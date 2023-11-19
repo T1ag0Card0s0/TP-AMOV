@@ -44,7 +44,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
     val snackbarHostState = remember{ SnackbarHostState() }
     var showTopBar by remember { mutableStateOf(false) }
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        showTopBar = destination.route in arrayOf(
+        showTopBar = destination.route  in arrayOf(
             Screens.CREDITS.route
             /*addicionar mais ecras que queiram adicionar o topbar*/
         )
@@ -68,10 +68,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = Color.Transparent,
                         titleContentColor = Color.White,
-                        navigationIconContentColor = Color.White,
-                        actionIconContentColor = Color.White //MaterialTheme.colorScheme.inversePrimary
+                        navigationIconContentColor =MaterialTheme.colorScheme.inversePrimary,
+                        actionIconContentColor =MaterialTheme.colorScheme.inversePrimary
                     ),
                 )
         }
