@@ -2,9 +2,7 @@ package pt.isec.a2021138999.tp1
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,13 +26,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost;
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import kotlinx.coroutines.launch
+import pt.isec.a2021138999.tp1.home.Home
+import pt.isec.a2021138999.tp1.login_register.Login
+import pt.isec.a2021138999.tp1.login_register.Register
+import pt.isec.a2021138999.tp1.login_register.Credits
 
 enum class Screens (val display: String, val showAppBar: Boolean){
     LOGIN("Sign in",false),
     REGISTER("Sign up",false),
-    CREDITS("Credits",true);
+    CREDITS("Credits",true),
+    HOME("Home",false);
     val route : String
         get() = this.toString()
 }
@@ -94,6 +95,9 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
                     Screens.LOGIN.route,
                     Screens.CREDITS.route
                 )
+            }
+            composable(Screens.HOME.route){
+                Home(navController)
             }
             composable(Screens.CREDITS.route){
                 Credits()

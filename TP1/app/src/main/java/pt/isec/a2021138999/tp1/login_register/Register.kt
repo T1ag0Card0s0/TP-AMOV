@@ -1,6 +1,5 @@
-package pt.isec.a2021138999.tp1
+package pt.isec.a2021138999.tp1.login_register
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,15 +8,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import pt.isec.a2021138999.tp1.R
+import pt.isec.a2021138999.tp1.Screens
 
 @Composable
-fun Login(
+fun Register(
     title: String,
     navController: NavHostController?,
     vararg options: String
@@ -55,7 +52,7 @@ fun Login(
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
         ) {
             Text(
-                text = stringResource(R.string.login_form_title),
+                text = stringResource(R.string.register_form_title),
                 fontSize = 24.sp,
                 modifier = Modifier
                     .padding(8.dp)
@@ -63,7 +60,16 @@ fun Login(
             OutlinedTextField(
                 value = " ",
                 onValueChange = {
-                                },
+                },
+                label = { Text(text = stringResource(R.string.name_label))},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+            OutlinedTextField(
+                value = " ",
+                onValueChange = {
+                },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,8 +83,16 @@ fun Login(
                     .fillMaxWidth()
                     .padding(8.dp)
             )
+            OutlinedTextField(
+                value = " ",
+                onValueChange = {},
+                label = { Text(text = stringResource(R.string.confirm_password_label))},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController?.navigate(Screens.HOME.route) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(160,160,160)
                 )
@@ -110,11 +124,10 @@ fun Login(
 }
 @Preview
 @Composable
-fun LoginPreview(){
-    Login(
-        stringResource(R.string.app_name),
+fun RegisterPreview(){
+    Register(
+        stringResource(id = R.string.app_name),
         null,
-        stringResource(id = R.string.register_form_title),
-        stringResource(id = R.string.credits_title)
-    )
+        stringResource(id = R.string.login_form_title),
+        stringResource(id = R.string.credits_title))
 }

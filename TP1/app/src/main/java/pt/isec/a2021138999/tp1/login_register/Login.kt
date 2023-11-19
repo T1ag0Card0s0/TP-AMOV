@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1
+package pt.isec.a2021138999.tp1.login_register
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import pt.isec.a2021138999.tp1.R
+import pt.isec.a2021138999.tp1.Screens
 
 @Composable
-fun Register(
+fun Login(
     title: String,
     navController: NavHostController?,
     vararg options: String
@@ -50,7 +52,7 @@ fun Register(
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
         ) {
             Text(
-                text = stringResource(R.string.register_form_title),
+                text = stringResource(R.string.login_form_title),
                 fontSize = 24.sp,
                 modifier = Modifier
                     .padding(8.dp)
@@ -58,16 +60,7 @@ fun Register(
             OutlinedTextField(
                 value = " ",
                 onValueChange = {
-                },
-                label = { Text(text = stringResource(R.string.name_label))},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            OutlinedTextField(
-                value = " ",
-                onValueChange = {
-                },
+                                },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,16 +74,8 @@ fun Register(
                     .fillMaxWidth()
                     .padding(8.dp)
             )
-            OutlinedTextField(
-                value = " ",
-                onValueChange = {},
-                label = { Text(text = stringResource(R.string.confirm_password_label))},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController?.navigate(Screens.HOME.route) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(160,160,160)
                 )
@@ -122,10 +107,11 @@ fun Register(
 }
 @Preview
 @Composable
-fun RegisterPreview(){
-    Register(
-        stringResource(id = R.string.app_name),
+fun LoginPreview(){
+    Login(
+        stringResource(R.string.app_name),
         null,
-        stringResource(id = R.string.login_form_title),
-        stringResource(id = R.string.credits_title))
+        stringResource(id = R.string.register_form_title),
+        stringResource(id = R.string.credits_title)
+    )
 }

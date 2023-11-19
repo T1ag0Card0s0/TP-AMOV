@@ -1,6 +1,5 @@
-package pt.isec.a2021138999.tp1
+package pt.isec.a2021138999.tp1.login_register
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -10,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import pt.isec.a2021138999.tp1.R
 
 @Composable
 fun Credits(){
@@ -23,10 +23,8 @@ fun Credits(){
             fontSize = 48.sp,
             )
         Text(text = stringResource(R.string.credits_description)+
-                "Tiago Rafael Santos Cardoso\n"+
-                "\t\tNumber: 2021138999\n"+
-                "\t\tE-Mail: a2021138999@isec.pt\n"+
-                "Adicionar o resto do grupo")
+                    "\n"+
+                    "Tiago Rafael Santos Cardoso, 2021138999, a2021138999@isec.pt")
     }
 }
 @Preview
