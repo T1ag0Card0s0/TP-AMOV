@@ -22,9 +22,9 @@ fun Credits(){
             text = stringResource(id = R.string.credits_title),
             fontSize = 48.sp,
             )
-        Text(text = "Trabalho realizado no âmbito da unidade curricular Arquiteturas Móveis\n"+
+        Text(text = stringResource(R.string.credits_description)+
                 "Tiago Rafael Santos Cardoso\n"+
-                "\t\tNumero: 2021138999\n"+
+                "\t\tNumber: 2021138999\n"+
                 "\t\tE-Mail: a2021138999@isec.pt\n"+
                 "Adicionar o resto do grupo")
     }

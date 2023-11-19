@@ -32,9 +32,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import kotlinx.coroutines.launch
 
 enum class Screens (val display: String, val showAppBar: Boolean){
-    LOGIN("LOGIN",false),
-    REGISTER("REGISTER",false),
-    CREDITS("CREDITS",true);
+    LOGIN("Sign in",false),
+    REGISTER("Sign up",false),
+    CREDITS("Credits",true);
     val route : String
         get() = this.toString()
 }
@@ -44,10 +44,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
     val snackbarHostState = remember{ SnackbarHostState() }
     var showTopBar by remember { mutableStateOf(false) }
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        showTopBar = destination.route  in arrayOf(
-            Screens.CREDITS.route
-            /*addicionar mais ecras que queiram adicionar o topbar*/
-        )
+        showTopBar = Screens.valueOf(destination.route!!).showAppBar
     }
     Scaffold(
         snackbarHost = {

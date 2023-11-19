@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">TP1</string>
     <string name="welcome_message">Welcome</string>
-    <string name="login_form_title">Login</string>
-    <string name="register_form_title">Register</string>
-    <string name="email_label">abc@gmail.com</string>
+    <string name="login_form_title">Sign in</string>
+    <string name="register_form_title">Sign up</string>
+    <string name="email_label">Email</string>
     <string name="name_label">Name</string>
     <string name="password_label">Password</string>
     <string name="confirm_password_label">Confirm Password</string>
     <string name="submit">Submit</string>
     <string name="credits_title">Credits</string>
+    <string name="credits_description">Work carried out within the scope of the curricular unit Mobile Architectures</string>
 </resources>
