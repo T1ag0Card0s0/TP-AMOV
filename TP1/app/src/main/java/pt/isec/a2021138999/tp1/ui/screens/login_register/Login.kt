@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1.login_register
+package pt.isec.a2021138999.tp1.ui.screens.login_register
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.a2021138999.tp1.R
-import pt.isec.a2021138999.tp1.Screens
+import pt.isec.a2021138999.tp1.ui.screens.Screens
 
 @Composable
 fun Login(

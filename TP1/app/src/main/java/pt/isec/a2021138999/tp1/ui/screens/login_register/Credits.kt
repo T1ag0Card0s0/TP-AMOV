@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1.login_register
+package pt.isec.a2021138999.tp1.ui.screens.login_register
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

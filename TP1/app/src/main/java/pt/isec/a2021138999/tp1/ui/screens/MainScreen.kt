@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1
+package pt.isec.a2021138999.tp1.ui.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -26,10 +26,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost;
 import androidx.navigation.compose.composable
-import pt.isec.a2021138999.tp1.home.Home
-import pt.isec.a2021138999.tp1.login_register.Login
-import pt.isec.a2021138999.tp1.login_register.Register
-import pt.isec.a2021138999.tp1.login_register.Credits
+import pt.isec.a2021138999.tp1.R
+import pt.isec.a2021138999.tp1.ui.screens.home.Home
+import pt.isec.a2021138999.tp1.ui.screens.login_register.Login
+import pt.isec.a2021138999.tp1.ui.screens.login_register.Register
+import pt.isec.a2021138999.tp1.ui.screens.login_register.Credits
 
 enum class Screens (val display: String, val showAppBar: Boolean){
     LOGIN("Sign in",false),

@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1.utils
+package pt.isec.a2021138999.tp1.ui.composables
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api

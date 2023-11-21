@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1.home
+package pt.isec.a2021138999.tp1.ui.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import pt.isec.a2021138999.tp1.Screens
+import pt.isec.a2021138999.tp1.ui.screens.Screens
 
 enum class BackgroundType{
     LOCATION,

@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1
+package pt.isec.a2021138999.tp1.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import pt.isec.a2021138999.tp1.ui.screens.MainScreen
 import pt.isec.a2021138999.tp1.ui.theme.TP1Theme
 
 class MainActivity : ComponentActivity() {

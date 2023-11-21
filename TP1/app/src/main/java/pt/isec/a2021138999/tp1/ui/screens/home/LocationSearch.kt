@@ -1,4 +1,4 @@
-package pt.isec.a2021138999.tp1.home
+package pt.isec.a2021138999.tp1.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,10 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isec.a2021138999.tp1.R
-import pt.isec.a2021138999.tp1.utils.DropDownMenu
+import pt.isec.a2021138999.tp1.ui.composables.DropDownMenu
 
 @Composable
-fun LocationSearch(){
+fun LocationSearch(
+
+){
     Column {
         Text(
             text = stringResource(id = R.string.locations_title),
