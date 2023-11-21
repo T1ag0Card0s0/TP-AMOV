@@ -32,14 +32,6 @@ import pt.isec.a2021138999.tp1.ui.screens.login_register.Login
 import pt.isec.a2021138999.tp1.ui.screens.login_register.Register
 import pt.isec.a2021138999.tp1.ui.screens.login_register.Credits
 
-enum class Screens (val display: String, val showAppBar: Boolean){
-    LOGIN("Sign in",false),
-    REGISTER("Sign up",false),
-    CREDITS("Credits",true),
-    HOME("Home",false);
-    val route : String
-        get() = this.toString()
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()){
