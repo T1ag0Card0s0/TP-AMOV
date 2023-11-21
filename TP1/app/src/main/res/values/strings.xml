@@ -11,4 +11,7 @@
     <string name="credits_title">Credits</string>
     <string name="credits_description">Work carried out within the scope of the curricular unit Mobile Architectures</string>
     <string name="locations_title">Locations</string>
+    <string name="orderBy">Order By</string>
+    <string name="alphabetic">Alphabetic</string>
+    <string name="distance">Distance</string>
 </resources>

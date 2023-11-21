@@ -35,7 +35,11 @@ fun LocationSearch(
         )
         Spacer(Modifier.height(16.dp))
         Row {
-            DropDownMenu("Order by", "Alphabetic", "Distance")
+            DropDownMenu(
+                stringResource(R.string.orderBy),
+                stringResource(R.string.alphabetic),
+                stringResource(R.string.distance)
+            )
         }
     }
 }
