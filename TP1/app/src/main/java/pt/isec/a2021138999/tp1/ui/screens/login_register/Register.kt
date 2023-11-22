@@ -29,17 +29,18 @@ import pt.isec.a2021138999.tp1.ui.screens.Screens
 fun Register(
     title: String,
     navController: NavHostController?,
-    vararg options: String
+    vararg options: String,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
         Text(
             text = title,
             fontSize = 48.sp,
-            modifier = Modifier
+            modifier = modifier
                 .align(Alignment.TopCenter)
                 .padding(24.dp)
         )
@@ -47,14 +48,14 @@ fun Register(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+            modifier = modifier
                 .align(Alignment.Center)
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
         ) {
             Text(
                 text = stringResource(R.string.register_form_title),
                 fontSize = 24.sp,
-                modifier = Modifier
+                modifier = modifier
                     .padding(8.dp)
             )
             OutlinedTextField(
@@ -62,7 +63,7 @@ fun Register(
                 onValueChange = {
                 },
                 label = { Text(text = stringResource(R.string.name_label))},
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
@@ -71,7 +72,7 @@ fun Register(
                 onValueChange = {
                 },
                 label = { Text(text = stringResource(R.string.email_label))},
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
@@ -79,7 +80,7 @@ fun Register(
                 value = " ",
                 onValueChange = {},
                 label = { Text(text = stringResource(R.string.password_label))},
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
@@ -87,12 +88,12 @@ fun Register(
                 value = " ",
                 onValueChange = {},
                 label = { Text(text = stringResource(R.string.confirm_password_label))},
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             Button(
-                onClick = { navController?.navigate(Screens.HOME.route) },
+                onClick = { navController?.navigate(Screens.LOCATION_SEARCH.route) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(160,160,160)
                 )
@@ -103,7 +104,7 @@ fun Register(
         Column (
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+            modifier = modifier
                 .align(Alignment.BottomEnd)
                 .fillMaxWidth(0.3f)
                 .fillMaxHeight(0.75f)
@@ -114,7 +115,7 @@ fun Register(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(160,160,160)
                     ),
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                 ) {
                     Text(text = btnName)

@@ -25,20 +25,24 @@ enum class BackgroundType{
 }
 @Composable
 fun Home(
-    navController: NavHostController?
+    type: BackgroundType,
+    navController: NavHostController?,
+    modifier: Modifier = Modifier
 ) {
     Box (
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {
-
-        LocationSearch()
+        when(type){
+            BackgroundType.LOCATION ->   LocationSearch()
+            BackgroundType.PLACE_OF_INTEREST -> PlaceOfInterestSearch()
+        }
 
         Column (
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+            modifier = modifier
                 .align(Alignment.BottomEnd)
                 .fillMaxWidth(0.3f)
                 .fillMaxHeight(0.75f)
@@ -58,5 +62,5 @@ fun Home(
 @Preview
 @Composable
 fun HomePreview(){
-    Home(null)
+
 }

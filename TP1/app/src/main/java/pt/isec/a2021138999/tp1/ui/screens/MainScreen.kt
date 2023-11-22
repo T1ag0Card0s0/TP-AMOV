@@ -27,14 +27,19 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost;
 import androidx.navigation.compose.composable
 import pt.isec.a2021138999.tp1.R
+import pt.isec.a2021138999.tp1.ui.screens.home.BackgroundType
 import pt.isec.a2021138999.tp1.ui.screens.home.Home
+import pt.isec.a2021138999.tp1.ui.screens.home.LocationSearch
 import pt.isec.a2021138999.tp1.ui.screens.login_register.Login
 import pt.isec.a2021138999.tp1.ui.screens.login_register.Register
 import pt.isec.a2021138999.tp1.ui.screens.login_register.Credits
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()){
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier
+){
     val snackbarHostState = remember{ SnackbarHostState() }
     var showTopBar by remember { mutableStateOf(false) }
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
@@ -70,7 +75,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
         NavHost(
             navController = navController,
             startDestination = Screens.LOGIN.route,
-            modifier = Modifier
+            modifier = modifier
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
@@ -89,8 +94,11 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
                     Screens.CREDITS.route
                 )
             }
-            composable(Screens.HOME.route){
-                Home(navController)
+            composable(Screens.LOCATION_SEARCH.route){
+                Home(BackgroundType.LOCATION,navController)
+            }
+            composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
+                Home(BackgroundType.PLACE_OF_INTEREST,navController)
             }
             composable(Screens.CREDITS.route){
                 Credits()

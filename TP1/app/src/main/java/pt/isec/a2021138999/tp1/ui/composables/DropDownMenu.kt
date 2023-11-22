@@ -16,8 +16,9 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDownMenu(
-    placeHolder: String,
-    vararg options: String
+    title: String,
+    vararg options: String,
+    modifier: Modifier = Modifier
 ){
     //TODO:ESTAS VARIAVEIS DEVEM SER RETIRADAS E COLOCADAS POR EXEMPLO NUMA VIEW MODEL
     var isExpanded by remember {
@@ -40,10 +41,10 @@ fun DropDownMenu(
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
             placeholder = {
-                Text(text = placeHolder)
+                Text(text = title)
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor()
+            modifier = modifier.menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = isExpanded,

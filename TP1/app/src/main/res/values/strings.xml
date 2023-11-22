@@ -14,4 +14,7 @@
     <string name="orderBy">Order By</string>
     <string name="alphabetic">Alphabetic</string>
     <string name="distance">Distance</string>
+    <string name="search">Search</string>
+    <string name="place_of_interest_title">Place Of Interest</string>
+    <string name="categories">Categories</string>
 </resources>

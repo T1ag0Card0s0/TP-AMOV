@@ -10,18 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isec.a2021138999.tp1.R
 import pt.isec.a2021138999.tp1.ui.composables.DropDownMenu
 
 @Composable
-fun LocationSearch(
-    modifier : Modifier = Modifier
+fun PlaceOfInterestSearch(
+    modifier: Modifier = Modifier
 ){
     Column {
         Text(
-            text = stringResource(id = R.string.locations_title),
+            text = stringResource(id = R.string.place_of_interest_title),
             fontSize = 48.sp
         )
         OutlinedTextField(
@@ -29,7 +30,10 @@ fun LocationSearch(
             onValueChange = {
 
             },
-            label = { Text(text = "Search") },
+            label = {
+                Text(
+                    text = stringResource(R.string.search)
+                ) },
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -39,9 +43,15 @@ fun LocationSearch(
         Row {
             DropDownMenu(
                 stringResource(R.string.orderBy),
+                stringResource(R.string.categories),
                 stringResource(R.string.alphabetic),
                 stringResource(R.string.distance)
             )
         }
     }
+}
+@Preview
+@Composable
+fun PlaceOfInterestPreview(){
+    PlaceOfInterestSearch()
 }

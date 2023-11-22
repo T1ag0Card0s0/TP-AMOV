@@ -4,7 +4,8 @@ enum class Screens (val display: String, val showAppBar: Boolean){
     LOGIN("Sign in",false),
     REGISTER("Sign up",false),
     CREDITS("Credits",true),
-    HOME("Home",false);
+    LOCATION_SEARCH("Location Search",false),
+    PLACE_OF_INTEREST_SEARCH("Place of Interest Search",true);
     val route : String
         get() = this.toString()
 }

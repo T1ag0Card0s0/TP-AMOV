@@ -12,10 +12,12 @@ import androidx.compose.ui.unit.sp
 import pt.isec.a2021138999.tp1.R
 
 @Composable
-fun Credits(){
+fun Credits(
+    modifier: Modifier = Modifier
+){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Text(
