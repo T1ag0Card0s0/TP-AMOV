@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "pt.isec.a2021138999.tp1"
+    namespace = "pt.isec.amov.tp1"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "pt.isec.a2021138999.tp1"
+        applicationId = "pt.isec.amov.tp1"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
