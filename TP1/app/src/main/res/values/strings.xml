@@ -17,4 +17,5 @@
     <string name="search">Search</string>
     <string name="place_of_interest_title">Place Of Interest</string>
     <string name="categories">Categories</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -1,23 +1,9 @@
 package pt.isec.a2021138999.tp1.ui.screens.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import pt.isec.a2021138999.tp1.ui.screens.Screens
+import pt.isec.a2021138999.tp1.data.AppData
 
 enum class BackgroundType{
     LOCATION,
@@ -25,40 +11,18 @@ enum class BackgroundType{
 }
 @Composable
 fun Home(
+    appData: AppData,
     type: BackgroundType,
-    navController: NavHostController?,
-    modifier: Modifier = Modifier
+    navHostController: NavHostController?
 ) {
-    Box (
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        when(type){
-            BackgroundType.LOCATION ->   LocationSearch()
-            BackgroundType.PLACE_OF_INTEREST -> PlaceOfInterestSearch()
-        }
 
-        Column (
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .align(Alignment.BottomEnd)
-                .fillMaxWidth(0.3f)
-                .fillMaxHeight(0.75f)
-        ) {
-            Button(
-                onClick = { navController?.navigate(Screens.LOGIN.route)},
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(160,160,160)
-                )
-            ) {
-                Text(text = "Logout")
-            }
-        }
+    when(type){
+        BackgroundType.LOCATION-> LocationSearch( appData = appData, navHostController = navHostController)
+        BackgroundType.PLACE_OF_INTEREST -> PlaceOfInterestSearch(appData = appData)
     }
-}
 
+
+}
 @Preview
 @Composable
 fun HomePreview(){
