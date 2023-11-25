@@ -24,7 +24,7 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun PlaceOfInterestSearch(
-    appData: AppData,
+    appViewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
     Column(
@@ -37,13 +37,13 @@ fun PlaceOfInterestSearch(
             fontSize = 40.sp
         )
         Text(
-            text = "In ${appData.getSelectedLocalName()}",
+            text = "In ${appViewModel.appData.getSelectedLocalName()}",
             fontSize = 30.sp
         )
         OutlinedTextField(
-            value = " ",
+            value = appViewModel.search.value,
             onValueChange = {
-
+                appViewModel.search.value=it
             },
             label = {
                 Text(
@@ -58,11 +58,15 @@ fun PlaceOfInterestSearch(
         Row {
             DropDownMenu(
                 stringResource(R.string.orderBy),
+                appViewModel.orderByOpt,
                 stringResource(R.string.categories),
                 stringResource(R.string.alphabetic),
                 stringResource(R.string.distance)
             )
         }
-        ListItems(locals = appData.getPlaceOfInterest(), onSelected = {})
+        Spacer(
+            modifier.height(16.dp)
+        )
+        ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {})
     }
 }

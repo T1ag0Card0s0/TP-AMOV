@@ -32,7 +32,7 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun LocationSearch(
-    appData: AppData,
+    appViewModel: AppViewModel,
     navHostController: NavHostController?,
     modifier: Modifier = Modifier
 ){
@@ -50,9 +50,9 @@ fun LocationSearch(
                 fontSize = 40.sp
             )
             OutlinedTextField(
-                value = " ",
+                value = appViewModel.search.value,
                 onValueChange = {
-
+                    appViewModel.search.value=it
                 },
                 label = {
                     Text(
@@ -68,13 +68,14 @@ fun LocationSearch(
             Row {
                 DropDownMenu(
                     stringResource(R.string.orderBy),
+                    appViewModel.orderByOpt,
                     stringResource(R.string.alphabetic),
                     stringResource(R.string.distance)
                 )
             }
             Spacer(modifier = modifier.height(20.dp))
-            ListItems(locals = appData.getLocations(), onSelected = {
-                appData.selectedLocal.intValue = it
+            ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
+                appViewModel.appData.selectedLocal.intValue = it
                 navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
             })
         }

@@ -3,6 +3,7 @@ package pt.isec.amov.tp1.ui.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,14 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost;
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.ui.screens.home.BackgroundType
 import pt.isec.amov.tp1.ui.screens.home.Home
 import pt.isec.amov.tp1.ui.screens.login_register.Login
@@ -43,11 +43,14 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
-){
-    val app = AppData()
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 
+){
+    val context = LocalContext.current
+    val app = context.applicationContext as App
+
+    var appViewModel: AppViewModel?=null
     val snackbarHostState = remember{ SnackbarHostState() }
     var showTopBar by remember { mutableStateOf(false) }
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
@@ -71,6 +74,14 @@ fun MainScreen(
                                 contentDescription = "Back")
                         }
                     },
+                    actions = {
+                              IconButton(onClick = { /*TODO*/ }) {
+                                  Icon(
+                                      Icons.Filled.MoreVert,
+                                      contentDescription = "More actions"
+                                  )
+                              }
+                    },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
                         titleContentColor = Color.White,
@@ -89,24 +100,22 @@ fun MainScreen(
             composable(Screens.LOGIN.route){
                 Login(
                     stringResource(R.string.app_name),
-                    navController,
-                    Screens.REGISTER.route,
-                    Screens.CREDITS.route
+                    navController
                     )
             }
             composable(Screens.REGISTER.route){
                 Register(
                     stringResource(R.string.app_name),
-                    navController,
-                    Screens.LOGIN.route,
-                    Screens.CREDITS.route
+                    navController
                 )
             }
             composable(Screens.LOCATION_SEARCH.route){
-                Home(app,BackgroundType.LOCATION,navController)
+                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
+                Home(appViewModel!!,BackgroundType.LOCATION,navController)
             }
             composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
-                Home(app,BackgroundType.PLACE_OF_INTEREST,navController)
+                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
+                Home(appViewModel!!,BackgroundType.PLACE_OF_INTEREST,navController)
             }
             composable(Screens.CREDITS.route){
                 Credits()

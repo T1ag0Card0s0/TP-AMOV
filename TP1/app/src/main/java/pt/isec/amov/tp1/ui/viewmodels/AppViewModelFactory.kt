@@ -8,11 +8,14 @@ import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Local
 
 class AppViewModelFactory(
-    private val appData: AppData
+    val appData: AppData
 ): ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return AppViewModel(appData) as T
     }
 }
-open class AppViewModel(protected val appData: AppData): ViewModel() {
+open class AppViewModel(val appData: AppData): ViewModel() {
+    val pageTite = mutableStateOf("")
+    val orderByOpt = mutableStateOf("")
+    val search = mutableStateOf("")
 }

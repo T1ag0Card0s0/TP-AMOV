@@ -7,6 +7,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,15 +18,13 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DropDownMenu(
     title: String,
+    opt:MutableState<String>,
     vararg options: String,
     modifier: Modifier = Modifier
 ){
     //TODO:ESTAS VARIAVEIS DEVEM SER RETIRADAS E COLOCADAS POR EXEMPLO NUMA VIEW MODEL
     var isExpanded by remember {
         mutableStateOf(false)
-    }
-    var opt by remember {
-        mutableStateOf("")
     }
     ExposedDropdownMenuBox(
         expanded = isExpanded,
@@ -34,7 +33,7 @@ fun DropDownMenu(
         }
     ) {
         OutlinedTextField(
-            value = opt,
+            value = opt.value,
             onValueChange = {},
             readOnly = true,
             trailingIcon = {
@@ -58,7 +57,7 @@ fun DropDownMenu(
                         Text(text = itemName)
                     },
                     onClick = {
-                        opt = itemName
+                        opt.value = itemName
                         isExpanded = false
                     }
                 )

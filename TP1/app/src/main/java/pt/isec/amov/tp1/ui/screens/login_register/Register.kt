@@ -29,9 +29,10 @@ import pt.isec.amov.tp1.ui.screens.Screens
 fun Register(
     title: String,
     navController: NavHostController?,
-    vararg options: String,
     modifier: Modifier = Modifier
 ) {
+    val options = listOf(Screens.LOGIN.route,
+    Screens.CREDITS.route)
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -128,7 +129,6 @@ fun Register(
 fun RegisterPreview(){
     Register(
         stringResource(id = R.string.app_name),
-        null,
-        stringResource(id = R.string.login_form_title),
-        stringResource(id = R.string.credits_title))
+        null
+    )
 }
