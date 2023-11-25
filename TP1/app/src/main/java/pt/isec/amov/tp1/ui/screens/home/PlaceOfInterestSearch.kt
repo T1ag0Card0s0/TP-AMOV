@@ -33,10 +33,6 @@ fun PlaceOfInterestSearch(
             .fillMaxSize()
     ) {
         Text(
-            text = stringResource(id = R.string.place_of_interest_title),
-            fontSize = 40.sp
-        )
-        Text(
             text = "In ${appViewModel.appData.getSelectedLocalName()}",
             fontSize = 30.sp
         )

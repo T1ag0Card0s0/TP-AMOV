@@ -45,10 +45,6 @@ fun LocationSearch(
             modifier = modifier
                 .fillMaxSize()
         ) {
-            Text(
-                text = stringResource(id = R.string.locations_title),
-                fontSize = 40.sp
-            )
             OutlinedTextField(
                 value = appViewModel.search.value,
                 onValueChange = {
@@ -78,24 +74,6 @@ fun LocationSearch(
                 appViewModel.appData.selectedLocal.intValue = it
                 navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
             })
-        }
-        Column (
-            verticalArrangement = Arrangement.Bottom,
-            modifier = modifier
-                .align(Alignment.BottomEnd)
-                .fillMaxWidth(0.3f)
-                .fillMaxHeight(0.75f)
-        ) {
-            Button(
-                onClick = { navHostController?.navigate(Screens.LOGIN.route)},
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(160,160,160)
-                ),
-                modifier = modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = stringResource(R.string.logout))
-            }
         }
     }
 

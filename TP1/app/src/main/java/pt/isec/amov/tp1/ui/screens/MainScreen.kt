@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,9 +56,22 @@ fun MainScreen(
 
     var appViewModel: AppViewModel?=null
     val snackbarHostState = remember{ SnackbarHostState() }
+
+    var isExpanded by remember { mutableStateOf(false) }
+    var pageTitle by remember { mutableStateOf("") }
     var showTopBar by remember { mutableStateOf(false) }
+    var showArrowBack by remember{ mutableStateOf(false) }
+    var showMoreVert by remember{ mutableStateOf(false) }
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
+        showArrowBack = destination.route in listOf(
+            Screens.PLACE_OF_INTEREST_SEARCH.route,
+            Screens.CREDITS.route
+        )
+        showMoreVert = destination.route in listOf(
+            Screens.PLACE_OF_INTEREST_SEARCH.route,
+            Screens.LOCATION_SEARCH.route
+        )
     }
     Scaffold(
         snackbarHost = {
@@ -62,29 +79,46 @@ fun MainScreen(
         },
         topBar = {
             if(showTopBar)
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            stringResource(R.string.app_name),
+                            text = pageTitle
                         ) },
                     navigationIcon = {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                Icons.Filled.ArrowBack,
-                                contentDescription = "Back")
-                        }
+                        if(showArrowBack)
+                            IconButton(onClick = { navController.navigateUp() }) {
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = "Back")
+                            }
+
                     },
                     actions = {
-                              IconButton(onClick = { /*TODO*/ }) {
+                        if(showMoreVert)
+                              IconButton(onClick = {isExpanded = !isExpanded}) {
                                   Icon(
                                       Icons.Filled.MoreVert,
                                       contentDescription = "More actions"
                                   )
                               }
+                        DropdownMenu(
+                            expanded = isExpanded,
+                            onDismissRequest = { isExpanded = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text("Logout")
+                                },
+                                onClick = {
+                                    isExpanded=false
+                                    navController.navigate(Screens.LOGIN.route)
+                                          },
+                            )
+                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
-                        titleContentColor = Color.White,
+                        titleContentColor =MaterialTheme.colorScheme.inversePrimary,
                         navigationIconContentColor =MaterialTheme.colorScheme.inversePrimary,
                         actionIconContentColor =MaterialTheme.colorScheme.inversePrimary
                     ),
@@ -98,26 +132,31 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
+                pageTitle=Screens.LOGIN.display
                 Login(
                     stringResource(R.string.app_name),
                     navController
                     )
             }
             composable(Screens.REGISTER.route){
+                pageTitle=Screens.REGISTER.display
                 Register(
                     stringResource(R.string.app_name),
                     navController
                 )
             }
             composable(Screens.LOCATION_SEARCH.route){
+                pageTitle=Screens.LOCATION_SEARCH.display
                 appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
                 Home(appViewModel!!,BackgroundType.LOCATION,navController)
             }
             composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
+                pageTitle=Screens.PLACE_OF_INTEREST_SEARCH.display
                 appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
                 Home(appViewModel!!,BackgroundType.PLACE_OF_INTEREST,navController)
             }
             composable(Screens.CREDITS.route){
+                pageTitle=Screens.CREDITS.display
                 Credits()
             }
         }
