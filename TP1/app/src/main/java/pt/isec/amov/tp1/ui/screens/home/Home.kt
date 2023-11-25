@@ -7,17 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +35,7 @@ enum class BackgroundType{
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(
+fun SearchViews(
     appViewModel: AppViewModel,
     type: BackgroundType,
     navHostController: NavHostController?,
@@ -121,24 +114,23 @@ fun Home(
         when(type){
             BackgroundType.LOCATION-> {
                 ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
-                    appViewModel.appData.selectedLocal.intValue = it
-                    navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
+                    if(it>=0){
+                        appViewModel.appData.selectedLocal.intValue = it
+                        navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
+                    }else{
+                        navHostController?.navigate(Screens.ADD_NEW_LOCATION.route)
+                    }
                 })
             }
             BackgroundType.PLACE_OF_INTEREST ->{
-                ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {})
+                ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {
+                    if(it>0){
+                        //vai para uma pagina de descrição mais promenorizada relacionada com o item selecionado
+                    }else{
+                        navHostController?.navigate(Screens.ADD_NEW_PLACE_OF_INTEREST.route)
+                    }
+                })
             }
         }
     }
-    /*when(type){
-        BackgroundType.LOCATION-> LocationSearch( appViewModel = appViewModel, navHostController = navHostController)
-        BackgroundType.PLACE_OF_INTEREST -> PlaceOfInterestSearch(appViewModel = appViewModel)
-    }*/
-
-
-}
-@Preview
-@Composable
-fun HomePreview(){
-
 }

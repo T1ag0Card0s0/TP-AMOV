@@ -5,7 +5,9 @@ enum class Screens (val display: String, val showAppBar: Boolean){
     REGISTER("Sign up",false),
     CREDITS("Credits",true),
     LOCATION_SEARCH("Locations",true),
-    PLACE_OF_INTEREST_SEARCH("Places of Interest",true);
+    PLACE_OF_INTEREST_SEARCH("Places of Interest",true),
+    ADD_NEW_LOCATION("Add new location", true),
+    ADD_NEW_PLACE_OF_INTEREST("Add new place of interest", true);
     val route : String
         get() = this.toString()
 }

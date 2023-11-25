@@ -53,7 +53,7 @@ fun ListItems(
                     containerColor = Color(255, 255, 255),
                     contentColor = Color(0, 0, 0)
                 ),
-                onClick = { /*Colocar aqui onSelect(-1) para saber que é para processar uma nova entrada de dados*/ }
+                onClick = { onSelected(-1) }
             ) {
                 Box(
                     modifier = modifier.fillMaxSize()

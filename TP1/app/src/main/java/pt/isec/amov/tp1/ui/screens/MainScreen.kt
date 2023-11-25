@@ -1,13 +1,10 @@
 package pt.isec.amov.tp1.ui.screens
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -37,8 +33,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.screens.home.AddNewLocalViews
 import pt.isec.amov.tp1.ui.screens.home.BackgroundType
-import pt.isec.amov.tp1.ui.screens.home.Home
+import pt.isec.amov.tp1.ui.screens.home.SearchViews
 import pt.isec.amov.tp1.ui.screens.login_register.Login
 import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
@@ -56,7 +53,7 @@ fun MainScreen(
     val context = LocalContext.current
     val app = context.applicationContext as App
 
-    var appViewModel: AppViewModel?
+    var appViewModel: AppViewModel?=null
     val snackbarHostState = remember{ SnackbarHostState() }
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -69,7 +66,10 @@ fun MainScreen(
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
         showArrowBack = destination.route in listOf(
             Screens.PLACE_OF_INTEREST_SEARCH.route,
-            Screens.CREDITS.route
+            Screens.CREDITS.route,
+            Screens.ADD_NEW_LOCATION.route,
+            Screens.ADD_NEW_PLACE_OF_INTEREST.route
+
         )
         showMoreVert = destination.route in listOf(
             Screens.PLACE_OF_INTEREST_SEARCH.route,
@@ -136,6 +136,7 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
+                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
                 Login(
                     stringResource(R.string.app_name),
                     navController
@@ -148,9 +149,7 @@ fun MainScreen(
                 )
             }
             composable(Screens.LOCATION_SEARCH.route){
-
-                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
-                Home(
+                SearchViews(
                     appViewModel!!,
                     BackgroundType.LOCATION,
                     navController,
@@ -159,8 +158,7 @@ fun MainScreen(
                 )
             }
             composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
-                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
-                Home(
+                SearchViews(
                     appViewModel!!,
                     BackgroundType.PLACE_OF_INTEREST,
                     navController,
@@ -168,6 +166,14 @@ fun MainScreen(
                     stringResource(R.string.distance),
                     stringResource(R.string.categories)
                 )
+            }
+            composable(Screens.ADD_NEW_LOCATION.route){
+                if(appViewModel!=null)
+                    AddNewLocalViews(appViewModel = appViewModel!!,Screens.LOCATION_SEARCH.route)
+            }
+            composable(Screens.ADD_NEW_PLACE_OF_INTEREST.route){
+                if(appViewModel!=null)
+                    AddNewLocalViews(appViewModel = appViewModel!!,Screens.PLACE_OF_INTEREST_SEARCH.route)
             }
             composable(Screens.CREDITS.route){
                 Credits()
