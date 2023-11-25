@@ -15,6 +15,5 @@ class App : Application() {
 
     override fun onCreate(){
         super.onCreate()
-        //Log.i("Sketches","Result: "+sketchesFile.delete())
     }
 }

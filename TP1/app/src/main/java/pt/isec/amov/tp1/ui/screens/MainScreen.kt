@@ -15,10 +15,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +52,7 @@ fun MainScreen(
     val context = LocalContext.current
     val app = context.applicationContext as App
 
-    var appViewModel: AppViewModel?=null
+    var appViewModel: AppViewModel?
     val snackbarHostState = remember{ SnackbarHostState() }
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -62,7 +60,8 @@ fun MainScreen(
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember{ mutableStateOf(false) }
     var showMoreVert by remember{ mutableStateOf(false) }
-    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        pageTitle=Screens.valueOf(destination.route!!).display
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
         showArrowBack = destination.route in listOf(
             Screens.PLACE_OF_INTEREST_SEARCH.route,
@@ -132,31 +131,40 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                pageTitle=Screens.LOGIN.display
                 Login(
                     stringResource(R.string.app_name),
                     navController
                     )
             }
             composable(Screens.REGISTER.route){
-                pageTitle=Screens.REGISTER.display
                 Register(
                     stringResource(R.string.app_name),
                     navController
                 )
             }
             composable(Screens.LOCATION_SEARCH.route){
-                pageTitle=Screens.LOCATION_SEARCH.display
+
                 appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
-                Home(appViewModel!!,BackgroundType.LOCATION,navController)
+                Home(
+                    appViewModel!!,
+                    BackgroundType.LOCATION,
+                    navController,
+                    stringResource(R.string.alphabetic),
+                    stringResource(R.string.distance)
+                )
             }
             composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
-                pageTitle=Screens.PLACE_OF_INTEREST_SEARCH.display
                 appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
-                Home(appViewModel!!,BackgroundType.PLACE_OF_INTEREST,navController)
+                Home(
+                    appViewModel!!,
+                    BackgroundType.PLACE_OF_INTEREST,
+                    navController,
+                    stringResource(R.string.alphabetic),
+                    stringResource(R.string.distance),
+                    stringResource(R.string.categories)
+                )
             }
             composable(Screens.CREDITS.route){
-                pageTitle=Screens.CREDITS.display
                 Credits()
             }
         }
@@ -166,5 +174,5 @@ fun MainScreen(
 @Preview
 @Composable
 fun MainPreview(){
-    MainScreen();
+    MainScreen()
 }
