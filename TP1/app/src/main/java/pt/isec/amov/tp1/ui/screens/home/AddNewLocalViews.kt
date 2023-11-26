@@ -55,26 +55,31 @@ fun AddNewLocalViews(
         ) {
 
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
+                value = appViewModel.name.value,
+                onValueChange = { appViewModel.name.value = it },
                 label = {
                     Text(text = stringResource(R.string.name_label))
                 }
             )
             Spacer(modifier = modifier.height(24.dp))
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = appViewModel.desc.value,
+                onValueChange = { appViewModel.desc.value = it },
                 label = {
                     Text(text = stringResource(R.string.description))
                 }
             )
             Spacer(modifier = modifier.height(24.dp))
-            TakePhoto(imagePath = appViewModel.imagePath)
-            Button(
-                onClick = { /*TODO*/ },
+            Box(
+                Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                    .padding(8.dp)
+
             ) {
-                Text(text = stringResource(R.string.submit))
+                TakePhoto(imagePath = appViewModel.imagePath)
             }
         }
     }

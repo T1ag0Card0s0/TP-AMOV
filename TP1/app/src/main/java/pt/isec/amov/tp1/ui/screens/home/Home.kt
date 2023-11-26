@@ -69,7 +69,7 @@ fun SearchViews(
                 .fillMaxWidth()
         )
         Spacer(
-            modifier.height(16.dp)
+            modifier.height(8.dp)
         )
         Row {
             ExposedDropdownMenuBox(
@@ -114,21 +114,13 @@ fun SearchViews(
         when(type){
             BackgroundType.LOCATION-> {
                 ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
-                    if(it>=0){
-                        appViewModel.appData.selectedLocal.intValue = it
-                        navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
-                    }else{
-                        navHostController?.navigate(Screens.ADD_NEW_LOCATION.route)
-                    }
+                    appViewModel.appData.selectedLocal.intValue = it
+                    navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
                 })
             }
             BackgroundType.PLACE_OF_INTEREST ->{
                 ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {
-                    if(it>0){
-                        //vai para uma pagina de descrição mais promenorizada relacionada com o item selecionado
-                    }else{
-                        navHostController?.navigate(Screens.ADD_NEW_PLACE_OF_INTEREST.route)
-                    }
+                    //TODO:vai para uma pagina de descrição mais promenorizada relacionada com o item selecionado
                 })
             }
         }

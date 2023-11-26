@@ -67,22 +67,21 @@ fun TakePhoto(
         }) {
             Text(text = stringResource(R.string.take_picture))
         }
-        if (imagePath.value != null) {
-            AsyncImage(
-                model = imagePath.value,
-                contentDescription = "image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(300.dp)
-                    .padding(16.dp)
-            )
-        } else {
-            Image(
-                painter = painterResource(id = R.drawable.empty),
-                contentDescription = "Default Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.height(300.dp).padding(16.dp)
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (imagePath != null) {
+                AsyncImage(
+                    model = imagePath.value,
+                    contentDescription = "Background image",
+                    modifier = Modifier.matchParentSize()
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.empty),
+                    contentDescription = "Default Image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.matchParentSize()
+                )
+            }
         }
     }
 }

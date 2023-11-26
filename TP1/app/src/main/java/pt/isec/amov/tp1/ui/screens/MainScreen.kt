@@ -3,8 +3,10 @@ package pt.isec.amov.tp1.ui.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,7 +55,7 @@ fun MainScreen(
     val context = LocalContext.current
     val app = context.applicationContext as App
 
-    var appViewModel: AppViewModel?=null
+    var appViewModel: AppViewModel?=viewModel(factory= AppViewModelFactory(app.appData))
     val snackbarHostState = remember{ SnackbarHostState() }
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -61,7 +63,9 @@ fun MainScreen(
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember{ mutableStateOf(false) }
     var showMoreVert by remember{ mutableStateOf(false) }
+    var showDoneAction by remember{ mutableStateOf(false)}
     navController.addOnDestinationChangedListener { _, destination, _ ->
+        appViewModel!!.typeOfDataToAdd.value = destination.route.toString()
         pageTitle=Screens.valueOf(destination.route!!).display
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
         showArrowBack = destination.route in listOf(
@@ -69,11 +73,14 @@ fun MainScreen(
             Screens.CREDITS.route,
             Screens.ADD_NEW_LOCATION.route,
             Screens.ADD_NEW_PLACE_OF_INTEREST.route
-
         )
         showMoreVert = destination.route in listOf(
             Screens.PLACE_OF_INTEREST_SEARCH.route,
             Screens.LOCATION_SEARCH.route
+        )
+        showDoneAction = destination.route in listOf(
+            Screens.ADD_NEW_PLACE_OF_INTEREST.route,
+            Screens.ADD_NEW_LOCATION.route
         )
     }
     Scaffold(
@@ -97,8 +104,19 @@ fun MainScreen(
 
                     },
                     actions = {
-
-                        if(showMoreVert)
+                        if(showDoneAction&&!showMoreVert)
+                            IconButton(
+                                onClick = {
+                                    appViewModel!!.addData()
+                                    navController.navigateUp()
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Filled.Done,
+                                    contentDescription = "Done"
+                                )
+                            }
+                        if(showMoreVert&&!showDoneAction)
                               IconButton(onClick = {isExpanded = !isExpanded}) {
                                   Icon(
                                       Icons.Filled.MoreVert,
@@ -111,6 +129,19 @@ fun MainScreen(
                         ) {
                             DropdownMenuItem(
                                 text = {
+                                    Text("Add")
+                                },
+                                onClick = {
+                                    isExpanded=false
+                                    when(pageTitle){
+                                        Screens.LOCATION_SEARCH.display->navController.navigate(Screens.ADD_NEW_LOCATION.route)
+                                        Screens.PLACE_OF_INTEREST_SEARCH.display-> navController.navigate(Screens.ADD_NEW_PLACE_OF_INTEREST.route)
+                                    }
+                                },
+                            )
+                            Divider()
+                            DropdownMenuItem(
+                                text = {
                                     Text("Logout")
                                 },
                                 onClick = {
@@ -118,6 +149,7 @@ fun MainScreen(
                                     navController.navigate(Screens.LOGIN.route)
                                           },
                             )
+
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -136,7 +168,6 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                appViewModel = viewModel(factory= AppViewModelFactory(app.appData))
                 Login(
                     stringResource(R.string.app_name),
                     navController

@@ -78,10 +78,7 @@ fun Login(
                     .padding(8.dp)
             )
             Button(
-                onClick = { navController?.navigate(Screens.LOCATION_SEARCH.route) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(160,160,160)
-                )
+                onClick = { navController?.navigate(Screens.LOCATION_SEARCH.route) }
             ) {
                 Text(text = stringResource(R.string.submit))
             }
@@ -97,9 +94,6 @@ fun Login(
             for(btnName in options)
                 Button(
                     onClick = { navController?.navigate(btnName)},
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(160,160,160)
-                    ),
                     modifier = modifier
                         .fillMaxWidth()
                 ) {
