@@ -3,6 +3,7 @@ package pt.isec.amov.tp1.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -117,7 +119,7 @@ fun MainScreen(
         },
         bottomBar = {
             if(showBottomBar)
-                BottomAppBar {
+                BottomAppBar(modifier = Modifier.height(50.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
@@ -174,6 +176,7 @@ fun MainScreen(
             }
             composable(Screens.SEARCH_LOCATIONS.route){
                 appViewModel.searchForm = SearchForm(ItemType.LOCATION)
+                appViewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
                 SearchViews(
                     appViewModel,
                     navController
@@ -181,18 +184,17 @@ fun MainScreen(
             }
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
                 appViewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
+                appViewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
                 SearchViews(
                     appViewModel,
                     navController
                 )
             }
             composable(Screens.ADD_LOCATIONS.route){
-                appViewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
                 AddNewLocalViews(appViewModel = appViewModel)
                 
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                appViewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
                 AddNewLocalViews(appViewModel = appViewModel)
             }
             composable(Screens.CREDITS.route){

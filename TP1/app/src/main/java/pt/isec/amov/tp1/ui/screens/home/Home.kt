@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -57,7 +59,7 @@ fun SearchViews(
             )
     Column(
             modifier = modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxSize()
     ) {
         if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST)
@@ -72,6 +74,7 @@ fun SearchViews(
             label = {
                 Text(text = stringResource(R.string.search))
                     },
+            shape = RoundedCornerShape(20.dp),
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -83,7 +86,7 @@ fun SearchViews(
                 expanded = isExpanded,
                 onExpandedChange = { newValue ->
                     isExpanded = newValue
-                }
+                },
             ) {
                 OutlinedTextField(
                     value = opt,
@@ -96,7 +99,8 @@ fun SearchViews(
                         Text(text = stringResource(R.string.orderBy))
                     },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = modifier.menuAnchor()
+                    modifier = modifier.menuAnchor(),
+                    shape = RoundedCornerShape(20.dp)
                 )
                 ExposedDropdownMenu(
                     expanded = isExpanded,
@@ -117,7 +121,7 @@ fun SearchViews(
                 }
             }
         }
-        Spacer(modifier = modifier.height(20.dp))
+        Spacer(modifier = modifier.height(8.dp))
         when(appViewModel.searchForm!!.itemType){
             ItemType.LOCATION-> {
                 ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
