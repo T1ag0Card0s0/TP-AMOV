@@ -24,13 +24,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import pt.isec.amov.tp1.data.Local
+import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListItems(
     locals: List<Local>,
+    appViewModel: AppViewModel,
+    navHostController: NavHostController?,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
 ){
@@ -50,7 +55,10 @@ fun ListItems(
                 onClick = {onSelected(it.id)}
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    IconButton(onClick = { /*TODO*/ },
+                    IconButton(onClick = {
+                        appViewModel.appData.selectedLocal.intValue = it.id
+                        navHostController?.navigate(Screens.DETAILS.route)
+                                         },
                         modifier=modifier.align(Alignment.TopEnd)) {
                         Icon(imageVector = Icons.Filled.MoreVert, contentDescription ="Details" )
                     }

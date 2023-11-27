@@ -2,6 +2,7 @@ package pt.isec.amov.tp1.data
 
 import androidx.compose.runtime.mutableIntStateOf
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
 open class Local(
     open val id: Int,

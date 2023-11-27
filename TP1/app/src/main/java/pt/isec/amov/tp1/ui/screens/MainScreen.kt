@@ -1,19 +1,10 @@
 package pt.isec.amov.tp1.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -36,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -45,8 +35,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.ui.screens.home.AddNewLocalViews
-import pt.isec.amov.tp1.ui.screens.home.SearchViews
+import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
+import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
+import pt.isec.amov.tp1.ui.screens.home.SearchView
 import pt.isec.amov.tp1.ui.screens.login_register.Login
 import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
@@ -87,7 +78,9 @@ fun MainScreen(
         showArrowBack = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route,
-            Screens.SEARCH_PLACES_OF_INTEREST.route
+            Screens.SEARCH_PLACES_OF_INTEREST.route,
+            Screens.DETAILS.route,
+            Screens.CREDITS.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -107,7 +100,10 @@ fun MainScreen(
                     navigationIcon = {
                         if(showArrowBack){
                             IconButton(onClick = {
-                                navController.navigateUp()
+                                when(Screens.valueOf(currentScreen!!.destination.route!!)){
+                                    Screens.SEARCH_PLACES_OF_INTEREST->  navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                    else -> navController.navigateUp()
+                                }
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.ArrowBack,
@@ -120,13 +116,10 @@ fun MainScreen(
                         if(showDoneIcon) {
                             IconButton(onClick = {
                                 appViewModel.addLocal()
-                                when (Screens.valueOf(currentScreen!!.destination.route!!).route) {
-                                    Screens.ADD_PLACE_OF_INTEREST.route -> navController.navigate(
-                                        Screens.SEARCH_PLACES_OF_INTEREST.route
-                                    )
-                                    Screens.ADD_LOCATIONS.route -> navController.navigate(
-                                        Screens.SEARCH_LOCATIONS.route
-                                    )
+                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
+                                    Screens.ADD_PLACE_OF_INTEREST -> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                                    Screens.ADD_LOCATIONS -> navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                    else -> {}
                                 }
                             }) {
                                 Icon(
@@ -193,7 +186,7 @@ fun MainScreen(
             composable(Screens.SEARCH_LOCATIONS.route){
                 appViewModel.searchForm = SearchForm(ItemType.LOCATION)
                 appViewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
-                SearchViews(
+                SearchView(
                     appViewModel,
                     navController
                 )
@@ -201,17 +194,20 @@ fun MainScreen(
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
                 appViewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
                 appViewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
-                SearchViews(
+                SearchView(
                     appViewModel,
                     navController
                 )
             }
             composable(Screens.ADD_LOCATIONS.route){
-                AddNewLocalViews(appViewModel = appViewModel)
+                AddNewLocalView(appViewModel = appViewModel)
                 
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                AddNewLocalViews(appViewModel = appViewModel)
+                AddNewLocalView(appViewModel = appViewModel)
+            }
+            composable(Screens.DETAILS.route){
+                LocalDetailView()
             }
             composable(Screens.CREDITS.route){
                 Credits()

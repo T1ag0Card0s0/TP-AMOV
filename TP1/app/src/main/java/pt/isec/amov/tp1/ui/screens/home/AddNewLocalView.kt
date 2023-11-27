@@ -23,7 +23,7 @@ import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
-fun AddNewLocalViews(
+fun AddNewLocalView(
     appViewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){

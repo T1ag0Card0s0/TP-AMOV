@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +38,7 @@ import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchViews(
+fun SearchView(
     appViewModel: AppViewModel,
     navHostController: NavHostController?,
     modifier: Modifier = Modifier
@@ -128,17 +127,27 @@ fun SearchViews(
             }
         }
         Spacer(modifier = modifier.height(8.dp))
+        //TODO: Tirar chamadas a metodos e variaveis appData, usar/ criar metodos na viewmodel
+        // e tambem tentar tirar o appviewmodel mantendo o mesmo funcionamento na navegação da app
         when(appViewModel.searchForm!!.itemType){
             ItemType.LOCATION-> {
-                ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
-                    appViewModel.appData.selectedLocal.intValue = it
-                    navHostController?.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                })
+                ListItems(
+                    locals = appViewModel.appData.getLocations(),
+                    appViewModel,
+                    navHostController = navHostController,
+                    onSelected = {
+                        appViewModel.appData.selectedLocal.intValue = it
+                        navHostController?.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                    }
+                )
             }
             ItemType.PLACE_OF_INTEREST ->{
-                ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {
-                    //TODO:vai para uma pagina de descrição mais promenorizada relacionada com o item selecionado
-                })
+                ListItems(
+                    locals = appViewModel.appData.getPlaceOfInterest(),
+                    appViewModel,
+                    navHostController = navHostController,
+                    onSelected = {}
+                )
             }
         }
     }
