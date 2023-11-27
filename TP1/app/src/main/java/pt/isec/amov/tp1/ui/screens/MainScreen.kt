@@ -6,13 +6,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,22 +70,28 @@ fun MainScreen(
     val app = context.applicationContext as App
 
     var appViewModel: AppViewModel= viewModel(factory = AppViewModelFactory(app.appData))
+
     val snackbarHostState = remember{ SnackbarHostState() }
+    var isExpanded by remember{ mutableStateOf(false) }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
-    var showBottomBar by remember{ mutableStateOf(false) }
+    var showArrowBack by remember{ mutableStateOf(false) }
+    var showMoreVert by remember{ mutableStateOf(false) }
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
-        showBottomBar = destination.route in listOf(
-           Screens.ADD_LOCATIONS.route,
-           Screens.ADD_PLACE_OF_INTEREST.route,
-           Screens.SEARCH_LOCATIONS.route,
-           Screens.SEARCH_PLACES_OF_INTEREST.route
-        )
         showDoneIcon = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route
+        )
+        showArrowBack = destination.route in listOf(
+            Screens.ADD_LOCATIONS.route,
+            Screens.ADD_PLACE_OF_INTEREST.route,
+            Screens.SEARCH_PLACES_OF_INTEREST.route
+        )
+        showMoreVert = destination.route in listOf(
+            Screens.SEARCH_PLACES_OF_INTEREST.route,
+            Screens.SEARCH_LOCATIONS.route
         )
     }
     Scaffold(
@@ -94,20 +104,60 @@ fun MainScreen(
                     title = {
                         Text(text = Screens.valueOf(currentScreen!!.destination.route!!).display)
                     },
+                    navigationIcon = {
+                        if(showArrowBack){
+                            IconButton(onClick = {
+                                navController.navigateUp()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        }
+                    },
                     actions = {
-                              if(showDoneIcon)
-                                  IconButton(onClick = {
-                                      appViewModel.addLocal()
-                                      when(Screens.valueOf(currentScreen!!.destination.route!!).route){
-                                          Screens.ADD_PLACE_OF_INTEREST.route-> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                          Screens.ADD_LOCATIONS.route-> navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                      }
-                                  }) {
-                                      Icon(
-                                          imageVector = Icons.Filled.Done,
-                                          contentDescription = "Done"
-                                      )
-                                  }
+                        if(showDoneIcon) {
+                            IconButton(onClick = {
+                                appViewModel.addLocal()
+                                when (Screens.valueOf(currentScreen!!.destination.route!!).route) {
+                                    Screens.ADD_PLACE_OF_INTEREST.route -> navController.navigate(
+                                        Screens.SEARCH_PLACES_OF_INTEREST.route
+                                    )
+                                    Screens.ADD_LOCATIONS.route -> navController.navigate(
+                                        Screens.SEARCH_LOCATIONS.route
+                                    )
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "Done"
+                                )
+                            }
+                        }
+                        if(showMoreVert){
+                            IconButton(onClick = {
+                                isExpanded = !isExpanded
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = "More Vert"
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = isExpanded,
+                                onDismissRequest = { isExpanded = false }) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(R.string.logout) )
+                                           },
+                                    onClick = {
+                                        isExpanded=false
+                                        navController.navigate(Screens.LOGIN.route)
+                                    }
+                                )
+                            }
+                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
@@ -117,40 +167,6 @@ fun MainScreen(
                     ),
                 )
         },
-        bottomBar = {
-            if(showBottomBar)
-                BottomAppBar(modifier = Modifier.height(50.dp)) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        IconButton(onClick = { navController.navigate(Screens.SEARCH_LOCATIONS.route)}) {
-                            Icon(imageVector = Icons.Outlined.Home, contentDescription = "Home")
-                        }
-                        IconButton(onClick = {
-                            when(Screens.valueOf(currentScreen!!.destination.route!!).route){
-                                Screens.ADD_PLACE_OF_INTEREST.route-> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                Screens.ADD_LOCATIONS.route-> navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                            }
-                        }) {
-                            Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
-                        }
-                        IconButton(onClick = {
-                            when(Screens.valueOf(currentScreen!!.destination.route!!).route){
-                                Screens.SEARCH_PLACES_OF_INTEREST.route-> navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
-                                Screens.SEARCH_LOCATIONS.route-> navController.navigate(Screens.ADD_LOCATIONS.route)
-                            }
-                        }) {
-                            Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
-                        }
-                        IconButton(onClick = {
-
-                        }) {
-                            Icon(imageVector = Icons.Outlined.Person, contentDescription = "Profile")
-                        }
-                    }
-                }
-        }
     ){
         NavHost(
             navController = navController,
