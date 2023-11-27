@@ -24,9 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun Login(
+    appViewModel: AppViewModel,
     title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
@@ -61,8 +63,9 @@ fun Login(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
+                value = appViewModel.loginForm!!.email.value,
                 onValueChange = {
+                    appViewModel.loginForm!!.email.value=it
                                 },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
@@ -70,15 +73,17 @@ fun Login(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
-                onValueChange = {},
+                value = appViewModel.loginForm!!.password.value,
+                onValueChange = {
+                    appViewModel.loginForm!!.password.value=it
+                },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             Button(
-                onClick = { navController?.navigate(Screens.LOCATION_SEARCH.route) }
+                onClick = { navController?.navigate(Screens.SEARCH_LOCATIONS.route) }
             ) {
                 Text(text = stringResource(R.string.submit))
             }
@@ -105,8 +110,5 @@ fun Login(
 @Preview
 @Composable
 fun LoginPreview(){
-    Login(
-        stringResource(R.string.app_name),
-        null
-    )
+
 }

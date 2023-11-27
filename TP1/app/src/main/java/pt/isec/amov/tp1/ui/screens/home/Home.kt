@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -28,18 +27,13 @@ import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.ListItems
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
-enum class BackgroundType{
-    LOCATION,
-    PLACE_OF_INTEREST,
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchViews(
     appViewModel: AppViewModel,
-    type: BackgroundType,
     navHostController: NavHostController?,
-    vararg options: String,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember {
@@ -48,20 +42,33 @@ fun SearchViews(
     var opt by remember {
         mutableStateOf("")
     }
+    val options =(
+            when(appViewModel.searchForm!!.itemType){
+                ItemType.LOCATION-> listOf(
+                    stringResource(R.string.alphabetic),
+                    stringResource(R.string.distance)
+                )
+                ItemType.PLACE_OF_INTEREST -> listOf(
+                    stringResource(R.string.alphabetic),
+                    stringResource(R.string.distance),
+                    stringResource(R.string.categories)
+                )
+            }
+            )
     Column(
             modifier = modifier
                 .padding(16.dp)
                 .fillMaxSize()
     ) {
-        if(type==BackgroundType.PLACE_OF_INTEREST)
+        if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST)
             Text(
                 text = "In ${appViewModel.appData.getSelectedLocalName()}",
                 fontSize = 30.sp
             )
         OutlinedTextField(
-            value = appViewModel.search.value,
+            value = appViewModel.searchForm!!.name.value,
             onValueChange = {
-                appViewModel.search.value = it },
+                appViewModel.searchForm!!.name.value = it },
             label = {
                 Text(text = stringResource(R.string.search))
                     },
@@ -111,14 +118,14 @@ fun SearchViews(
             }
         }
         Spacer(modifier = modifier.height(20.dp))
-        when(type){
-            BackgroundType.LOCATION-> {
+        when(appViewModel.searchForm!!.itemType){
+            ItemType.LOCATION-> {
                 ListItems(locals = appViewModel.appData.getLocations(), onSelected = {
                     appViewModel.appData.selectedLocal.intValue = it
-                    navHostController?.navigate(Screens.PLACE_OF_INTEREST_SEARCH.route)
+                    navHostController?.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                 })
             }
-            BackgroundType.PLACE_OF_INTEREST ->{
+            ItemType.PLACE_OF_INTEREST ->{
                 ListItems(locals = appViewModel.appData.getPlaceOfInterest(), onSelected = {
                     //TODO:vai para uma pagina de descrição mais promenorizada relacionada com o item selecionado
                 })

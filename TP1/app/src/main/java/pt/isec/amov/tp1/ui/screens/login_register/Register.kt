@@ -24,15 +24,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun Register(
+    appViewModel: AppViewModel,
     title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
-    val options = listOf(Screens.LOGIN.route,
-    Screens.CREDITS.route)
+    val options = listOf(
+        Screens.LOGIN.route,
+        Screens.CREDITS.route
+    )
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -60,8 +64,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
+                value =  appViewModel.registerForm!!.name.value,
                 onValueChange = {
+                    appViewModel.registerForm!!.name.value=it
                 },
                 label = { Text(text = stringResource(R.string.name_label))},
                 modifier = modifier
@@ -69,8 +74,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
+                value = appViewModel.registerForm!!.email.value,
                 onValueChange = {
+                    appViewModel.registerForm!!.email.value=it
                 },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
@@ -78,23 +84,27 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
-                onValueChange = {},
+                value = appViewModel.registerForm!!.password.value,
+                onValueChange = {
+                    appViewModel.registerForm!!.password.value=it
+                },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = " ",
-                onValueChange = {},
+                value =appViewModel.registerForm!!.confirmPassword.value ,
+                onValueChange = {
+                    appViewModel.registerForm!!.confirmPassword.value=it
+                },
                 label = { Text(text = stringResource(R.string.confirm_password_label))},
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             Button(
-                onClick = { navController?.navigate(Screens.LOCATION_SEARCH.route) }
+                onClick = {  }
             ) {
                 Text(text = stringResource(R.string.submit))
             }
@@ -121,8 +131,5 @@ fun Register(
 @Preview
 @Composable
 fun RegisterPreview(){
-    Register(
-        stringResource(id = R.string.app_name),
-        null
-    )
+
 }

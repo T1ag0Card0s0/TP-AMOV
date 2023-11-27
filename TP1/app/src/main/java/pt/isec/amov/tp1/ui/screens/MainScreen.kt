@@ -1,14 +1,17 @@
 package pt.isec.amov.tp1.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,16 +36,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.home.AddNewLocalViews
-import pt.isec.amov.tp1.ui.screens.home.BackgroundType
 import pt.isec.amov.tp1.ui.screens.home.SearchViews
 import pt.isec.amov.tp1.ui.screens.login_register.Login
 import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
+import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
+import pt.isec.amov.tp1.ui.viewmodels.ItemType
+import pt.isec.amov.tp1.ui.viewmodels.LoginForm
+import pt.isec.amov.tp1.ui.viewmodels.RegisterForm
+import pt.isec.amov.tp1.ui.viewmodels.SearchForm
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,32 +63,23 @@ fun MainScreen(
     val context = LocalContext.current
     val app = context.applicationContext as App
 
-    var appViewModel: AppViewModel?=viewModel(factory= AppViewModelFactory(app.appData))
+    var appViewModel: AppViewModel= viewModel(factory = AppViewModelFactory(app.appData))
     val snackbarHostState = remember{ SnackbarHostState() }
-
-    var isExpanded by remember { mutableStateOf(false) }
-    var pageTitle by remember { mutableStateOf("") }
+    var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
-    var showArrowBack by remember{ mutableStateOf(false) }
-    var showMoreVert by remember{ mutableStateOf(false) }
-    var showDoneAction by remember{ mutableStateOf(false)}
+    var showBottomBar by remember{ mutableStateOf(false) }
+    val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        appViewModel!!.typeOfDataToAdd.value = destination.route.toString()
-        pageTitle=Screens.valueOf(destination.route!!).display
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
-        showArrowBack = destination.route in listOf(
-            Screens.PLACE_OF_INTEREST_SEARCH.route,
-            Screens.CREDITS.route,
-            Screens.ADD_NEW_LOCATION.route,
-            Screens.ADD_NEW_PLACE_OF_INTEREST.route
+        showBottomBar = destination.route in listOf(
+           Screens.ADD_LOCATIONS.route,
+           Screens.ADD_PLACE_OF_INTEREST.route,
+           Screens.SEARCH_LOCATIONS.route,
+           Screens.SEARCH_PLACES_OF_INTEREST.route
         )
-        showMoreVert = destination.route in listOf(
-            Screens.PLACE_OF_INTEREST_SEARCH.route,
-            Screens.LOCATION_SEARCH.route
-        )
-        showDoneAction = destination.route in listOf(
-            Screens.ADD_NEW_PLACE_OF_INTEREST.route,
-            Screens.ADD_NEW_LOCATION.route
+        showDoneIcon = destination.route in listOf(
+            Screens.ADD_LOCATIONS.route,
+            Screens.ADD_PLACE_OF_INTEREST.route
         )
     }
     Scaffold(
@@ -91,66 +90,22 @@ fun MainScreen(
             if(showTopBar)
                 CenterAlignedTopAppBar(
                     title = {
-                        Text(
-                            text = pageTitle
-                        ) },
-                    navigationIcon = {
-                        if(showArrowBack)
-                            IconButton(onClick = { navController.navigateUp() }) {
-                                Icon(
-                                    Icons.Filled.ArrowBack,
-                                    contentDescription = "Back")
-                            }
-
+                        Text(text = Screens.valueOf(currentScreen!!.destination.route!!).display)
                     },
                     actions = {
-                        if(showDoneAction&&!showMoreVert)
-                            IconButton(
-                                onClick = {
-                                    appViewModel!!.addData()
-                                    navController.navigateUp()
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Filled.Done,
-                                    contentDescription = "Done"
-                                )
-                            }
-                        if(showMoreVert&&!showDoneAction)
-                              IconButton(onClick = {isExpanded = !isExpanded}) {
-                                  Icon(
-                                      Icons.Filled.MoreVert,
-                                      contentDescription = "More actions"
-                                  )
-                              }
-                        DropdownMenu(
-                            expanded = isExpanded,
-                            onDismissRequest = { isExpanded = false },
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text("Add")
-                                },
-                                onClick = {
-                                    isExpanded=false
-                                    when(pageTitle){
-                                        Screens.LOCATION_SEARCH.display->navController.navigate(Screens.ADD_NEW_LOCATION.route)
-                                        Screens.PLACE_OF_INTEREST_SEARCH.display-> navController.navigate(Screens.ADD_NEW_PLACE_OF_INTEREST.route)
-                                    }
-                                },
-                            )
-                            Divider()
-                            DropdownMenuItem(
-                                text = {
-                                    Text("Logout")
-                                },
-                                onClick = {
-                                    isExpanded=false
-                                    navController.navigate(Screens.LOGIN.route)
-                                          },
-                            )
-
-                        }
+                              if(showDoneIcon)
+                                  IconButton(onClick = {
+                                      appViewModel.addLocal()
+                                      when(Screens.valueOf(currentScreen!!.destination.route!!).route){
+                                          Screens.ADD_PLACE_OF_INTEREST.route-> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                                          Screens.ADD_LOCATIONS.route-> navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                      }
+                                  }) {
+                                      Icon(
+                                          imageVector = Icons.Filled.Done,
+                                          contentDescription = "Done"
+                                      )
+                                  }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
@@ -159,6 +114,40 @@ fun MainScreen(
                         actionIconContentColor =MaterialTheme.colorScheme.inversePrimary
                     ),
                 )
+        },
+        bottomBar = {
+            if(showBottomBar)
+                BottomAppBar {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        IconButton(onClick = { navController.navigate(Screens.SEARCH_LOCATIONS.route)}) {
+                            Icon(imageVector = Icons.Outlined.Home, contentDescription = "Home")
+                        }
+                        IconButton(onClick = {
+                            when(Screens.valueOf(currentScreen!!.destination.route!!).route){
+                                Screens.ADD_PLACE_OF_INTEREST.route-> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                                Screens.ADD_LOCATIONS.route-> navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
+                        }
+                        IconButton(onClick = {
+                            when(Screens.valueOf(currentScreen!!.destination.route!!).route){
+                                Screens.SEARCH_PLACES_OF_INTEREST.route-> navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
+                                Screens.SEARCH_LOCATIONS.route-> navController.navigate(Screens.ADD_LOCATIONS.route)
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
+                        }
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(imageVector = Icons.Outlined.Person, contentDescription = "Profile")
+                        }
+                    }
+                }
         }
     ){
         NavHost(
@@ -168,43 +157,43 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
+                appViewModel.loginForm = LoginForm()
                 Login(
+                    appViewModel,
                     stringResource(R.string.app_name),
                     navController
                     )
             }
             composable(Screens.REGISTER.route){
+                appViewModel.registerForm = RegisterForm()
                 Register(
+                    appViewModel,
                     stringResource(R.string.app_name),
                     navController
                 )
             }
-            composable(Screens.LOCATION_SEARCH.route){
+            composable(Screens.SEARCH_LOCATIONS.route){
+                appViewModel.searchForm = SearchForm(ItemType.LOCATION)
                 SearchViews(
-                    appViewModel!!,
-                    BackgroundType.LOCATION,
-                    navController,
-                    stringResource(R.string.alphabetic),
-                    stringResource(R.string.distance)
+                    appViewModel,
+                    navController
                 )
             }
-            composable(Screens.PLACE_OF_INTEREST_SEARCH.route){
+            composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
+                appViewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
                 SearchViews(
-                    appViewModel!!,
-                    BackgroundType.PLACE_OF_INTEREST,
-                    navController,
-                    stringResource(R.string.alphabetic),
-                    stringResource(R.string.distance),
-                    stringResource(R.string.categories)
+                    appViewModel,
+                    navController
                 )
             }
-            composable(Screens.ADD_NEW_LOCATION.route){
-                if(appViewModel!=null)
-                    AddNewLocalViews(appViewModel = appViewModel!!,Screens.LOCATION_SEARCH.route)
+            composable(Screens.ADD_LOCATIONS.route){
+                appViewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
+                AddNewLocalViews(appViewModel = appViewModel)
+                
             }
-            composable(Screens.ADD_NEW_PLACE_OF_INTEREST.route){
-                if(appViewModel!=null)
-                    AddNewLocalViews(appViewModel = appViewModel!!,Screens.PLACE_OF_INTEREST_SEARCH.route)
+            composable(Screens.ADD_PLACE_OF_INTEREST.route){
+                appViewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
+                AddNewLocalViews(appViewModel = appViewModel)
             }
             composable(Screens.CREDITS.route){
                 Credits()
