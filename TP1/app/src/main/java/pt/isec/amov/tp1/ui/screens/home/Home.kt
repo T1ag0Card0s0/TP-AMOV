@@ -46,22 +46,11 @@ fun SearchView(
     var isExpanded by remember {
         mutableStateOf(false)
     }
+    //TODO: ADD A CATEGORIES DROPDOWN MENU
     var opt by remember {
         mutableStateOf("")
     }
-    val options =(
-            when(appViewModel.searchForm!!.itemType){
-                ItemType.LOCATION-> listOf(
-                    stringResource(R.string.alphabetic),
-                    stringResource(R.string.distance)
-                )
-                ItemType.PLACE_OF_INTEREST -> listOf(
-                    stringResource(R.string.alphabetic),
-                    stringResource(R.string.distance),
-                    stringResource(R.string.categories)
-                )
-            }
-            )
+    val options =listOf(stringResource(R.string.alphabetic), stringResource(R.string.distance))
     Column(
             modifier = modifier
                 .padding(8.dp)
@@ -69,7 +58,7 @@ fun SearchView(
     ) {
         if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST)
             Text(
-                text = "In ${appViewModel.appData.getSelectedLocalName()}",
+                text = "In ${appViewModel.getSelectedLocalName()}",
                 fontSize = 30.sp
             )
         OutlinedTextField(
@@ -86,7 +75,7 @@ fun SearchView(
         Spacer(
             modifier.height(8.dp)
         )
-        Row {
+        Row(modifier = modifier.fillMaxWidth()){
             ExposedDropdownMenuBox(
                 expanded = isExpanded,
                 onExpandedChange = { newValue ->
@@ -104,7 +93,7 @@ fun SearchView(
                         Text(text = stringResource(R.string.orderBy))
                     },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = modifier.menuAnchor(),
+                    modifier = modifier.weight(1f).menuAnchor(),
                     shape = RoundedCornerShape(20.dp)
                 )
                 ExposedDropdownMenu(
@@ -127,23 +116,21 @@ fun SearchView(
             }
         }
         Spacer(modifier = modifier.height(8.dp))
-        //TODO: Tirar chamadas a metodos e variaveis appData, usar/ criar metodos na viewmodel
-        // e tambem tentar tirar o appviewmodel mantendo o mesmo funcionamento na navegação da app
         when(appViewModel.searchForm!!.itemType){
             ItemType.LOCATION-> {
                 ListItems(
-                    locals = appViewModel.appData.getLocations(),
+                    locals = appViewModel.getLocations(),
                     appViewModel,
                     navHostController = navHostController,
                     onSelected = {
-                        appViewModel.appData.selectedLocal.intValue = it
+                        appViewModel.selectedLocationId.value = it
                         navHostController?.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                     }
                 )
             }
             ItemType.PLACE_OF_INTEREST ->{
                 ListItems(
-                    locals = appViewModel.appData.getPlaceOfInterest(),
+                    locals = appViewModel.getPlaceOfInterest(),
                     appViewModel,
                     navHostController = navHostController,
                     onSelected = {}

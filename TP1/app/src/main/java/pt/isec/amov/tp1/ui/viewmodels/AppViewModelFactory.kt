@@ -6,7 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import pt.isec.amov.tp1.data.AppData
-import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.data.Location
+import pt.isec.amov.tp1.data.PlaceOfInterest
 
 enum class ItemType{
     LOCATION,
@@ -24,20 +25,42 @@ class AppViewModel(val appData: AppData): ViewModel() {
     var searchForm: SearchForm?=null
     var registerForm: RegisterForm?=null
     var addLocalForm: AddLocalForm?=null
+    val selectedLocationId: MutableState<Int> = mutableIntStateOf(-1)
     fun addLocal(){
         when(addLocalForm!!.itemType){
             ItemType.LOCATION-> appData.addLocation(addLocalForm!!.name.value,
                 addLocalForm!!.descrition.value, addLocalForm!!.imagePath.value)
             ItemType.PLACE_OF_INTEREST-> appData.addPlaceOfInterest(addLocalForm!!.name.value,
-                addLocalForm!!.descrition.value, addLocalForm!!.imagePath.value)
+                addLocalForm!!.descrition.value, addLocalForm!!.imagePath.value,selectedLocationId.value)
         }
+    }
+    fun getLocations(): List<Location>{
+        return appData.getLocations()
+    }
+    fun getSelectedLocalName(): String? {
+        return appData.getSelectedLocalName(selectedLocationId.value)
+    }
+    fun getPlaceOfInterest():List<PlaceOfInterest>{
+        return appData.getPlaceOfInterest(selectedLocationId.value)
+    }
+
+    fun getCategories(): List<String> {
+        return listOf(
+            "Museus",
+            "Monumentos&Locais de culto",
+            "Jardins",
+            "Miradouros",
+            "Restaurantes&Bares",
+            "Alojamento"
+        )
     }
 }
 class LoginForm{
     val email: MutableState<String> = mutableStateOf("")
     val password: MutableState<String> = mutableStateOf("")
 }
-class SearchForm(val itemType: ItemType){
+
+class SearchForm(var itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
     val orderBy:MutableState<String> = mutableStateOf("")
 }

@@ -6,20 +6,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.ui.screens.MainScreen
 import pt.isec.amov.tp1.ui.theme.TP1Theme
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private val app by lazy{application as App}
+    private val viewModel : AppViewModel by viewModels{
+        AppViewModelFactory(app.appData)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TP1Theme {
-                MainScreen();
+                MainScreen(viewModel);
             }
         }
         if(

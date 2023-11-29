@@ -25,22 +25,21 @@ data class PlaceOfInterest(
 ):Local(id,name,description,imagePath)
 
 class AppData{
-    private val locations = mutableListOf<Local>()
-    val selectedLocal = mutableIntStateOf(-1)
+    private val locations = mutableListOf<Location>()
     init{
         /*val tmp =Location(1,"Coimbra","Cidade dos estudantes",null)
         locations.add(tmp)
         tmp.placesOfInterest.add(PlaceOfInterest(1,"Cantina do ISEC","Melhor cantina de coimbra",null))*/
     }
-    fun getLocations():List<Local>{
+    fun getLocations():List<Location>{
         return locations
     }
-    fun getPlaceOfInterest(): MutableList<PlaceOfInterest> {
-        val location= locations.find { it.id == selectedLocal.intValue } as Location
+    fun getPlaceOfInterest(id:Int): MutableList<PlaceOfInterest> {
+        val location= locations.find { it.id == id } as Location
         return location.placesOfInterest
     }
-    fun getSelectedLocalName():String?{
-        val local= locations.find { it.id == selectedLocal.intValue }
+    fun getSelectedLocalName(id:Int):String?{
+        val local= locations.find { it.id == id }
         return local?.name
     }
     fun addLocation(
@@ -54,9 +53,10 @@ class AppData{
     fun addPlaceOfInterest(
         name: String,
         description: String,
-        imagePath: String?
+        imagePath: String?,
+        id:Int
     ){
-        val location = locations.find { it.id==selectedLocal.intValue } as Location
+        val location = locations.find { it.id==id } as Location
         location.placesOfInterest.add(
             PlaceOfInterest(
                 location.placesOfInterest.size,

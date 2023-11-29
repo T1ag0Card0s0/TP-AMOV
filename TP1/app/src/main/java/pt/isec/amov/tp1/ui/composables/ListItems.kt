@@ -56,7 +56,7 @@ fun ListItems(
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
                     IconButton(onClick = {
-                        appViewModel.appData.selectedLocal.intValue = it.id
+                        appViewModel.selectedLocationId.value = it.id
                         navHostController?.navigate(Screens.DETAILS.route)
                                          },
                         modifier=modifier.align(Alignment.TopEnd)) {

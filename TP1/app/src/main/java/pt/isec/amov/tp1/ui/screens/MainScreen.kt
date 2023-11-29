@@ -27,13 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
 import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
@@ -43,7 +41,6 @@ import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
 import pt.isec.amov.tp1.ui.viewmodels.LoginForm
 import pt.isec.amov.tp1.ui.viewmodels.RegisterForm
@@ -53,14 +50,12 @@ import pt.isec.amov.tp1.ui.viewmodels.SearchForm
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 
 ){
     val context = LocalContext.current
-    val app = context.applicationContext as App
-
-    var appViewModel: AppViewModel= viewModel(factory = AppViewModelFactory(app.appData))
 
     val snackbarHostState = remember{ SnackbarHostState() }
     var isExpanded by remember{ mutableStateOf(false) }
@@ -115,7 +110,7 @@ fun MainScreen(
                     actions = {
                         if(showDoneIcon) {
                             IconButton(onClick = {
-                                appViewModel.addLocal()
+                                viewModel.addLocal()
                                 when (Screens.valueOf(currentScreen!!.destination.route!!)) {
                                     Screens.ADD_PLACE_OF_INTEREST -> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                                     Screens.ADD_LOCATIONS -> navController.navigate(Screens.SEARCH_LOCATIONS.route)
@@ -168,43 +163,43 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                appViewModel.loginForm = LoginForm()
+                viewModel.loginForm = LoginForm()
                 Login(
-                    appViewModel,
+                    viewModel,
                     stringResource(R.string.app_name),
                     navController
                     )
             }
             composable(Screens.REGISTER.route){
-                appViewModel.registerForm = RegisterForm()
+                viewModel.registerForm = RegisterForm()
                 Register(
-                    appViewModel,
+                    viewModel,
                     stringResource(R.string.app_name),
                     navController
                 )
             }
             composable(Screens.SEARCH_LOCATIONS.route){
-                appViewModel.searchForm = SearchForm(ItemType.LOCATION)
-                appViewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
+                viewModel.searchForm = SearchForm(itemType = ItemType.LOCATION)
+                viewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
                 SearchView(
-                    appViewModel,
+                    viewModel,
                     navController
                 )
             }
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
-                appViewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
-                appViewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
+                viewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
+                viewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
                 SearchView(
-                    appViewModel,
+                    viewModel,
                     navController
                 )
             }
             composable(Screens.ADD_LOCATIONS.route){
-                AddNewLocalView(appViewModel = appViewModel)
+                AddNewLocalView(appViewModel = viewModel)
                 
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                AddNewLocalView(appViewModel = appViewModel)
+                AddNewLocalView(appViewModel = viewModel)
             }
             composable(Screens.DETAILS.route){
                 LocalDetailView()
@@ -219,5 +214,4 @@ fun MainScreen(
 @Preview
 @Composable
 fun MainPreview(){
-    MainScreen()
 }
