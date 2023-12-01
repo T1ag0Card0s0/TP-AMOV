@@ -52,13 +52,6 @@ fun SearchView(
     var isExpandedCategories by remember {
         mutableStateOf(false)
     }
-    //TODO: ADD A CATEGORIES DROPDOWN MENU
-    var optOrderby by remember {
-        mutableStateOf("")
-    }
-    var optCategory by remember {
-        mutableStateOf("")
-    }
     val options =listOf(stringResource(R.string.alphabetic), stringResource(R.string.distance))
     Column(
             modifier = modifier
@@ -96,7 +89,7 @@ fun SearchView(
                 modifier = modifier.fillMaxWidth(0.5f)
             ) {
                 TextField(
-                    value = optOrderby,
+                    value = appViewModel.searchForm!!.orderByOption.value,
                     placeholder = { Text(stringResource(R.string.orderBy))},
                     onValueChange = {},
                     readOnly = true,
@@ -114,7 +107,7 @@ fun SearchView(
                                 Text(text = itemName)
                             },
                             onClick = {
-                                optOrderby = itemName
+                                appViewModel.searchForm!!.orderByOption.value = itemName
                                 isExpandedOrderby = false
                             }
                         )
@@ -129,7 +122,7 @@ fun SearchView(
                     },
                 ) {
                     TextField(
-                        value = optCategory,
+                        value = appViewModel.searchForm!!.categoryOption.value,
                         onValueChange = {},
                         placeholder = { Text(stringResource(R.string.categories))},
                         readOnly = true,
@@ -141,13 +134,13 @@ fun SearchView(
                         expanded = isExpandedCategories,
                         onDismissRequest = { isExpandedCategories = false }
                     ) {
-                        for (itemName in appViewModel.getCategories())
+                        for (item in appViewModel.getCategories())
                             DropdownMenuItem(
                                 text = {
-                                    Text(text = itemName)
+                                    Text(text = item.name)
                                 },
                                 onClick = {
-                                    optCategory = itemName
+                                    appViewModel.searchForm!!.categoryOption.value = item.name
                                     isExpandedCategories = false
                                 }
                             )

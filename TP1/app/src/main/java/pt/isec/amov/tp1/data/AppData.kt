@@ -21,18 +21,20 @@ data class PlaceOfInterest(
     override val id: Int,
     override val name: String,
     override val description: String,
-    override val imagePath: String?
+    override val imagePath: String?,
+    val category: Category
 ):Local(id,name,description,imagePath)
 
+data class Category(val id: Int, val name: String,val description: String)
 class AppData{
     private val locations = mutableListOf<Location>()
-    val categorias = listOf<String>(
-        "Museus" ,
-        "Monumentos&Locais de culto",
-        "Jardins",
-        "Miradouros",
-        "Restaurantes&Bares",
-        "Alojamento",
+    val categories = listOf(
+        Category(1,"Museus","") ,
+        Category(2,"Monumentos&Locais de culto",""),
+        Category(3,"Jardins",""),
+        Category(4,"Miradouros",""),
+        Category(5,"Restaurantes&Bares",""),
+        Category(6,"Alojamento","")
     )
     init{
         /*val tmp =Location(1,"Coimbra","Cidade dos estudantes",null)
@@ -62,6 +64,7 @@ class AppData{
         name: String,
         description: String,
         imagePath: String?,
+        category: Category,
         id:Int
     ){
         val location = locations.find { it.id==id } as Location
@@ -70,7 +73,8 @@ class AppData{
                 location.placesOfInterest.size,
                 name,
                 description,
-                imagePath
+                imagePath,
+                category
             )
         )
     }

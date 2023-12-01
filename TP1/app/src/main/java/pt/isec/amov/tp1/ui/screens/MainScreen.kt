@@ -115,11 +115,15 @@ fun MainScreen(
                     actions = {
                         if(showDoneIcon) {
                             IconButton(onClick = {
-                                viewModel.addLocal()
-                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
-                                    Screens.ADD_PLACE_OF_INTEREST -> navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                    Screens.ADD_LOCATIONS -> navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                    else -> {}
+                                if(viewModel.addLocal()) {
+                                    when (Screens.valueOf(currentScreen!!.destination.route!!)) {
+                                        Screens.ADD_PLACE_OF_INTEREST -> navController.navigate(
+                                            Screens.SEARCH_PLACES_OF_INTEREST.route
+                                        )
+
+                                        Screens.ADD_LOCATIONS -> navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                        else -> {}
+                                    }
                                 }
                             }) {
                                 Icon(

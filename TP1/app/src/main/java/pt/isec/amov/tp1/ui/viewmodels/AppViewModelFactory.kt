@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import pt.isec.amov.tp1.data.AppData
+import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 
@@ -26,13 +28,30 @@ class AppViewModel(val appData: AppData): ViewModel() {
     var registerForm: RegisterForm?=null
     var addLocalForm: AddLocalForm?=null
     val selectedLocationId: MutableState<Int> = mutableIntStateOf(-1)
-    fun addLocal(){
+    fun addLocal():Boolean{
+        if(addLocalForm==null) return false
+        if( addLocalForm!!.name.value.isEmpty()||
+            addLocalForm!!.descrition.value.isEmpty()||
+            addLocalForm!!.imagePath.value.isEmpty()) return false
         when(addLocalForm!!.itemType){
-            ItemType.LOCATION-> appData.addLocation(addLocalForm!!.name.value,
-                addLocalForm!!.descrition.value, addLocalForm!!.imagePath.value)
-            ItemType.PLACE_OF_INTEREST-> appData.addPlaceOfInterest(addLocalForm!!.name.value,
-                addLocalForm!!.descrition.value, addLocalForm!!.imagePath.value,selectedLocationId.value)
+            ItemType.LOCATION-> appData.addLocation(
+                                                addLocalForm!!.name.value,
+                                                addLocalForm!!.descrition.value,
+                                                addLocalForm!!.imagePath.value
+                                )
+            ItemType.PLACE_OF_INTEREST->{
+                if(addLocalForm!!.category.value==null) return false
+                appData.addPlaceOfInterest(
+                    addLocalForm!!.name.value,
+                    addLocalForm!!.descrition.value,
+                    addLocalForm!!.imagePath.value,
+                    addLocalForm!!.category.value!!,
+                    selectedLocationId.value
+
+                )
+            }
         }
+        return true
     }
     fun getLocations(): List<Location>{
         return appData.getLocations()
@@ -44,8 +63,20 @@ class AppViewModel(val appData: AppData): ViewModel() {
         return appData.getPlaceOfInterest(selectedLocationId.value)
     }
 
-    fun getCategories(): List<String> {
-        return appData.categorias
+    fun getCategories(): List<Category> {
+        return appData.categories
+    }
+    fun filterByCategory(category: Category):List<PlaceOfInterest>{
+        return appData.getPlaceOfInterest(selectedLocationId.value).filter { it.category==category }
+    }
+    fun orderBy(orderBy: String): List<Local>? {
+        //TODO: Aplicar o order by
+        when(searchForm?.itemType){
+            ItemType.LOCATION-> return appData.getLocations()
+            ItemType.PLACE_OF_INTEREST -> return appData.getPlaceOfInterest(selectedLocationId.value)
+            else -> {}
+        }
+        return null
     }
 }
 class LoginForm{
@@ -55,7 +86,8 @@ class LoginForm{
 
 class SearchForm(var itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
-    val orderBy:MutableState<String> = mutableStateOf("")
+    val orderByOption:MutableState<String> = mutableStateOf("")
+    val categoryOption: MutableState<String> = mutableStateOf("")
 }
 class RegisterForm{
     val name: MutableState<String> = mutableStateOf("")
@@ -66,5 +98,6 @@ class RegisterForm{
 class AddLocalForm(val itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
     val descrition: MutableState<String> = mutableStateOf("")
-    val imagePath : MutableState<String?> = mutableStateOf(null)
+    val imagePath : MutableState<String> = mutableStateOf("")
+    val category: MutableState<Category?> = mutableStateOf(null)
 }

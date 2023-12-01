@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import pt.isec.amov.tp1.data.Local
+import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
@@ -74,7 +75,10 @@ fun ListItems(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Description:\n ${it.description}", fontSize = 12.sp)
+                        if (it is PlaceOfInterest){
+                            Text(text = "Category:${it.category.name}", fontSize = 12.sp)
+                        }
+                        Text(text = "Description: ${it.description}", fontSize = 12.sp)
                         AsyncImage(
                             model = it.imagePath,
                             contentDescription = "Image",

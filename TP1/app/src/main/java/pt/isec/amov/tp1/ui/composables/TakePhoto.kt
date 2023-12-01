@@ -38,7 +38,7 @@ import java.io.File
 
 @Composable
 fun TakePhoto(
-    imagePath: MutableState<String?>,
+    imagePath: MutableState<String>,
     modifier: Modifier = Modifier
 ) {
     val context= LocalContext.current
@@ -47,7 +47,7 @@ fun TakePhoto(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
         if (!success) {
-            imagePath.value = null
+            imagePath.value = ""
             return@rememberLauncherForActivityResult
         }
         imagePath.value = tempFile
