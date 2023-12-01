@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,13 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.TakePhoto
+import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun AddNewLocalView(
     appViewModel: AppViewModel,
+    navHostController: NavHostController,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -52,6 +59,10 @@ fun AddNewLocalView(
                     Text(text = stringResource(R.string.description))
                 }
             )
+            Spacer(modifier = modifier.height(24.dp))
+            IconButton(onClick = { navHostController.navigate(Screens.CHOOSE_COORDINATES.route) }) {
+                Icon(imageVector = Icons.Filled.LocationOn, contentDescription = "Location")
+            }
             Spacer(modifier = modifier.height(24.dp))
             Box(
                 Modifier

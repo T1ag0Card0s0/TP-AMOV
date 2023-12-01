@@ -34,6 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
+import pt.isec.amov.tp1.ui.screens.home.ChooseCoordinates
 import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
 import pt.isec.amov.tp1.ui.screens.home.SearchView
 import pt.isec.amov.tp1.ui.screens.login_register.Login
@@ -42,6 +43,7 @@ import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
+import pt.isec.amov.tp1.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp1.ui.viewmodels.LoginForm
 import pt.isec.amov.tp1.ui.viewmodels.RegisterForm
 import pt.isec.amov.tp1.ui.viewmodels.SearchForm
@@ -51,6 +53,7 @@ import pt.isec.amov.tp1.ui.viewmodels.SearchForm
 @Composable
 fun MainScreen(
     viewModel: AppViewModel,
+    locationViewModel: LocationViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 
@@ -68,14 +71,16 @@ fun MainScreen(
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
         showDoneIcon = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
-            Screens.ADD_PLACE_OF_INTEREST.route
+            Screens.ADD_PLACE_OF_INTEREST.route,
+            Screens.CHOOSE_COORDINATES.route
         )
         showArrowBack = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route,
             Screens.SEARCH_PLACES_OF_INTEREST.route,
             Screens.DETAILS.route,
-            Screens.CREDITS.route
+            Screens.CREDITS.route,
+            Screens.CHOOSE_COORDINATES.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -195,11 +200,14 @@ fun MainScreen(
                 )
             }
             composable(Screens.ADD_LOCATIONS.route){
-                AddNewLocalView(appViewModel = viewModel)
+                AddNewLocalView(appViewModel = viewModel,navController)
                 
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                AddNewLocalView(appViewModel = viewModel)
+                AddNewLocalView(appViewModel = viewModel,navController)
+            }
+            composable(Screens.CHOOSE_COORDINATES.route){
+                ChooseCoordinates(locationViewModel)
             }
             composable(Screens.DETAILS.route){
                 LocalDetailView()
