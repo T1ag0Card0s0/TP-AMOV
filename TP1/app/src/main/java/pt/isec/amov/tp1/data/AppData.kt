@@ -26,6 +26,14 @@ data class PlaceOfInterest(
 
 class AppData{
     private val locations = mutableListOf<Location>()
+    val categorias = listOf<String>(
+        "Museus" ,
+        "Monumentos&Locais de culto",
+        "Jardins",
+        "Miradouros",
+        "Restaurantes&Bares",
+        "Alojamento",
+    )
     init{
         /*val tmp =Location(1,"Coimbra","Cidade dos estudantes",null)
         locations.add(tmp)

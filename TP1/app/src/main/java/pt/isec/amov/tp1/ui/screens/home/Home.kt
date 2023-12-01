@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,6 +21,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,11 +46,17 @@ fun SearchView(
     navHostController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember {
+    var isExpandedOrderby by remember {
+        mutableStateOf(false)
+    }
+    var isExpandedCategories by remember {
         mutableStateOf(false)
     }
     //TODO: ADD A CATEGORIES DROPDOWN MENU
-    var opt by remember {
+    var optOrderby by remember {
+        mutableStateOf("")
+    }
+    var optCategory by remember {
         mutableStateOf("")
     }
     val options =listOf(stringResource(R.string.alphabetic), stringResource(R.string.distance))
@@ -75,32 +84,29 @@ fun SearchView(
         Spacer(
             modifier.height(8.dp)
         )
-        Row(modifier = modifier.fillMaxWidth()){
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = modifier.fillMaxWidth()
+        ){
             ExposedDropdownMenuBox(
-                expanded = isExpanded,
-                onExpandedChange = { newValue ->
-                    isExpanded = newValue
+                expanded = isExpandedOrderby,
+                onExpandedChange = {
+                    isExpandedOrderby = !isExpandedOrderby
                 },
+                modifier = modifier.fillMaxWidth(0.5f)
             ) {
-                OutlinedTextField(
-                    value = opt,
+                TextField(
+                    value = optOrderby,
+                    placeholder = { Text(stringResource(R.string.orderBy))},
                     onValueChange = {},
                     readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                    },
-                    placeholder = {
-                        Text(text = stringResource(R.string.orderBy))
-                    },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = modifier.weight(1f).menuAnchor(),
-                    shape = RoundedCornerShape(20.dp)
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedOrderby) },
+                    modifier = Modifier.menuAnchor()
                 )
+
                 ExposedDropdownMenu(
-                    expanded = isExpanded,
-                    onDismissRequest = {
-                        isExpanded = false
-                    }
+                    expanded = isExpandedOrderby,
+                    onDismissRequest = { isExpandedOrderby = false }
                 ) {
                     for (itemName in options)
                         DropdownMenuItem(
@@ -108,10 +114,44 @@ fun SearchView(
                                 Text(text = itemName)
                             },
                             onClick = {
-                                opt = itemName
-                                isExpanded = false
+                                optOrderby = itemName
+                                isExpandedOrderby = false
                             }
                         )
+                }
+            }
+            if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST){
+                Spacer(modifier = modifier.width(8.dp))
+                ExposedDropdownMenuBox(
+                    expanded = isExpandedCategories,
+                    onExpandedChange = {
+                        isExpandedCategories = !isExpandedCategories
+                    },
+                ) {
+                    TextField(
+                        value = optCategory,
+                        onValueChange = {},
+                        placeholder = { Text(stringResource(R.string.categories))},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedCategories) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = isExpandedCategories,
+                        onDismissRequest = { isExpandedCategories = false }
+                    ) {
+                        for (itemName in appViewModel.getCategories())
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = itemName)
+                                },
+                                onClick = {
+                                    optCategory = itemName
+                                    isExpandedCategories = false
+                                }
+                            )
+                    }
                 }
             }
         }
@@ -139,7 +179,9 @@ fun SearchView(
         }
     }
     Box(
-        modifier = modifier.fillMaxSize().padding(16.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ){
         Button(
             onClick = {

@@ -45,14 +45,7 @@ class AppViewModel(val appData: AppData): ViewModel() {
     }
 
     fun getCategories(): List<String> {
-        return listOf(
-            "Museus",
-            "Monumentos&Locais de culto",
-            "Jardins",
-            "Miradouros",
-            "Restaurantes&Bares",
-            "Alojamento"
-        )
+        return appData.categorias
     }
 }
 class LoginForm{
