@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +23,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModel
 
 @Composable
 fun Login(
-    appViewModel: AppViewModel,
+    loginViewModel: LoginViewModel,
     title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
@@ -63,9 +62,9 @@ fun Login(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = appViewModel.loginForm!!.email.value,
+                value = loginViewModel.email.value,
                 onValueChange = {
-                    appViewModel.loginForm!!.email.value=it
+                    loginViewModel.email.value=it
                                 },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
@@ -73,9 +72,9 @@ fun Login(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = appViewModel.loginForm!!.password.value,
+                value = loginViewModel.password.value,
                 onValueChange = {
-                    appViewModel.loginForm!!.password.value=it
+                    loginViewModel.password.value=it
                 },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier

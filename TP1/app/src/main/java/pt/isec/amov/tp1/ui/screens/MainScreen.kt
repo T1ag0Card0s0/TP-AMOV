@@ -27,11 +27,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
 import pt.isec.amov.tp1.ui.screens.home.ChooseCoordinates
@@ -44,8 +46,10 @@ import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
 import pt.isec.amov.tp1.ui.viewmodels.LocationViewModel
-import pt.isec.amov.tp1.ui.viewmodels.LoginForm
-import pt.isec.amov.tp1.ui.viewmodels.RegisterForm
+import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModel
+import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModelFactory
+import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModel
+import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModelFactory
 import pt.isec.amov.tp1.ui.viewmodels.SearchForm
 
 
@@ -59,7 +63,7 @@ fun MainScreen(
 
 ){
     val context = LocalContext.current
-
+    val app = context.applicationContext as App
     val snackbarHostState = remember{ SnackbarHostState() }
     var isExpanded by remember{ mutableStateOf(false) }
     var showDoneIcon by remember { mutableStateOf(false) }
@@ -172,17 +176,17 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                viewModel.loginForm = LoginForm()
+                val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(app.appData))
                 Login(
-                    viewModel,
+                    loginViewModel,
                     stringResource(R.string.app_name),
                     navController
                     )
             }
             composable(Screens.REGISTER.route){
-                viewModel.registerForm = RegisterForm()
+                val registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModelFactory(app.appData))
                 Register(
-                    viewModel,
+                    registerViewModel,
                     stringResource(R.string.app_name),
                     navController
                 )

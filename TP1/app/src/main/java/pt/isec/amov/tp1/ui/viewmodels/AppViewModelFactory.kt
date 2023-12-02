@@ -22,10 +22,10 @@ class AppViewModelFactory(
         return AppViewModel(appData) as T
     }
 }
+
+
 class AppViewModel(val appData: AppData): ViewModel() {
-    var loginForm: LoginForm? = null
     var searchForm: SearchForm?=null
-    var registerForm: RegisterForm?=null
     var addLocalForm: AddLocalForm?=null
     val selectedLocationId: MutableState<Int> = mutableIntStateOf(-1)
     fun addLocal():Boolean{
@@ -79,21 +79,10 @@ class AppViewModel(val appData: AppData): ViewModel() {
         return null
     }
 }
-class LoginForm{
-    val email: MutableState<String> = mutableStateOf("")
-    val password: MutableState<String> = mutableStateOf("")
-}
-
 class SearchForm(var itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
     val orderByOption:MutableState<String> = mutableStateOf("")
     val categoryOption: MutableState<String> = mutableStateOf("")
-}
-class RegisterForm{
-    val name: MutableState<String> = mutableStateOf("")
-    val email: MutableState<String> = mutableStateOf("")
-    val password: MutableState<String> = mutableStateOf("")
-    val confirmPassword: MutableState<String> = mutableStateOf("")
 }
 class AddLocalForm(val itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")

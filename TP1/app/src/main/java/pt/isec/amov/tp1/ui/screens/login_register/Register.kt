@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +23,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModel
 
 @Composable
 fun Register(
-    appViewModel: AppViewModel,
+    registerViewModel: RegisterViewModel,
     title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
@@ -64,9 +63,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value =  appViewModel.registerForm!!.name.value,
+                value =  registerViewModel.name.value,
                 onValueChange = {
-                    appViewModel.registerForm!!.name.value=it
+                    registerViewModel.name.value=it
                 },
                 label = { Text(text = stringResource(R.string.name_label))},
                 modifier = modifier
@@ -74,9 +73,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = appViewModel.registerForm!!.email.value,
+                value = registerViewModel.email.value,
                 onValueChange = {
-                    appViewModel.registerForm!!.email.value=it
+                    registerViewModel.email.value=it
                 },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
@@ -84,9 +83,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = appViewModel.registerForm!!.password.value,
+                value = registerViewModel.password.value,
                 onValueChange = {
-                    appViewModel.registerForm!!.password.value=it
+                    registerViewModel.password.value=it
                 },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier
@@ -94,9 +93,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value =appViewModel.registerForm!!.confirmPassword.value ,
+                value =registerViewModel.confirmPassword.value ,
                 onValueChange = {
-                    appViewModel.registerForm!!.confirmPassword.value=it
+                    registerViewModel.confirmPassword.value=it
                 },
                 label = { Text(text = stringResource(R.string.confirm_password_label))},
                 modifier = modifier
