@@ -1,20 +1,11 @@
-package pt.isec.amov.tp1.ui.viewmodels
+package pt.isec.amov.tp1.ui.viewmodels.location
 
 
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import pt.isec.amov.tp1.utils.location.LocationHandler
-
-class LocationViewModelFactory(
-    private val locationHandler: LocationHandler
-):ViewModelProvider.Factory{
-    override fun <T:ViewModel> create(modelClass:Class<T>):T{
-        return LocationViewModel(locationHandler = locationHandler) as T
-    }
-}
 
 class LocationViewModel(private val locationHandler: LocationHandler) : ViewModel() {
     val POIs = listOf(
@@ -60,5 +51,4 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         stopLocationUpdates()
     }
 }
-data class Coordinates(val team: String,val latitude : Double, val longitude: Double)
 

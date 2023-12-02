@@ -45,7 +45,7 @@ import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
-import pt.isec.amov.tp1.ui.viewmodels.LocationViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocationViewModel
 import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModel
 import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModelFactory
 import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModel

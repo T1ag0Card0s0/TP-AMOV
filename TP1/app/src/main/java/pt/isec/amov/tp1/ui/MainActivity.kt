@@ -23,8 +23,8 @@ import pt.isec.amov.tp1.ui.screens.MainScreen
 import pt.isec.amov.tp1.ui.theme.TP1Theme
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
-import pt.isec.amov.tp1.ui.viewmodels.LocationViewModel
-import pt.isec.amov.tp1.ui.viewmodels.LocationViewModelFactory
+import pt.isec.amov.tp1.ui.viewmodels.location.LocationViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocationViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val app by lazy{application as App}
