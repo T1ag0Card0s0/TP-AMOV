@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -60,7 +61,6 @@ fun MainScreen(
     locationViewModel: LocationViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
-
 ){
     val context = LocalContext.current
     val app = context.applicationContext as App
@@ -119,15 +119,25 @@ fun MainScreen(
                     actions = {
                         if(showDoneIcon) {
                             IconButton(onClick = {
-                                if(viewModel.addLocal()) {
-                                    when (Screens.valueOf(currentScreen!!.destination.route!!)) {
-                                        Screens.ADD_PLACE_OF_INTEREST -> navController.navigate(
-                                            Screens.SEARCH_PLACES_OF_INTEREST.route
-                                        )
-
-                                        Screens.ADD_LOCATIONS -> navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                        else -> {}
+                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
+                                    Screens.ADD_PLACE_OF_INTEREST -> {
+                                        if(viewModel.addLocal()) {
+                                            navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                                        }else{
+                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        }
                                     }
+                                    Screens.ADD_LOCATIONS ->{
+                                        if(viewModel.addLocal()) {
+                                            navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                        }else{
+                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                    Screens.CHOOSE_COORDINATES->{
+
+                                    }
+                                    else->{}
                                 }
                             }) {
                                 Icon(

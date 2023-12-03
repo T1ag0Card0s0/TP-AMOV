@@ -76,4 +76,8 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:4.3.0")
     implementation("org.osmdroid:osmdroid-android:6.1.17")
     implementation("androidx.preference:preference-ktx:1.2.1")
+
+    implementation("androidx.preference:preference:1.1.1")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.20")
 }
