@@ -161,6 +161,7 @@ fun MainScreen(
                                            },
                                     onClick = {
                                         isExpanded=false
+                                        fireBaseViewModel.signOut()
                                         navController.navigate(Screens.LOGIN.route)
                                     }
                                 )

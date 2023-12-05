@@ -9,14 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import pt.isec.amov.tp1.data.AppData
-import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
+import pt.isec.amov.tp1.data.User
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 import pt.isec.amov.tp1.utils.firebase.FStorageUtil
-import pt.isec.amov.tp1.utils.location.LocationHandler
 
-data class User(val name: String, val email: String, val picture: String?)
-
-fun FirebaseUser.toUser():User{
+fun FirebaseUser.toUser(): User {
     val username = this.displayName?:""
     val strEmail = this.email?:""
     val photoUrl = this.photoUrl.toString()
@@ -30,10 +27,8 @@ class FireBaseViewModelFactory(
     }
 }
 class FireBaseViewModel(private val appData: AppData): ViewModel() {
-
-    private val _user = mutableStateOf(FAuthUtil.currentUser?.toUser())
     val user : MutableState<User?>
-        get() = _user
+        get() = appData._user
 
     private val _error = mutableStateOf<String?>(null)
     val error : MutableState<String?>
@@ -44,7 +39,7 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
         viewModelScope.launch {
             FAuthUtil.createUserWithEmail(email, password) { exception ->
                 if (exception == null) {//Success
-                    _user.value = FAuthUtil.currentUser?.toUser()
+                    appData._user.value = FAuthUtil.currentUser?.toUser()
                 }
                 _error.value = exception?.message
             }
@@ -55,7 +50,7 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
         viewModelScope.launch {
             FAuthUtil.signInWithEmail(email, password) { exception ->
                 if (exception == null) {//Success
-                    _user.value = FAuthUtil.currentUser?.toUser()
+                    appData._user.value = FAuthUtil.currentUser?.toUser()
                 }
                 _error.value = exception?.message
             }
@@ -63,7 +58,7 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
     }
     fun signOut(){
         FAuthUtil.signOut()
-        _user.value = null
+        appData._user.value = null
         _error.value = null
     }
     fun addDataToFireStore(){
