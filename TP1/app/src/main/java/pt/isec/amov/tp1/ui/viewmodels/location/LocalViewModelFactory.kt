@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import pt.isec.amov.tp1.utils.location.LocationHandler
 
-class LocationViewModelFactory(
+class LocalViewModelFactory(
     private val locationHandler: LocationHandler
 ): ViewModelProvider.Factory {
     override fun <T: ViewModel> create(modelClass:Class<T>):T{
-        return LocationViewModel(locationHandler = locationHandler) as T
+        return LocalViewModel(locationHandler = locationHandler) as T
     }
 }

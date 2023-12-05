@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pt.isec.amov.tp1.utils.location.LocationHandler
 
-class LocationViewModel(private val locationHandler: LocationHandler) : ViewModel() {
+class LocalViewModel(private val locationHandler: LocationHandler) : ViewModel() {
     val POIs = listOf(
         Coordinates("Liverpool",53.430819,-2.960828),
         Coordinates("Manchester City",53.482989,-2.200292),

@@ -1,4 +1,4 @@
-package pt.isec.amov.tp1.utils
+package pt.isec.amov.tp1.utils.file
 
 import android.content.Context
 import android.net.Uri

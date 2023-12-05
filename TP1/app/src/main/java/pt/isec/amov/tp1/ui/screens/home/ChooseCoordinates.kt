@@ -26,11 +26,11 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import pt.isec.amov.tp1.ui.viewmodels.location.LocationViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun ChooseCoordinates(
-    viewModel: LocationViewModel,
+    viewModel: LocalViewModel,
     modifier: Modifier = Modifier
 ){
     val location = viewModel.currentLocation.observeAsState()

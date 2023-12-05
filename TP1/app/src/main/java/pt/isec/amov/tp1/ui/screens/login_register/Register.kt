@@ -13,6 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,19 +27,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModel
+import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 
 @Composable
 fun Register(
-    registerViewModel: RegisterViewModel,
+    fireBaseViewModel: FireBaseViewModel,
     title: String,
     navController: NavHostController?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSuccess: ()->Unit
 ) {
+    val email = remember{ mutableStateOf("") }
+    val password = remember{ mutableStateOf("") }
+    val confirmPassword = remember { mutableStateOf("") }
+    val name = remember { mutableStateOf("") }
+    val error = remember{fireBaseViewModel.error}
+    val user by remember{fireBaseViewModel.user}
     val options = listOf(
         Screens.LOGIN.route,
         Screens.CREDITS.route
     )
+    LaunchedEffect(key1 = user){
+        if(user!=null&&error.value==null) onSuccess()
+    }
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -63,9 +77,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value =  registerViewModel.name.value,
+                value =  name.value,
                 onValueChange = {
-                    registerViewModel.name.value=it
+                    name.value=it
                 },
                 label = { Text(text = stringResource(R.string.name_label))},
                 modifier = modifier
@@ -73,9 +87,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = registerViewModel.email.value,
+                value = email.value,
                 onValueChange = {
-                    registerViewModel.email.value=it
+                    email.value=it
                 },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
@@ -83,9 +97,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = registerViewModel.password.value,
+                value = password.value,
                 onValueChange = {
-                    registerViewModel.password.value=it
+                    password.value=it
                 },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier
@@ -93,9 +107,9 @@ fun Register(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value =registerViewModel.confirmPassword.value ,
+                value =confirmPassword.value ,
                 onValueChange = {
-                    registerViewModel.confirmPassword.value=it
+                    confirmPassword.value=it
                 },
                 label = { Text(text = stringResource(R.string.confirm_password_label))},
                 modifier = modifier
@@ -103,7 +117,7 @@ fun Register(
                     .padding(8.dp)
             )
             Button(
-                onClick = {  }
+                onClick = { fireBaseViewModel.createUserWithEmail(email.value,password.value)  }
             ) {
                 Text(text = stringResource(R.string.submit))
             }

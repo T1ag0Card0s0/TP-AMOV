@@ -13,6 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,15 +27,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModel
+import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 
 @Composable
 fun Login(
-    loginViewModel: LoginViewModel,
+    fireBaseViewModel: FireBaseViewModel,
     title: String,
     navController: NavHostController?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSuccess: ()->Unit
 ) {
+    val email = remember{ mutableStateOf("") }
+    val password = remember{ mutableStateOf("") }
+    val error = remember{fireBaseViewModel.error}
+    val user by remember{fireBaseViewModel.user}
+    LaunchedEffect(key1 = user){
+        if(user!=null&&error.value==null) onSuccess()
+    }
     val options = listOf(
         Screens.REGISTER.route,
         Screens.CREDITS.route)
@@ -62,27 +74,23 @@ fun Login(
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = loginViewModel.email.value,
-                onValueChange = {
-                    loginViewModel.email.value=it
-                                },
+                value = email.value,
+                onValueChange = { email.value=it },
                 label = { Text(text = stringResource(R.string.email_label))},
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             OutlinedTextField(
-                value = loginViewModel.password.value,
-                onValueChange = {
-                    loginViewModel.password.value=it
-                },
+                value = password.value,
+                onValueChange = { password.value=it },
                 label = { Text(text = stringResource(R.string.password_label))},
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             )
             Button(
-                onClick = { navController?.navigate(Screens.SEARCH_LOCATIONS.route) }
+                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) }
             ) {
                 Text(text = stringResource(R.string.submit))
             }

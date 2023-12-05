@@ -1,6 +1,7 @@
 package pt.isec.amov.tp1.ui.screens
 
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -45,25 +46,21 @@ import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
-import pt.isec.amov.tp1.ui.viewmodels.location.LocationViewModel
-import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModel
-import pt.isec.amov.tp1.ui.viewmodels.login.LoginViewModelFactory
-import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModel
-import pt.isec.amov.tp1.ui.viewmodels.register.RegisterViewModelFactory
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 import pt.isec.amov.tp1.ui.viewmodels.SearchForm
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     viewModel: AppViewModel,
-    locationViewModel: LocationViewModel,
+    locationViewModel: LocalViewModel,
+    fireBaseViewModel: FireBaseViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ){
     val context = LocalContext.current
-    val app = context.applicationContext as App
     val snackbarHostState = remember{ SnackbarHostState() }
     var isExpanded by remember{ mutableStateOf(false) }
     var showDoneIcon by remember { mutableStateOf(false) }
@@ -186,20 +183,22 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(app.appData))
                 Login(
-                    loginViewModel,
+                    fireBaseViewModel,
                     stringResource(R.string.app_name),
                     navController
-                    )
+                ){
+                    navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                }
             }
             composable(Screens.REGISTER.route){
-                val registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModelFactory(app.appData))
                 Register(
-                    registerViewModel,
+                    fireBaseViewModel,
                     stringResource(R.string.app_name),
                     navController
-                )
+                ){
+                    navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                }
             }
             composable(Screens.SEARCH_LOCATIONS.route){
                 viewModel.searchForm = SearchForm(itemType = ItemType.LOCATION)

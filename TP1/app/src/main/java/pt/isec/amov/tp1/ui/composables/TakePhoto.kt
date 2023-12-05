@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.utils.FileUtils
+import pt.isec.amov.tp1.utils.file.FileUtils
 import java.io.File
 
 @Composable
