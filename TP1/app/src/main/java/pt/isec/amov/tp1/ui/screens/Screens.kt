@@ -1,8 +1,8 @@
 package pt.isec.amov.tp1.ui.screens
 
 enum class Screens (val display: String, val showAppBar: Boolean){
-    LOGIN("Sign in",false),
-    REGISTER("Sign up",false),
+    LOGIN("Sign in",true),
+    REGISTER("Sign up",true),
     CREDITS("Credits",true),
     SEARCH_LOCATIONS("Search Locations", true),
     SEARCH_PLACES_OF_INTEREST("Search Places Of Interest", true),

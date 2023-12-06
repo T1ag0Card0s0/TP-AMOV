@@ -4,11 +4,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Abc
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Mail
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,17 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.composables.LoginField
+import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 
 @Composable
-fun Register(
+fun RegisterForm(
     fireBaseViewModel: FireBaseViewModel,
-    title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
     onSuccess: ()->Unit
-) {
+){
     val email = remember{ mutableStateOf("") }
     val password = remember{ mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
@@ -55,71 +63,53 @@ fun Register(
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Text(
-            text = title,
-            fontSize = 48.sp,
-            modifier = modifier
-                .align(Alignment.TopCenter)
-                .padding(24.dp)
-        )
-
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .align(Alignment.Center)
-                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
-            Text(
-                text = stringResource(R.string.register_form_title),
-                fontSize = 24.sp,
-                modifier = modifier
-                    .padding(8.dp)
+            LoginField(
+                value = name.value,
+                onChange = { name.value=it},
+                stringResource(R.string.name_label),
+                stringResource(R.string.name),
+                Icons.Default.Abc,
+                modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value =  name.value,
-                onValueChange = {
-                    name.value=it
-                },
-                label = { Text(text = stringResource(R.string.name_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            OutlinedTextField(
+            LoginField(
                 value = email.value,
-                onValueChange = {
-                    email.value=it
-                },
-                label = { Text(text = stringResource(R.string.email_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                onChange = { email.value=it},
+                stringResource(R.string.enter_your_email),
+                stringResource(R.string.email),
+                Icons.Default.Person,
+                modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
+            PasswordField(
                 value = password.value,
-                onValueChange = {
-                    password.value=it
-                },
-                label = { Text(text = stringResource(R.string.password_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                onChange = { password.value = it },
+                submit = { },
+                stringResource(R.string.password),
+                stringResource(R.string.enter_your_password),
+                modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value =confirmPassword.value ,
-                onValueChange = {
-                    confirmPassword.value=it
-                },
-                label = { Text(text = stringResource(R.string.confirm_password_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+            PasswordField(
+                value = confirmPassword.value,
+                onChange = { confirmPassword.value = it },
+                submit = { },
+                stringResource(R.string.confirm_password),
+                stringResource(R.string.confirm_your_password),
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { fireBaseViewModel.createUserWithEmail(email.value,password.value)  }
+                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) },
+                enabled = true,
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(R.string.submit))
+                Text(stringResource(R.string.submit))
             }
         }
         Column (
@@ -140,6 +130,7 @@ fun Register(
                 }
         }
     }
+
 }
 @Preview
 @Composable

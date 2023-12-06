@@ -4,7 +4,7 @@
     <string name="login_form_title">Sign in</string>
     <string name="register_form_title">Sign up</string>
     <string name="email_label">Email</string>
-    <string name="name_label">Name</string>
+    <string name="name_label">Enter Your Name</string>
     <string name="password_label">Password</string>
     <string name="confirm_password_label">Confirm Password</string>
     <string name="submit">Submit</string>
@@ -21,4 +21,12 @@
     <string name="create_new">Create new</string>
     <string name="description">Description</string>
     <string name="take_picture">Take Picture</string>
+    <string name="login">Login</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="confirm_your_password">Confirm Your Password</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

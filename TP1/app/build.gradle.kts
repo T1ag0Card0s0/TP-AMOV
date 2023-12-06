@@ -71,6 +71,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
     implementation("com.google.android.gms:play-services-maps:18.2.0")

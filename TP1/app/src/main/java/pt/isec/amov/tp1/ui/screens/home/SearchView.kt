@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -63,17 +64,6 @@ fun SearchView(
                 text = "In ${appViewModel.getSelectedLocalName()}",
                 fontSize = 30.sp
             )
-        OutlinedTextField(
-            value = appViewModel.searchForm!!.name.value,
-            onValueChange = {
-                appViewModel.searchForm!!.name.value = it },
-            label = {
-                Text(text = stringResource(R.string.search))
-                    },
-            shape = RoundedCornerShape(20.dp),
-            modifier = modifier
-                .fillMaxWidth()
-        )
         Spacer(
             modifier.height(8.dp)
         )

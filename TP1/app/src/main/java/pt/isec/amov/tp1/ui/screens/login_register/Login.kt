@@ -1,16 +1,18 @@
 package pt.isec.amov.tp1.ui.screens.login_register
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,20 +21,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.composables.LoginField
+import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 
 @Composable
-fun Login(
+fun LoginForm(
     fireBaseViewModel: FireBaseViewModel,
-    title: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
     onSuccess: ()->Unit
@@ -41,58 +42,48 @@ fun Login(
     val password = remember{ mutableStateOf("") }
     val error = remember{fireBaseViewModel.error}
     val user by remember{fireBaseViewModel.user}
-    LaunchedEffect(key1 = user){
-        if(user!=null&&error.value==null) onSuccess()
-    }
     val options = listOf(
         Screens.REGISTER.route,
         Screens.CREDITS.route)
+    LaunchedEffect(key1 = user){
+        if(user!=null&&error.value==null) onSuccess()
+    }
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Text(
-            text = title,
-            fontSize = 48.sp,
-            modifier = modifier
-                .align(Alignment.TopCenter)
-                .padding(24.dp)
-        )
-
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .align(Alignment.Center)
-                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
-            Text(
-                text = stringResource(R.string.login_form_title),
-                fontSize = 24.sp,
-                modifier = modifier
-                    .padding(8.dp)
-            )
-            OutlinedTextField(
+            LoginField(
                 value = email.value,
-                onValueChange = { email.value=it },
-                label = { Text(text = stringResource(R.string.email_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                onChange = { email.value=it},
+                stringResource(R.string.enter_your_email),
+                stringResource(R.string.email),
+                Icons.Default.Person,
+                modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
+            PasswordField(
                 value = password.value,
-                onValueChange = { password.value=it },
-                label = { Text(text = stringResource(R.string.password_label))},
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                onChange = { password.value = it },
+                submit = { },
+                stringResource(R.string.password),
+                stringResource(R.string.enter_your_password),
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) }
+                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) },
+                enabled = true,
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(R.string.submit))
+                Text(stringResource(R.string.submit))
             }
         }
         Column (
@@ -114,6 +105,7 @@ fun Login(
         }
     }
 }
+
 @Preview
 @Composable
 fun LoginPreview(){

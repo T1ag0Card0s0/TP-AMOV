@@ -13,6 +13,7 @@ open class Local(
     open val description: String,
     open val imagePath: String?
 )
+
 data class Location(
     override val id: Int,
     override val name: String,
@@ -20,6 +21,7 @@ data class Location(
     override val imagePath: String?,
     val placesOfInterest: MutableList<PlaceOfInterest> = mutableListOf() //alterar para id
 ):Local(id,name,description,imagePath)
+
 data class PlaceOfInterest(
     override val id: Int,
     override val name: String,
@@ -27,8 +29,11 @@ data class PlaceOfInterest(
     override val imagePath: String?,
     val category: Category//alterar para id
 ):Local(id,name,description,imagePath)
+
 data class User(val name: String, val email: String, val picture: String?)
+
 data class Category(val id: Int, val name: String,val description: String)
+
 class AppData{
     val _user = mutableStateOf(FAuthUtil.currentUser?.toUser())
     private val locations = mutableListOf<Location>()

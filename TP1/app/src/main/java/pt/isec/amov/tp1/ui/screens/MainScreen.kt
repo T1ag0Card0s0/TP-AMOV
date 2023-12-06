@@ -41,9 +41,9 @@ import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
 import pt.isec.amov.tp1.ui.screens.home.ChooseCoordinates
 import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
 import pt.isec.amov.tp1.ui.screens.home.SearchView
-import pt.isec.amov.tp1.ui.screens.login_register.Login
-import pt.isec.amov.tp1.ui.screens.login_register.Register
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
+import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
+import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
@@ -184,18 +184,16 @@ fun MainScreen(
                 .padding(it)
         ){
             composable(Screens.LOGIN.route){
-                Login(
+                LoginForm(
                     fireBaseViewModel,
-                    stringResource(R.string.app_name),
                     navController
                 ){
                     navController.navigate(Screens.SEARCH_LOCATIONS.route)
                 }
             }
             composable(Screens.REGISTER.route){
-                Register(
+                RegisterForm(
                     fireBaseViewModel,
-                    stringResource(R.string.app_name),
                     navController
                 ){
                     navController.navigate(Screens.SEARCH_LOCATIONS.route)
