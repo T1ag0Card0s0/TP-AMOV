@@ -3,23 +3,30 @@ package pt.isec.amov.tp1.ui.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,6 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,19 +68,70 @@ fun SearchView(
                 .padding(8.dp)
                 .fillMaxSize()
     ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.inversePrimary
+                )
+            ) {
+                Row {
+                    Text(text = "A")
+                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
+                }
+            }
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.inversePrimary
+                )
+            ) {
+                Row {
+                    Text(text = "A")
+                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
+                }
+            }
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.inversePrimary
+                )
+            ) {
+                Row {
+                    Text(text = "Km")
+                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
+                }
+            }
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.inversePrimary
+                )
+            ) {
+                Row {
+                    Text(text = "Km")
+                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
+                }
+            }
+        }
+
         if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST)
             Text(
                 text = "In ${appViewModel.getSelectedLocalName()}",
                 fontSize = 30.sp
             )
-        Spacer(
-            modifier.height(8.dp)
-        )
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ){
-            ExposedDropdownMenuBox(
+            /*ExposedDropdownMenuBox(
                 expanded = isExpandedOrderby,
                 onExpandedChange = {
                     isExpandedOrderby = !isExpandedOrderby
@@ -102,7 +162,7 @@ fun SearchView(
                             }
                         )
                 }
-            }
+            }*/
             if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST){
                 Spacer(modifier = modifier.width(8.dp))
                 ExposedDropdownMenuBox(
@@ -138,7 +198,6 @@ fun SearchView(
                 }
             }
         }
-        Spacer(modifier = modifier.height(8.dp))
         when(appViewModel.searchForm!!.itemType){
             ItemType.LOCATION-> {
                 ListItems(
@@ -173,7 +232,9 @@ fun SearchView(
                           ItemType.PLACE_OF_INTEREST ->navHostController?.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
                       }
             },
-            modifier.align(Alignment.BottomEnd)
+            shape = CircleShape,
+            contentPadding = PaddingValues(0.dp),
+            modifier = modifier.align(Alignment.BottomEnd).size(50.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
