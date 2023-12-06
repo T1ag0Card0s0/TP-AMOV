@@ -104,7 +104,7 @@ fun RegisterForm(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) },
+                onClick = { fireBaseViewModel.createUserWithEmail(email.value,password.value) },
                 enabled = true,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()
