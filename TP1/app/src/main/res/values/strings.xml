@@ -29,4 +29,5 @@
     <string name="confirm_your_password">Confirm Your Password</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="select_categories">Select Categories</string>
 </resources>

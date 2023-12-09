@@ -1,17 +1,23 @@
 package pt.isec.amov.tp1.ui.screens.home
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -28,9 +34,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.TakePhoto
@@ -60,12 +71,11 @@ fun AddNewLocalView(
             modifier = modifier
                 .align(Alignment.Center)
         ) {
-
             OutlinedTextField(
                 value = appViewModel.addLocalForm!!.name.value,
                 onValueChange = { appViewModel.addLocalForm!!.name.value = it },
                 label = {
-                    Text(text = stringResource(R.string.name_label))
+                    Text(text = stringResource(R.string.name))
                 }
             )
             Spacer(modifier = modifier.height(24.dp))
@@ -87,7 +97,13 @@ fun AddNewLocalView(
                     TextField(
                         value = optCategory,
                         onValueChange = {},
-                        placeholder = { Text(stringResource(R.string.categories)) },
+                        placeholder = { Text(stringResource(R.string.select_categories)) },
+                        label = {
+                                Text(
+                                    stringResource(R.string.categories),
+                                    textAlign = TextAlign.Center
+                                )
+                                },
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedCategories) },
                         modifier = Modifier.menuAnchor()

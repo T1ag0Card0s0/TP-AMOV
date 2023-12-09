@@ -16,20 +16,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +46,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -120,51 +128,13 @@ fun SearchView(
                     Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
                 }
             }
+
         }
-
-        if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST)
-            Text(
-                text = "In ${appViewModel.getSelectedLocalName()}",
-                fontSize = 30.sp
-            )
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = modifier.fillMaxWidth()
-        ){
-            /*ExposedDropdownMenuBox(
-                expanded = isExpandedOrderby,
-                onExpandedChange = {
-                    isExpandedOrderby = !isExpandedOrderby
-                },
-                modifier = modifier.fillMaxWidth(0.5f)
+        if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = modifier.fillMaxWidth()
             ) {
-                TextField(
-                    value = appViewModel.searchForm!!.orderByOption.value,
-                    placeholder = { Text(stringResource(R.string.orderBy))},
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedOrderby) },
-                    modifier = Modifier.menuAnchor()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = isExpandedOrderby,
-                    onDismissRequest = { isExpandedOrderby = false }
-                ) {
-                    for (itemName in options)
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = itemName)
-                            },
-                            onClick = {
-                                appViewModel.searchForm!!.orderByOption.value = itemName
-                                isExpandedOrderby = false
-                            }
-                        )
-                }
-            }*/
-            if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST){
-                Spacer(modifier = modifier.width(8.dp))
                 ExposedDropdownMenuBox(
                     expanded = isExpandedCategories,
                     onExpandedChange = {
@@ -174,12 +144,28 @@ fun SearchView(
                     TextField(
                         value = appViewModel.searchForm!!.categoryOption.value,
                         onValueChange = {},
-                        placeholder = { Text(stringResource(R.string.categories))},
+                        label = {
+                            Box(modifier= modifier.fillMaxWidth()){
+                                Text(
+                                    text = stringResource(R.string.categories),
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            } },
+                        placeholder = {
+                            Box(modifier= modifier.fillMaxWidth()){
+                                Text(
+                                    text = stringResource(R.string.select_categories),
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }},
                         readOnly = true,
+                        colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                        textStyle = TextStyle(textAlign = TextAlign.Center),
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedCategories) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
                     )
-
                     ExposedDropdownMenu(
                         expanded = isExpandedCategories,
                         onDismissRequest = { isExpandedCategories = false }
@@ -197,6 +183,10 @@ fun SearchView(
                     }
                 }
             }
+            Text(
+                text = "In ${appViewModel.getSelectedLocalName()}",
+                fontSize = 30.sp
+            )
         }
         when(appViewModel.searchForm!!.itemType){
             ItemType.LOCATION-> {
@@ -234,7 +224,9 @@ fun SearchView(
             },
             shape = CircleShape,
             contentPadding = PaddingValues(0.dp),
-            modifier = modifier.align(Alignment.BottomEnd).size(50.dp)
+            modifier = modifier
+                .align(Alignment.BottomEnd)
+                .size(50.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
