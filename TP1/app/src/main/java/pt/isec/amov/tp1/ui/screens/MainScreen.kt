@@ -1,15 +1,13 @@
 package pt.isec.amov.tp1.ui.screens
 
+import android.content.Context
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,15 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pt.isec.amov.tp1.App
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.composables.MyDropDownMenu
 import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
 import pt.isec.amov.tp1.ui.screens.home.ChooseCoordinates
 import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
@@ -116,26 +112,11 @@ fun MainScreen(
                     actions = {
                         if(showDoneIcon) {
                             IconButton(onClick = {
-                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
-                                    Screens.ADD_PLACE_OF_INTEREST -> {
-                                        if(viewModel.addLocal()) {
-                                            navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                        }else{
-                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
-                                        }
-                                    }
-                                    Screens.ADD_LOCATIONS ->{
-                                        if(viewModel.addLocal()) {
-                                            navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                        }else{
-                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
-                                        }
-                                    }
-                                    Screens.CHOOSE_COORDINATES->{
-
-                                    }
-                                    else->{}
-                                }
+                                onDoneAction(
+                                    currentScreen?.destination?.route,
+                                    navController,
+                                    viewModel,
+                                    context)
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.Done,
@@ -152,20 +133,19 @@ fun MainScreen(
                                     contentDescription = "More Vert"
                                 )
                             }
-                            DropdownMenu(
-                                expanded = isExpanded,
-                                onDismissRequest = { isExpanded = false }) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(stringResource(R.string.logout) )
-                                           },
-                                    onClick = {
+                            MyDropDownMenu(
+                                isExpanded = isExpanded,
+                                options =  listOf(stringResource(R.string.logout)),
+                                onClick = {
+                                    if(it.isEmpty())
+                                        isExpanded = false
+                                    else {
                                         isExpanded=false
                                         fireBaseViewModel.signOut()
                                         navController.navigate(Screens.LOGIN.route)
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -235,7 +215,30 @@ fun MainScreen(
     }
 }
 
-@Preview
-@Composable
-fun MainPreview(){
+fun onDoneAction(
+    currentScreen: String?,
+    navController: NavHostController,
+    viewModel: AppViewModel,
+    context: Context
+){
+    when (currentScreen) {
+        Screens.ADD_PLACE_OF_INTEREST.route -> {
+            if(viewModel.addLocal()) {
+                navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+            }else{
+                Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+            }
+        }
+        Screens.ADD_LOCATIONS.route ->{
+            if(viewModel.addLocal()) {
+                navController.navigate(Screens.SEARCH_LOCATIONS.route)
+            }else{
+                Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+            }
+        }
+        Screens.CHOOSE_COORDINATES.route->{
+
+        }
+        else->{}
+    }
 }

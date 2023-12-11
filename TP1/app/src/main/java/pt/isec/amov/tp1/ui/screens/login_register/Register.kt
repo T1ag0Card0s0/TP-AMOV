@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.ui.composables.LoginField
+import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
@@ -64,7 +64,7 @@ fun RegisterForm(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
-            LoginField(
+            MyTextField(
                 value = name.value,
                 onChange = { name.value=it},
                 stringResource(R.string.name_label),
@@ -72,7 +72,7 @@ fun RegisterForm(
                 Icons.Default.Abc,
                 modifier = Modifier.fillMaxWidth()
             )
-            LoginField(
+            MyTextField(
                 value = email.value,
                 onChange = { email.value=it},
                 stringResource(R.string.enter_your_email),

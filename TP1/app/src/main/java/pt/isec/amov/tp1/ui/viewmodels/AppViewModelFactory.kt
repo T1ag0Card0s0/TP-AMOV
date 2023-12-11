@@ -81,8 +81,6 @@ class AppViewModel(val appData: AppData): ViewModel() {
 }
 class SearchForm(var itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
-    val orderByOption:MutableState<String> = mutableStateOf("")
-    val categoryOption: MutableState<String> = mutableStateOf("")
 }
 class AddLocalForm(val itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")

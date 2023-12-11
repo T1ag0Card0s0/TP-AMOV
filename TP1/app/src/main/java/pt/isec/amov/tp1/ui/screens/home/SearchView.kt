@@ -53,24 +53,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.ListItems
+import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(
     appViewModel: AppViewModel,
     navHostController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
-    var isExpandedOrderby by remember {
-        mutableStateOf(false)
-    }
+
     var isExpandedCategories by remember {
         mutableStateOf(false)
     }
-    val options =listOf(stringResource(R.string.alphabetic), stringResource(R.string.distance))
+    var selectedCategory by remember {
+        mutableStateOf("")
+    }
     Column(
             modifier = modifier
                 .padding(8.dp)
@@ -135,53 +135,19 @@ fun SearchView(
                 horizontalArrangement = Arrangement.Center,
                 modifier = modifier.fillMaxWidth()
             ) {
-                ExposedDropdownMenuBox(
-                    expanded = isExpandedCategories,
-                    onExpandedChange = {
-                        isExpandedCategories = !isExpandedCategories
-                    },
-                ) {
-                    TextField(
-                        value = appViewModel.searchForm!!.categoryOption.value,
-                        onValueChange = {},
-                        label = {
-                            Box(modifier= modifier.fillMaxWidth()){
-                                Text(
-                                    text = stringResource(R.string.categories),
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            } },
-                        placeholder = {
-                            Box(modifier= modifier.fillMaxWidth()){
-                                Text(
-                                    text = stringResource(R.string.select_categories),
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }},
-                        readOnly = true,
-                        colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        textStyle = TextStyle(textAlign = TextAlign.Center),
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedCategories) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = isExpandedCategories,
-                        onDismissRequest = { isExpandedCategories = false }
-                    ) {
-                        for (item in appViewModel.getCategories())
-                            DropdownMenuItem(
-                                text = {
-                                    Text(text = item.name)
-                                },
-                                onClick = {
-                                    appViewModel.searchForm!!.categoryOption.value = item.name
-                                    isExpandedCategories = false
-                                }
-                            )
+                MyExposedDropDownMenu(
+                    isExpanded = isExpandedCategories,
+                    options = appViewModel.getCategories().map { it.name },
+                    selectedOption = selectedCategory,
+                    placeholder = stringResource(R.string.select_categories),
+                    label = stringResource(R.string.categories),
+                    onExpandChange = { /*TODO*/isExpandedCategories = !isExpandedCategories },
+                    onDismissRequest = { /*TODO*/isExpandedCategories = false },
+                    onClick = {
+                        isExpandedCategories = false
+                        selectedCategory = it
                     }
-                }
+                )
             }
             Text(
                 text = "In ${appViewModel.getSelectedLocalName()}",

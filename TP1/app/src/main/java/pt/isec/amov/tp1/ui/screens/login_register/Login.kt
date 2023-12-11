@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.ui.composables.LoginField
+import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
@@ -60,7 +60,7 @@ fun LoginForm(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
-            LoginField(
+            MyTextField(
                 value = email.value,
                 onChange = { email.value=it},
                 stringResource(R.string.enter_your_email),
