@@ -70,17 +70,12 @@ class AppViewModel(val appData: AppData): ViewModel() {
         return appData.getPlaceOfInterest(selectedLocationId.value).filter { it.category==category }
     }
     fun orderBy(orderBy: String): List<Local>? {
-        //TODO: Aplicar o order by
-        when(searchForm?.itemType){
-            ItemType.LOCATION-> return appData.getLocations()
-            ItemType.PLACE_OF_INTEREST -> return appData.getPlaceOfInterest(selectedLocationId.value)
-            else -> {}
-        }
         return null
     }
 }
+// Isto provavelmente tem de se tirar e juntar o var itemType e os valores que estão no addLocalForm todos no appViewModel
 class SearchForm(var itemType: ItemType){
-    val name: MutableState<String> = mutableStateOf("")
+
 }
 class AddLocalForm(val itemType: ItemType){
     val name: MutableState<String> = mutableStateOf("")
