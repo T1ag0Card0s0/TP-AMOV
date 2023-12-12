@@ -35,10 +35,9 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 @Composable
 fun ListItems(
     locals: List<Local>,
-    appViewModel: AppViewModel,
-    navHostController: NavHostController?,
     modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit
+    onSelected: (Int) -> Unit,
+    onDetails:(Int)-> Unit
 ){
 
     LazyColumn(
@@ -56,10 +55,7 @@ fun ListItems(
                 onClick = {onSelected(it.id)}
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    IconButton(onClick = {
-                        appViewModel.selectedLocationId.value = it.id
-                        navHostController?.navigate(Screens.DETAILS.route)
-                                         },
+                    IconButton(onClick = { onDetails(it.id) },
                         modifier=modifier.align(Alignment.TopEnd)) {
                         Icon(imageVector = Icons.Filled.MoreVert, contentDescription ="Details" )
                     }

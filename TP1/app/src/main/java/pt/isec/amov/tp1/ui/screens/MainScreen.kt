@@ -1,14 +1,15 @@
 package pt.isec.amov.tp1.ui.screens
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -63,6 +64,7 @@ fun MainScreen(
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember{ mutableStateOf(false) }
     var showMoreVert by remember{ mutableStateOf(false) }
+    var showFloatingButton by remember { mutableStateOf(false) }
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
@@ -83,6 +85,11 @@ fun MainScreen(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
             Screens.SEARCH_LOCATIONS.route
         )
+        showFloatingButton = destination.route in listOf(
+            Screens.SEARCH_PLACES_OF_INTEREST.route,
+            Screens.SEARCH_LOCATIONS.route
+        )
+
     }
     Scaffold(
         snackbarHost = {
@@ -112,11 +119,26 @@ fun MainScreen(
                     actions = {
                         if(showDoneIcon) {
                             IconButton(onClick = {
-                                onDoneAction(
-                                    currentScreen?.destination?.route,
-                                    navController,
-                                    viewModel,
-                                    context)
+                                when (currentScreen!!.destination.route!!) {
+                                    Screens.ADD_PLACE_OF_INTEREST.route -> {
+                                        if(viewModel.addLocal()) {
+                                            navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                                        }else{
+                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                    Screens.ADD_LOCATIONS.route ->{
+                                        if(viewModel.addLocal()) {
+                                            navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                        }else{
+                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                    Screens.CHOOSE_COORDINATES.route->{
+
+                                    }
+                                    else->{}
+                                }
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.Done,
@@ -156,6 +178,17 @@ fun MainScreen(
                     ),
                 )
         },
+        floatingActionButton = {
+            if(showFloatingButton)
+                FloatingActionButton(onClick = {
+                    when(currentScreen!!.destination.route!!){
+                        Screens.SEARCH_LOCATIONS.route-> navController.navigate(Screens.ADD_LOCATIONS.route)
+                        Screens.SEARCH_PLACES_OF_INTEREST.route->navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
+                    }
+                }) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                }
+        }
     ){
         NavHost(
             navController = navController,
@@ -180,11 +213,18 @@ fun MainScreen(
                 }
             }
             composable(Screens.SEARCH_LOCATIONS.route){
-                viewModel.searchForm = SearchForm(itemType = ItemType.LOCATION)
+                viewModel.searchForm = SearchForm(ItemType.LOCATION)
                 viewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
                 SearchView(
                     viewModel,
-                    navController
+                    onSelect= {locationId ->
+                        viewModel.selectedLocationId.value=locationId
+                        navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                    },
+                    onDetails = {locationId ->
+                        viewModel.selectedLocationId.value=locationId
+                        navController.navigate(Screens.DETAILS.route)
+                    }
                 )
             }
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
@@ -192,15 +232,18 @@ fun MainScreen(
                 viewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
                 SearchView(
                     viewModel,
-                    navController
+                    onSelect = {},
+                    onDetails = {
+                        navController.navigate(Screens.DETAILS.route)
+                    }
                 )
             }
             composable(Screens.ADD_LOCATIONS.route){
-                AddNewLocalView(appViewModel = viewModel,navController)
+                AddNewLocalView(viewModel,navController)
                 
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                AddNewLocalView(appViewModel = viewModel,navController)
+                AddNewLocalView(viewModel,navController)
             }
             composable(Screens.CHOOSE_COORDINATES.route){
                 ChooseCoordinates(locationViewModel)
@@ -212,33 +255,5 @@ fun MainScreen(
                 Credits()
             }
         }
-    }
-}
-
-fun onDoneAction(
-    currentScreen: String?,
-    navController: NavHostController,
-    viewModel: AppViewModel,
-    context: Context
-){
-    when (currentScreen) {
-        Screens.ADD_PLACE_OF_INTEREST.route -> {
-            if(viewModel.addLocal()) {
-                navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-            }else{
-                Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
-            }
-        }
-        Screens.ADD_LOCATIONS.route ->{
-            if(viewModel.addLocal()) {
-                navController.navigate(Screens.SEARCH_LOCATIONS.route)
-            }else{
-                Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
-            }
-        }
-        Screens.CHOOSE_COORDINATES.route->{
-
-        }
-        else->{}
     }
 }

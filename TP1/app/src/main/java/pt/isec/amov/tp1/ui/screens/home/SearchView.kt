@@ -61,8 +61,9 @@ import pt.isec.amov.tp1.ui.viewmodels.ItemType
 @Composable
 fun SearchView(
     appViewModel: AppViewModel,
-    navHostController: NavHostController?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSelect: (Int)-> Unit,
+    onDetails: (Int)-> Unit
 ) {
 
     var isExpandedCategories by remember {
@@ -130,74 +131,53 @@ fun SearchView(
             }
 
         }
-        if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = modifier.fillMaxWidth()
-            ) {
-                MyExposedDropDownMenu(
-                    isExpanded = isExpandedCategories,
-                    options = appViewModel.getCategories().map { it.name },
-                    selectedOption = selectedCategory,
-                    placeholder = stringResource(R.string.select_categories),
-                    label = stringResource(R.string.categories),
-                    onExpandChange = { /*TODO*/isExpandedCategories = !isExpandedCategories },
-                    onDismissRequest = { /*TODO*/isExpandedCategories = false },
-                    onClick = {
-                        isExpandedCategories = false
-                        selectedCategory = it
-                    }
+        when(appViewModel.searchForm!!.itemType) {
+            ItemType.PLACE_OF_INTEREST-> {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = modifier.fillMaxWidth()
+                ) {
+                    MyExposedDropDownMenu(
+                        isExpanded = isExpandedCategories,
+                        options = appViewModel.getCategories().map { it.name },
+                        selectedOption = selectedCategory,
+                        placeholder = stringResource(R.string.select_categories),
+                        label = stringResource(R.string.categories),
+                        onExpandChange = { isExpandedCategories = !isExpandedCategories },
+                        onDismissRequest = { isExpandedCategories = false },
+                        onClick = {
+                            isExpandedCategories = false
+                            selectedCategory = it
+                        }
+                    )
+                }
+                Text(
+                    text = "In ${appViewModel.getSelectedLocalName()}",
+                    fontSize = 30.sp
                 )
-            }
-            Text(
-                text = "In ${appViewModel.getSelectedLocalName()}",
-                fontSize = 30.sp
-            )
-        }
-        when(appViewModel.searchForm!!.itemType){
-            ItemType.LOCATION-> {
-                ListItems(
-                    locals = appViewModel.getLocations(),
-                    appViewModel,
-                    navHostController = navHostController,
-                    onSelected = {
-                        appViewModel.selectedLocationId.value = it
-                        navHostController?.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                    }
-                )
-            }
-            ItemType.PLACE_OF_INTEREST ->{
                 ListItems(
                     locals = appViewModel.getPlaceOfInterest(),
-                    appViewModel,
-                    navHostController = navHostController,
-                    onSelected = {}
+                    onSelected = {
+                        onSelect(it)
+                    },
+                    onDetails = {
+                        onDetails(it)
+                    }
+                )
+            }
+            ItemType.LOCATION->{
+                ListItems(
+                    locals = appViewModel.getLocations(),
+                    onSelected = {
+                        onSelect(it)
+                    },
+                    onDetails = {
+                        onDetails(it)
+                    }
                 )
             }
         }
-    }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ){
-        Button(
-            onClick = {
-                      when(appViewModel.searchForm!!.itemType){
-                          ItemType.LOCATION-> navHostController?.navigate(Screens.ADD_LOCATIONS.route)
-                          ItemType.PLACE_OF_INTEREST ->navHostController?.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
-                      }
-            },
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp),
-            modifier = modifier
-                .align(Alignment.BottomEnd)
-                .size(50.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Add"
-            )
-        }
+
+
     }
 }
