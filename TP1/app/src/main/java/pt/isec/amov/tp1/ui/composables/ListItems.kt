@@ -36,8 +36,8 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 fun ListItems(
     locals: List<Local>,
     modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit,
-    onDetails:(Int)-> Unit
+    onSelected: (Local) -> Unit,
+    onDetails:(Local)-> Unit
 ){
 
     LazyColumn(
@@ -52,10 +52,10 @@ fun ListItems(
                 elevation = CardDefaults.cardElevation(4.dp),
                 modifier = modifier
                     .padding(8.dp),
-                onClick = {onSelected(it.id)}
+                onClick = {onSelected(it)}
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    IconButton(onClick = { onDetails(it.id) },
+                    IconButton(onClick = { onDetails(it) },
                         modifier=modifier.align(Alignment.TopEnd)) {
                         Icon(imageVector = Icons.Filled.MoreVert, contentDescription ="Details" )
                     }

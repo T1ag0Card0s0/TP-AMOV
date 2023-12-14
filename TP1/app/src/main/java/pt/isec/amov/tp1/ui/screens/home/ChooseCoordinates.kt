@@ -32,14 +32,16 @@ import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 fun ChooseCoordinates(
     viewModel: LocalViewModel,
     modifier: Modifier = Modifier
-){
+) {
     val location = viewModel.currentLocation.observeAsState()
 
-    val geoPoint by remember{ mutableStateOf(
-        GeoPoint(
-            location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0
+    val geoPoint by remember {
+        mutableStateOf(
+            GeoPoint(
+                location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0
+            )
         )
-    ) }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -29,8 +29,8 @@ fun MyExposedDropDownMenu(
         expanded = isExpanded,
         onExpandedChange = {
                            onExpandChange()
-            //isExpandedCategories = !isExpandedCategories
         },
+        modifier = modifier
     ) {
         TextField(
             value = selectedOption,

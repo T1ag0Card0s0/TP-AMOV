@@ -41,12 +41,13 @@ import pt.isec.amov.tp1.ui.screens.home.SearchView
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
 import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
+import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
+import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 import pt.isec.amov.tp1.ui.viewmodels.ItemType
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
-import pt.isec.amov.tp1.ui.viewmodels.SearchForm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,14 +57,14 @@ fun MainScreen(
     fireBaseViewModel: FireBaseViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
-){
+) {
     val context = LocalContext.current
-    val snackbarHostState = remember{ SnackbarHostState() }
-    var isExpanded by remember{ mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    var isExpanded by remember { mutableStateOf(false) }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
-    var showArrowBack by remember{ mutableStateOf(false) }
-    var showMoreVert by remember{ mutableStateOf(false) }
+    var showArrowBack by remember { mutableStateOf(false) }
+    var showMoreVert by remember { mutableStateOf(false) }
     var showFloatingButton by remember { mutableStateOf(false) }
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -77,7 +78,8 @@ fun MainScreen(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route,
             Screens.SEARCH_PLACES_OF_INTEREST.route,
-            Screens.DETAILS.route,
+            Screens.LOCATION_DETAILS.route,
+            Screens.PLACE_OF_INTEREST_DETAILS.route,
             Screens.CREDITS.route,
             Screens.CHOOSE_COORDINATES.route
         )
@@ -96,16 +98,19 @@ fun MainScreen(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            if(showTopBar)
+            if (showTopBar)
                 CenterAlignedTopAppBar(
                     title = {
                         Text(text = Screens.valueOf(currentScreen!!.destination.route!!).display)
                     },
                     navigationIcon = {
-                        if(showArrowBack){
+                        if (showArrowBack) {
                             IconButton(onClick = {
-                                when(Screens.valueOf(currentScreen!!.destination.route!!)){
-                                    Screens.SEARCH_PLACES_OF_INTEREST->  navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
+                                    Screens.SEARCH_PLACES_OF_INTEREST -> navController.navigate(
+                                        Screens.SEARCH_LOCATIONS.route
+                                    )
+
                                     else -> navController.navigateUp()
                                 }
                             }) {
@@ -117,27 +122,38 @@ fun MainScreen(
                         }
                     },
                     actions = {
-                        if(showDoneIcon) {
+                        if (showDoneIcon) {
                             IconButton(onClick = {
                                 when (currentScreen!!.destination.route!!) {
                                     Screens.ADD_PLACE_OF_INTEREST.route -> {
-                                        if(viewModel.addLocal()) {
+                                        if (viewModel.addLocal(ItemType.PLACE_OF_INTEREST)) {
                                             navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                        }else{
-                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Failed to add",
+                                                Toast.LENGTH_LONG
+                                            ).show()
                                         }
                                     }
-                                    Screens.ADD_LOCATIONS.route ->{
-                                        if(viewModel.addLocal()) {
+
+                                    Screens.ADD_LOCATIONS.route -> {
+                                        if (viewModel.addLocal(ItemType.LOCATION)) {
                                             navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                        }else{
-                                            Toast.makeText(context, "Failed to add", Toast.LENGTH_LONG).show()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Failed to add",
+                                                Toast.LENGTH_LONG
+                                            ).show()
                                         }
                                     }
-                                    Screens.CHOOSE_COORDINATES.route->{
+
+                                    Screens.CHOOSE_COORDINATES.route -> {
 
                                     }
-                                    else->{}
+
+                                    else -> {}
                                 }
                             }) {
                                 Icon(
@@ -146,7 +162,7 @@ fun MainScreen(
                                 )
                             }
                         }
-                        if(showMoreVert){
+                        if (showMoreVert) {
                             IconButton(onClick = {
                                 isExpanded = !isExpanded
                             }) {
@@ -157,12 +173,12 @@ fun MainScreen(
                             }
                             MyDropDownMenu(
                                 isExpanded = isExpanded,
-                                options =  listOf(stringResource(R.string.logout)),
+                                options = listOf(stringResource(R.string.logout)),
                                 onClick = {
-                                    if(it.isEmpty())
+                                    if (it.isEmpty())
                                         isExpanded = false
                                     else {
-                                        isExpanded=false
+                                        isExpanded = false
                                         fireBaseViewModel.signOut()
                                         navController.navigate(Screens.LOGIN.route)
                                     }
@@ -172,86 +188,100 @@ fun MainScreen(
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
-                        titleContentColor =MaterialTheme.colorScheme.inversePrimary,
-                        navigationIconContentColor =MaterialTheme.colorScheme.inversePrimary,
-                        actionIconContentColor =MaterialTheme.colorScheme.inversePrimary
+                        titleContentColor = MaterialTheme.colorScheme.inversePrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.inversePrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.inversePrimary
                     ),
                 )
         },
         floatingActionButton = {
-            if(showFloatingButton)
+            if (showFloatingButton)
                 FloatingActionButton(onClick = {
-                    when(currentScreen!!.destination.route!!){
-                        Screens.SEARCH_LOCATIONS.route-> navController.navigate(Screens.ADD_LOCATIONS.route)
-                        Screens.SEARCH_PLACES_OF_INTEREST.route->navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
+                    when (currentScreen!!.destination.route!!) {
+                        Screens.SEARCH_LOCATIONS.route -> navController.navigate(Screens.ADD_LOCATIONS.route)
+                        Screens.SEARCH_PLACES_OF_INTEREST.route -> navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
                     }
                 }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
                 }
         }
-    ){
+    ) {
         NavHost(
             navController = navController,
             startDestination = Screens.LOGIN.route,
             modifier = modifier
                 .padding(it)
-        ){
-            composable(Screens.LOGIN.route){
+        ) {
+            composable(Screens.LOGIN.route) {
                 LoginForm(
                     fireBaseViewModel,
                     navController
-                ){
-                    navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                }
+                )
             }
-            composable(Screens.REGISTER.route){
+            composable(Screens.REGISTER.route) {
                 RegisterForm(
                     fireBaseViewModel,
                     navController
-                ){
-                    navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                }
+                )
             }
-            composable(Screens.SEARCH_LOCATIONS.route){
-                viewModel.searchForm = SearchForm(ItemType.LOCATION)
-                viewModel.addLocalForm= AddLocalForm(ItemType.LOCATION)
-                SearchView(
-                    viewModel,
-                    onSelect= {locationId ->
-                        viewModel.selectedLocationId.value=locationId
+            composable(Screens.SEARCH_LOCATIONS.route) {
+                SearchLocationView(
+                    locations = viewModel.getLocations(),
+                    onSelect = { location ->
+                        viewModel.selectedLocation.value = location
                         navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                     },
-                    onDetails = {locationId ->
-                        viewModel.selectedLocationId.value=locationId
-                        navController.navigate(Screens.DETAILS.route)
+                    onDetails = { location ->
+                        viewModel.selectedLocation.value = location
+                        navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                     }
                 )
             }
-            composable(Screens.SEARCH_PLACES_OF_INTEREST.route){
-                viewModel.searchForm = SearchForm(ItemType.PLACE_OF_INTEREST)
-                viewModel.addLocalForm= AddLocalForm(ItemType.PLACE_OF_INTEREST)
-                SearchView(
-                    viewModel,
-                    onSelect = {},
+            composable(Screens.SEARCH_PLACES_OF_INTEREST.route) {
+                SearchPlaceOfInterestView(
+                    placesOfInterest = viewModel.selectedLocation.value!!.placesOfInterest,
+                    categories = viewModel.getCategories(),
+                    location = viewModel.selectedLocation.value!!,
                     onDetails = {
-                        navController.navigate(Screens.DETAILS.route)
-                    }
+                        /*
+                        navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
+                        */
+                    },
                 )
             }
-            composable(Screens.ADD_LOCATIONS.route){
-                AddNewLocalView(viewModel,navController)
-                
+            composable(Screens.ADD_LOCATIONS.route) {
+                viewModel.addLocalForm = AddLocalForm()
+                AddNewLocalView(
+                    viewModel,
+                    ItemType.LOCATION,
+                    navController
+                )
+
             }
-            composable(Screens.ADD_PLACE_OF_INTEREST.route){
-                AddNewLocalView(viewModel,navController)
+            composable(Screens.ADD_PLACE_OF_INTEREST.route) {
+                viewModel.addLocalForm = AddLocalForm()
+                AddNewLocalView(
+                    viewModel,
+                    ItemType.PLACE_OF_INTEREST,
+                    navController
+                )
             }
-            composable(Screens.CHOOSE_COORDINATES.route){
+            composable(Screens.LOCATION_DETAILS.route) {
+                LocalDetailView(
+                    viewModel,
+                    ItemType.LOCATION
+                )
+            }
+            composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {
+                LocalDetailView(
+                    viewModel,
+                    ItemType.PLACE_OF_INTEREST
+                )
+            }
+            composable(Screens.CHOOSE_COORDINATES.route) {
                 ChooseCoordinates(locationViewModel)
             }
-            composable(Screens.DETAILS.route){
-                LocalDetailView()
-            }
-            composable(Screens.CREDITS.route){
+            composable(Screens.CREDITS.route) {
                 Credits()
             }
         }

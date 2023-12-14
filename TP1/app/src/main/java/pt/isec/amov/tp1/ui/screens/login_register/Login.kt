@@ -36,7 +36,6 @@ fun LoginForm(
     fireBaseViewModel: FireBaseViewModel,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
-    onSuccess: ()->Unit
 ) {
     val email = remember{ mutableStateOf("") }
     val password = remember{ mutableStateOf("") }
@@ -46,7 +45,7 @@ fun LoginForm(
         Screens.REGISTER.route,
         Screens.CREDITS.route)
     LaunchedEffect(key1 = user){
-        if(user!=null&&error.value==null) onSuccess()
+        if(user!=null&&error.value==null) navController!!.navigate(Screens.SEARCH_LOCATIONS.route)
     }
     Box(
         modifier = modifier

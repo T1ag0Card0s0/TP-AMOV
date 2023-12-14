@@ -44,9 +44,10 @@ import pt.isec.amov.tp1.ui.viewmodels.ItemType
 @Composable
 fun AddNewLocalView(
     appViewModel: AppViewModel,
+    itemType: ItemType,
     navHostController: NavHostController,
     modifier: Modifier = Modifier
-){
+) {
     var optCategory by remember {
         mutableStateOf("")
     }
@@ -64,7 +65,7 @@ fun AddNewLocalView(
         ) {
             MyTextField(
                 value = appViewModel.addLocalForm!!.name.value,
-                onChange =  { appViewModel.addLocalForm!!.name.value = it },
+                onChange = { appViewModel.addLocalForm!!.name.value = it },
                 placeholder = stringResource(R.string.enter_name),
                 label = stringResource(R.string.name),
                 icon = Icons.Default.Abc
@@ -73,31 +74,33 @@ fun AddNewLocalView(
             Spacer(modifier = modifier.height(24.dp))
             MyTextField(
                 value = appViewModel.addLocalForm!!.descrition.value,
-                onChange =  { appViewModel.addLocalForm!!.descrition.value = it },
+                onChange = { appViewModel.addLocalForm!!.descrition.value = it },
                 placeholder = stringResource(R.string.enter_description),
                 label = stringResource(R.string.description),
                 icon = Icons.Default.Abc
             )
-            if(appViewModel.searchForm!!.itemType==ItemType.PLACE_OF_INTEREST) {
+            if (itemType == ItemType.PLACE_OF_INTEREST) {
                 Spacer(modifier = modifier.height(24.dp))
                 MyExposedDropDownMenu(
                     isExpanded = isExpandedCategories,
                     options = appViewModel.getCategories().map { it.name },
                     selectedOption = optCategory,
-                    placeholder = stringResource(R.string.select_categories) ,
-                    label = stringResource(R.string.categories) ,
+                    placeholder = stringResource(R.string.select_categories),
+                    label = stringResource(R.string.categories),
                     onExpandChange = { /*TODO*/isExpandedCategories = !isExpandedCategories },
                     onDismissRequest = { /*TODO*/
-                        isExpandedCategories = false },
+                        isExpandedCategories = false
+                    },
                     onClick = {
                         optCategory = it
                         isExpandedCategories = false
-                        appViewModel.addLocalForm!!.category.value= appViewModel.getCategories().find { c-> c.name == optCategory }
+                        appViewModel.addLocalForm!!.category.value =
+                            appViewModel.getCategories().find { c -> c.name == optCategory }
                     }
                 )
             }
             Spacer(modifier = modifier.height(24.dp))
-            Row{
+            Row {
                 Button(onClick = { /*TODO*/ }) {
                     Text(text = stringResource(R.string.current_location))
                 }
