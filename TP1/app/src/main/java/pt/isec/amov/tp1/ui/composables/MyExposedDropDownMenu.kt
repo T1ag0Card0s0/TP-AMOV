@@ -1,5 +1,8 @@
 package pt.isec.amov.tp1.ui.composables
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -7,8 +10,10 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import pt.isec.amov.tp1.R
 
@@ -27,41 +32,55 @@ fun MyExposedDropDownMenu(
 ){
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        onExpandedChange = {
-                           onExpandChange()
-        },
+        onExpandedChange = { onExpandChange() },
         modifier = modifier
     ) {
         TextField(
             value = selectedOption,
             onValueChange = {},
-            placeholder = { Text(placeholder) },
+            placeholder = {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Text(placeholder)
+                } },
             label = {
-                Text(
-                    label,
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Text(
+                        label,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
             },
+            textStyle = TextStyle(textAlign = TextAlign.Center),
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-            modifier = Modifier.menuAnchor()
+            modifier = modifier.menuAnchor()
         )
 
         ExposedDropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { onDismissRequest()}
+            onDismissRequest = { onDismissRequest()},
         ) {
             for (option in options)
                 DropdownMenuItem(
                     text = {
-                        Text(text = option)
+                        Row(
+                            horizontalArrangement =Arrangement.Center ,
+                            modifier = Modifier.fillMaxWidth()
+                        ){
+                            Text(text = option)
+                        }
+
                     },
                     onClick = {
                         onClick(option)
-                       /* optCategory = item.name
-                        isExpandedCategories = false
-                        appViewModel.addLocalForm!!.category.value=item*/
-                    }
+                    },
                 )
         }
     }

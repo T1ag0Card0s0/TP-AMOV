@@ -2,6 +2,7 @@ package pt.isec.amov.tp1.ui.screens.searchview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +42,10 @@ fun SearchPlaceOfInterestView(
 ) {
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
+    var isAlphabetiOrderByExpanded by remember { mutableStateOf(false) }
+    var alphabeticOrderBy by remember { mutableStateOf("") }
+    var isDistanceOrderByExpanded by remember { mutableStateOf(false) }
+    var distanceOrderBy by remember { mutableStateOf("") }
     Column(
         modifier = modifier
             .padding(8.dp)
@@ -50,75 +55,62 @@ fun SearchPlaceOfInterestView(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "A")
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "A")
-                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "Km")
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "Km")
-                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
-                }
-            }
-
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = modifier.fillMaxWidth()
-        ) {
             MyExposedDropDownMenu(
-                isExpanded = isExpandedCategories,
-                options = categories.map { it.name },
-                selectedOption = selectedCategory,
-                placeholder = stringResource(R.string.select_categories),
-                label = stringResource(R.string.categories),
-                onExpandChange = { isExpandedCategories = !isExpandedCategories },
-                onDismissRequest = { isExpandedCategories = false },
+                isExpanded = isAlphabetiOrderByExpanded,
+                options = listOf(
+                    stringResource(R.string.ascendent),
+                    stringResource(R.string.descendent)
+                ),
+                selectedOption = alphabeticOrderBy,
+                placeholder = stringResource(R.string.orderBy),
+                label = stringResource(R.string.alphabetic),
+                onExpandChange = { isAlphabetiOrderByExpanded = !isAlphabetiOrderByExpanded },
+                onDismissRequest = { isAlphabetiOrderByExpanded = false },
                 onClick = {
-                    isExpandedCategories = false
-                    selectedCategory = it
-                }
+                    isAlphabetiOrderByExpanded = false
+                    alphabeticOrderBy = it
+                },
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = 3.dp, end = 3.dp)
+            )
+            MyExposedDropDownMenu(
+                isExpanded = isDistanceOrderByExpanded,
+                options = listOf(
+                    stringResource(R.string.ascendent),
+                    stringResource(R.string.descendent)
+                ),
+                selectedOption = distanceOrderBy,
+                placeholder = stringResource(R.string.orderBy),
+                label = stringResource(R.string.distance),
+                onExpandChange = { isDistanceOrderByExpanded = !isDistanceOrderByExpanded },
+                onDismissRequest = { isDistanceOrderByExpanded = false },
+                onClick = {
+                    isDistanceOrderByExpanded = false
+                    distanceOrderBy = it
+                },
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = 3.dp,end = 3.dp)
             )
         }
+        MyExposedDropDownMenu(
+            isExpanded = isExpandedCategories,
+            options = categories.map { it.name },
+            selectedOption = selectedCategory,
+            placeholder = stringResource(R.string.select_categories),
+            label = stringResource(R.string.categories),
+            onExpandChange = { isExpandedCategories = !isExpandedCategories },
+            onDismissRequest = { isExpandedCategories = false },
+            onClick = {
+                isExpandedCategories = false
+                selectedCategory = it
+            },
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp,start = 3.dp,end = 3.dp)
+        )
+
         Text(
             text = "In ${location.name}",
             fontSize = 30.sp

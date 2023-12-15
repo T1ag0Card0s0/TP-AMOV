@@ -1,4 +1,4 @@
-package pt.isec.amov.tp1.ui.screens.home
+package pt.isec.amov.tp1.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,10 +30,10 @@ import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun ChooseCoordinates(
-    viewModel: LocalViewModel,
+    locationViewModel: LocalViewModel,
     modifier: Modifier = Modifier
 ) {
-    val location = viewModel.currentLocation.observeAsState()
+    val location = locationViewModel.currentLocation.observeAsState()
 
     val geoPoint by remember {
         mutableStateOf(
@@ -73,7 +73,7 @@ fun ChooseCoordinates(
                         setMultiTouchControls(true)
                         controller.setCenter(geoPoint)
                         controller.setZoom(18.0)
-                        for (poi in viewModel.POIs)
+                        for (poi in locationViewModel.POIs)
                             overlays.add(
                                 Marker(this).apply {
                                     position = GeoPoint(poi.latitude, poi.longitude)

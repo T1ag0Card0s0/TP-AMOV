@@ -66,15 +66,11 @@ fun ListItems(
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Title: ${it.name}",
+                            text = it.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        if (it is PlaceOfInterest){
-                            Text(text = "Category:${it.category.name}", fontSize = 12.sp)
-                        }
-                        Text(text = "Description: ${it.description}", fontSize = 12.sp)
                         AsyncImage(
                             model = it.imagePath,
                             contentDescription = "Image",

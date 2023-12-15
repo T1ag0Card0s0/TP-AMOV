@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -33,11 +35,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.ui.composables.MyDropDownMenu
-import pt.isec.amov.tp1.ui.screens.home.AddNewLocalView
-import pt.isec.amov.tp1.ui.screens.home.ChooseCoordinates
-import pt.isec.amov.tp1.ui.screens.home.LocalDetailView
-import pt.isec.amov.tp1.ui.screens.home.SearchView
+import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
+import pt.isec.amov.tp1.ui.screens.addview.AddPlaceOfInterestView
+import pt.isec.amov.tp1.ui.screens.detailview.LocationDetailsView
+import pt.isec.amov.tp1.ui.screens.detailview.PlaceOfInterestDetailsView
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
 import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
@@ -81,7 +82,8 @@ fun MainScreen(
             Screens.LOCATION_DETAILS.route,
             Screens.PLACE_OF_INTEREST_DETAILS.route,
             Screens.CREDITS.route,
-            Screens.CHOOSE_COORDINATES.route
+            Screens.CHOOSE_COORDINATES.route,
+            Screens.MY_CONTRIBUTIONS.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -89,9 +91,9 @@ fun MainScreen(
         )
         showFloatingButton = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
-            Screens.SEARCH_LOCATIONS.route
+            Screens.SEARCH_LOCATIONS.route,
+            Screens.MY_CONTRIBUTIONS.route
         )
-
     }
     Scaffold(
         snackbarHost = {
@@ -107,13 +109,15 @@ fun MainScreen(
                         if (showArrowBack) {
                             IconButton(onClick = {
                                 when (Screens.valueOf(currentScreen!!.destination.route!!)) {
-                                    Screens.SEARCH_PLACES_OF_INTEREST -> navController.navigate(
-                                        Screens.SEARCH_LOCATIONS.route
-                                    )
-
+                                    Screens.SEARCH_PLACES_OF_INTEREST, Screens.MY_CONTRIBUTIONS -> {
+                                        navController.navigate(
+                                            Screens.SEARCH_LOCATIONS.route
+                                        )
+                                    }
                                     else -> navController.navigateUp()
                                 }
-                            }) {
+                            }
+                            ) {
                                 Icon(
                                     imageVector = Icons.Filled.ArrowBack,
                                     contentDescription = "Back"
@@ -171,19 +175,29 @@ fun MainScreen(
                                     contentDescription = "More Vert"
                                 )
                             }
-                            MyDropDownMenu(
-                                isExpanded = isExpanded,
-                                options = listOf(stringResource(R.string.logout)),
-                                onClick = {
-                                    if (it.isEmpty())
+                            DropdownMenu(
+                                expanded = isExpanded,
+                                onDismissRequest = { isExpanded = false }) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(R.string.my_contributions))
+                                    },
+                                    onClick = {
                                         isExpanded = false
-                                    else {
+                                        navController.navigate(Screens.MY_CONTRIBUTIONS.route)
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(R.string.logout))
+                                    },
+                                    onClick = {
                                         isExpanded = false
                                         fireBaseViewModel.signOut()
                                         navController.navigate(Screens.LOGIN.route)
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -214,14 +228,14 @@ fun MainScreen(
         ) {
             composable(Screens.LOGIN.route) {
                 LoginForm(
-                    fireBaseViewModel,
-                    navController
+                    fireBaseViewModel = fireBaseViewModel,
+                    navController = navController
                 )
             }
             composable(Screens.REGISTER.route) {
                 RegisterForm(
-                    fireBaseViewModel,
-                    navController
+                    fireBaseViewModel = fireBaseViewModel,
+                    navController = navController
                 )
             }
             composable(Screens.SEARCH_LOCATIONS.route) {
@@ -233,7 +247,7 @@ fun MainScreen(
                     },
                     onDetails = { location ->
                         viewModel.selectedLocation.value = location
-                        navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
+                        navController.navigate(Screens.LOCATION_DETAILS.route)
                     }
                 )
             }
@@ -242,44 +256,43 @@ fun MainScreen(
                     placesOfInterest = viewModel.selectedLocation.value!!.placesOfInterest,
                     categories = viewModel.getCategories(),
                     location = viewModel.selectedLocation.value!!,
-                    onDetails = {
-                        /*
+                    onDetails = { placeOfInterest ->
+                        viewModel.selecedPlaceOfInterest.value = placeOfInterest
                         navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
-                        */
                     },
                 )
             }
             composable(Screens.ADD_LOCATIONS.route) {
                 viewModel.addLocalForm = AddLocalForm()
-                AddNewLocalView(
-                    viewModel,
-                    ItemType.LOCATION,
-                    navController
+                AddLocationView(
+                    appViewModel = viewModel,
+                    navController = navController
                 )
-
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route) {
                 viewModel.addLocalForm = AddLocalForm()
-                AddNewLocalView(
-                    viewModel,
-                    ItemType.PLACE_OF_INTEREST,
-                    navController
+                AddPlaceOfInterestView(
+                    appViewModel = viewModel,
+                    navController = navController
                 )
             }
             composable(Screens.LOCATION_DETAILS.route) {
-                LocalDetailView(
-                    viewModel,
-                    ItemType.LOCATION
+                LocationDetailsView(
+                    location = viewModel.selectedLocation.value!!,
                 )
             }
             composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {
-                LocalDetailView(
-                    viewModel,
-                    ItemType.PLACE_OF_INTEREST
+                PlaceOfInterestDetailsView(
+                    placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
                 )
             }
+            composable(Screens.MY_CONTRIBUTIONS.route) {
+                MyContributionsView()
+            }
             composable(Screens.CHOOSE_COORDINATES.route) {
-                ChooseCoordinates(locationViewModel)
+                ChooseCoordinates(
+                    locationViewModel = locationViewModel
+                )
             }
             composable(Screens.CREDITS.route) {
                 Credits()

@@ -15,12 +15,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListItems
+import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 
 @Composable
 fun SearchLocationView(
@@ -29,6 +36,10 @@ fun SearchLocationView(
     onSelect: (Location)-> Unit,
     onDetails: (Location)-> Unit
 ) {
+    var isAlphabetiOrderByExpanded by remember {mutableStateOf(false)}
+    var alphabeticOrderBy by remember { mutableStateOf("") }
+    var isDistanceOrderByExpanded by remember {mutableStateOf(false)}
+    var distanceOrderBy by remember { mutableStateOf("") }
     Column(
         modifier = modifier
             .padding(8.dp)
@@ -38,57 +49,41 @@ fun SearchLocationView(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "A")
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "A")
-                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "Km")
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
-                }
-            }
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                Row {
-                    Text(text = "Km")
-                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
-                }
-            }
-
+            MyExposedDropDownMenu(
+                isExpanded = isAlphabetiOrderByExpanded,
+                options = listOf(
+                    stringResource(R.string.ascendent),
+                    stringResource(R.string.descendent)
+                ),
+                selectedOption = alphabeticOrderBy,
+                placeholder = stringResource(R.string.orderBy),
+                label = stringResource(R.string.alphabetic),
+                onExpandChange = { isAlphabetiOrderByExpanded= !isAlphabetiOrderByExpanded },
+                onDismissRequest = { isAlphabetiOrderByExpanded = false },
+                onClick = {
+                    isAlphabetiOrderByExpanded = false
+                    alphabeticOrderBy=it
+                },
+                modifier = modifier.weight(1f).padding(start = 3.dp,end = 3.dp)
+            )
+            MyExposedDropDownMenu(
+                isExpanded = isDistanceOrderByExpanded,
+                options = listOf(
+                    stringResource(R.string.ascendent),
+                    stringResource(R.string.descendent)
+                ),
+                selectedOption = distanceOrderBy,
+                placeholder = stringResource(R.string.orderBy),
+                label = stringResource(R.string.distance),
+                onExpandChange = { isDistanceOrderByExpanded=!isDistanceOrderByExpanded },
+                onDismissRequest = { isDistanceOrderByExpanded=false },
+                onClick = {
+                    isDistanceOrderByExpanded = false
+                    distanceOrderBy=it
+                },
+                modifier = modifier.weight(1f).padding(start = 3.dp,end = 3.dp)
+            )
         }
-
         ListItems(
             locals = locations,
             onSelected = {

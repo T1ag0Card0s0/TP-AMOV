@@ -34,4 +34,10 @@
     <string name="choose_location">Choose Location</string>
     <string name="enter_description">Enter Description</string>
     <string name="enter_name">Enter Name</string>
+    <string name="ascendent">Ascendent</string>
+    <string name="descendent">Descendent</string>
+    <string name="select_one_option">Select one option</string>
+    <string name="my_contributions">My Contributions</string>
+    <string name="locations">Locations</string>
+    <string name="places_of_interest">Places of Interest</string>
 </resources>
