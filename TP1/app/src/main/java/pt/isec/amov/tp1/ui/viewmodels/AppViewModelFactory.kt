@@ -11,6 +11,7 @@ import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
+import java.util.UUID
 
 enum class ItemType {
     LOCATION,
@@ -65,6 +66,9 @@ class AppViewModel(val appData: AppData) : ViewModel() {
 
     fun getCategories(): List<Category> {
         return appData.categories
+    }
+    fun addCategory(name: String, description:String){
+        appData.addCategory(name,description)
     }
 }
 

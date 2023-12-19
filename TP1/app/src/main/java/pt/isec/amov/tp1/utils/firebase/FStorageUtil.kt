@@ -8,12 +8,25 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import pt.isec.amov.tp1.data.Category
 import java.io.IOException
 import java.io.InputStream
 
 
 class FStorageUtil {
     companion object {
+        fun addCategoryToFirestore(category: Category,onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToAdd = hashMapOf(
+                "id" to category.id,
+                "name" to category.name,
+                "description" to category.description
+            )
+            db.collection("Categories").document(category.name).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
         fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
 

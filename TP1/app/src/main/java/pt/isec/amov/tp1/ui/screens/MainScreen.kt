@@ -1,6 +1,8 @@
 package pt.isec.amov.tp1.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,6 +37,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.ui.composables.MyCenterAlignedTopAppBarr
+import pt.isec.amov.tp1.ui.composables.MyFloatingActionButton
 import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
 import pt.isec.amov.tp1.ui.screens.addview.AddPlaceOfInterestView
 import pt.isec.amov.tp1.ui.screens.detailview.LocationDetailsView
@@ -59,9 +63,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    val context = LocalContext.current
+
     val snackbarHostState = remember { SnackbarHostState() }
-    var isExpanded by remember { mutableStateOf(false) }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember { mutableStateOf(false) }
@@ -101,123 +104,25 @@ fun MainScreen(
         },
         topBar = {
             if (showTopBar)
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(text = Screens.valueOf(currentScreen!!.destination.route!!).display)
-                    },
-                    navigationIcon = {
-                        if (showArrowBack) {
-                            IconButton(onClick = {
-                                when (Screens.valueOf(currentScreen!!.destination.route!!)) {
-                                    Screens.SEARCH_PLACES_OF_INTEREST, Screens.MY_CONTRIBUTIONS -> {
-                                        navController.navigate(
-                                            Screens.SEARCH_LOCATIONS.route
-                                        )
-                                    }
-                                    else -> navController.navigateUp()
-                                }
-                            }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                            }
-                        }
-                    },
-                    actions = {
-                        if (showDoneIcon) {
-                            IconButton(onClick = {
-                                when (currentScreen!!.destination.route!!) {
-                                    Screens.ADD_PLACE_OF_INTEREST.route -> {
-                                        if (viewModel.addLocal(ItemType.PLACE_OF_INTEREST)) {
-                                            navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Failed to add",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                    }
-
-                                    Screens.ADD_LOCATIONS.route -> {
-                                        if (viewModel.addLocal(ItemType.LOCATION)) {
-                                            navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Failed to add",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                    }
-
-                                    Screens.CHOOSE_COORDINATES.route -> {
-
-                                    }
-
-                                    else -> {}
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Done,
-                                    contentDescription = "Done"
-                                )
-                            }
-                        }
-                        if (showMoreVert) {
-                            IconButton(onClick = {
-                                isExpanded = !isExpanded
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = "More Vert"
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = isExpanded,
-                                onDismissRequest = { isExpanded = false }) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(stringResource(R.string.my_contributions))
-                                    },
-                                    onClick = {
-                                        isExpanded = false
-                                        navController.navigate(Screens.MY_CONTRIBUTIONS.route)
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(stringResource(R.string.logout))
-                                    },
-                                    onClick = {
-                                        isExpanded = false
-                                        fireBaseViewModel.signOut()
-                                        navController.navigate(Screens.LOGIN.route)
-                                    }
-                                )
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                        titleContentColor = MaterialTheme.colorScheme.inversePrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.inversePrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.inversePrimary
-                    ),
+                MyCenterAlignedTopAppBarr(
+                    Screens.valueOf(currentScreen!!.destination.route!!).display,
+                    Screens.valueOf(currentScreen!!.destination.route!!),
+                    navController,
+                    viewModel,
+                    fireBaseViewModel,
+                    showArrowBack,
+                    showDoneIcon,
+                    showMoreVert
                 )
-        },
+        } ,
         floatingActionButton = {
-            if (showFloatingButton)
-                FloatingActionButton(onClick = {
-                    when (currentScreen!!.destination.route!!) {
-                        Screens.SEARCH_LOCATIONS.route -> navController.navigate(Screens.ADD_LOCATIONS.route)
-                        Screens.SEARCH_PLACES_OF_INTEREST.route -> navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
-                    }
-                }) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-                }
+            if (showFloatingButton) {
+                MyFloatingActionButton(
+                    viewModel,
+                    Screens.valueOf(currentScreen!!.destination.route!!),
+                    navController
+                )
+            }
         }
     ) {
         NavHost(
