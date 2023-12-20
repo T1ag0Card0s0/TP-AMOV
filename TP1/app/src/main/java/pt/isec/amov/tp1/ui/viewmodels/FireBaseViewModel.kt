@@ -1,6 +1,5 @@
 package pt.isec.amov.tp1.ui.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,6 @@ import kotlinx.coroutines.launch
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.User
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
-import pt.isec.amov.tp1.utils.firebase.FStorageUtil
 
 fun FirebaseUser.toUser(): User {
     val username = this.displayName?:""
@@ -28,7 +26,7 @@ class FireBaseViewModelFactory(
 }
 class FireBaseViewModel(private val appData: AppData): ViewModel() {
     val user : MutableState<User?>
-        get() = appData._user
+        get() = appData.user
 
     private val _error = mutableStateOf<String?>(null)
     val error : MutableState<String?>
@@ -39,7 +37,7 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
         viewModelScope.launch {
             FAuthUtil.createUserWithEmail(email, password) { exception ->
                 if (exception == null) {//Success
-                    appData._user.value = FAuthUtil.currentUser?.toUser()
+                    appData.user.value = FAuthUtil.currentUser?.toUser()
                 }
                 _error.value = exception?.message
             }
@@ -50,7 +48,7 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
         viewModelScope.launch {
             FAuthUtil.signInWithEmail(email, password) { exception ->
                 if (exception == null) {//Success
-                    appData._user.value = FAuthUtil.currentUser?.toUser()
+                    appData.user.value = FAuthUtil.currentUser?.toUser()
                 }
                 _error.value = exception?.message
             }
@@ -58,14 +56,14 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
     }
     fun signOut(){
         FAuthUtil.signOut()
-        appData._user.value = null
+        appData.user.value = null
         _error.value = null
     }
-    fun addDataToFireStore(){
+    /*fun addDataToFireStore(){
         viewModelScope.launch {
-            FStorageUtil.addDataToFirestore { exception->
+            /*FStorageUtil.addDataToFirestore { exception->
                 _error.value = exception?.message
-            }
+            }*/
         }
     }
 
@@ -82,6 +80,6 @@ class FireBaseViewModel(private val appData: AppData): ViewModel() {
                 Log.i("Teste","$games, $topscores")
             }
         }
-    }
+    }*/
 
 }

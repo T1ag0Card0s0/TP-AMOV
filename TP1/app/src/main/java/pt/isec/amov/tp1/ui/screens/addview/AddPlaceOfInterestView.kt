@@ -40,12 +40,8 @@ fun AddPlaceOfInterestView(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var optCategory by remember {
-        mutableStateOf("")
-    }
-    var isExpandedCategories by remember {
-        mutableStateOf(false)
-    }
+    var optCategory by remember { mutableStateOf("") }
+    var isExpandedCategories by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
             .fillMaxSize()

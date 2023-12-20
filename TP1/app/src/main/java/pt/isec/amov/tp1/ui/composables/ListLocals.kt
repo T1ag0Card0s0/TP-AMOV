@@ -24,16 +24,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import pt.isec.amov.tp1.data.Local
-import pt.isec.amov.tp1.data.PlaceOfInterest
-import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListItems(
+fun ListLocals(
     locals: List<Local>,
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,

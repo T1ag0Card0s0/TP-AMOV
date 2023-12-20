@@ -9,85 +9,137 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Location
+import pt.isec.amov.tp1.data.PlaceOfInterest
+import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 
 
 class FStorageUtil {
     companion object {
-        fun addCategoryToFirestore(category: Category,onResult: (Throwable?) -> Unit){
+        fun addOrUpdateLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToAdd = hashMapOf(
-                "id" to category.id,
-                "name" to category.name,
-                "description" to category.description
-            )
-            db.collection("Categories").document(category.name).set(dataToAdd)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
-        }
-        fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
-            val db = Firebase.firestore
-
-            val scores = hashMapOf(
-                "nrgames" to 0,
-                "topscore" to 0
-            )
-            db.collection("Scores").document("Level1").set(scores)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
-        }
-
-        fun updateDataInFirestore(onResult: (Throwable?) -> Unit) {
-            val db = Firebase.firestore
-            val v = db.collection("Scores").document("Level1")
-
-            v.get(Source.SERVER)
-                .addOnSuccessListener {
-                    val exists = it.exists()
-                    Log.i("Firestore", "updateDataInFirestore: Success? $exists")
-                    if (!exists) {
-                        onResult(Exception("Doesn't exist"))
-                        return@addOnSuccessListener
-                    }
-                    val value = it.getLong("nrgames") ?: 0
-                    v.update("nrgames", value + 1)
-                    onResult(null)
-                }
-                .addOnFailureListener { e ->
-                    onResult(e)
-                }
-        }
-
-        fun updateDataInFirestoreTrans(onResult: (Throwable?) -> Unit) {
-            val db = Firebase.firestore
-            val v = db.collection("Scores").document("Level1")
+            val dataFromFS = db.collection("Locations").document(location.name)
 
             db.runTransaction { transaction ->
-                val doc = transaction.get(v)
+                val doc = transaction.get(dataFromFS)
                 if (doc.exists()) {
-                    val newnrgames = (doc.getLong("nrgames") ?: 0) + 1
-                    val newtopscore = (doc.getLong("topscore") ?: 0) + 100
-                    transaction.update(v, "nrgames", newnrgames)
-                    transaction.update(v, "topscore", newtopscore)
+                    transaction.update(dataFromFS, "name", location.name)
+                    transaction.update(dataFromFS, "description", location.description)
+                    transaction.update(dataFromFS, "imagePath", location.imagePath)
+                    transaction.update(dataFromFS, "authorEmail", location.authorEmail)
                     null
-                } else
-                    throw FirebaseFirestoreException(
-                        "Doesn't exist",
-                        FirebaseFirestoreException.Code.UNAVAILABLE
+                } else{
+                    val dataToAdd = hashMapOf(
+                        "id" to location.id,
+                        "name" to location.name,
+                        "description" to location.description,
+                        "imagePath" to location.imagePath,
+                        "authorEmail" to location.authorEmail
                     )
+                    if (location.imagePath!!.isNotEmpty()) {
+                        val file = File(location.imagePath)
+                        val inputStream = FileInputStream(file)
+                        uploadFile(inputStream, file.name)
+                    }
+                    db.collection("Locations").document(location.name).set(dataToAdd)
+                        .addOnCompleteListener { result ->
+                            onResult(result.exception)
+                        }
+                }
+
+            }.addOnCompleteListener { result ->
+                onResult(result.exception)
+            }
+        }
+        fun addOrUpdatePlaceOfInterestToFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataFromFS = db.collection("PlacesOfInterest").document(placeOfInterest.name)
+
+            db.runTransaction { transaction ->
+                val doc = transaction.get(dataFromFS)
+                if (doc.exists()) {
+                    transaction.update(dataFromFS, "name", placeOfInterest.name)
+                    transaction.update(dataFromFS, "description", placeOfInterest.description)
+                    transaction.update(dataFromFS, "categoryId", placeOfInterest.categoryId)
+                    transaction.update(dataFromFS, "locationId", placeOfInterest.locationId)
+                    transaction.update(dataFromFS, "imagePath", placeOfInterest.imagePath)
+                    transaction.update(dataFromFS, "authorEmail", placeOfInterest.authorEmail)
+                    null
+                } else{
+                    val dataToAdd = hashMapOf(
+                        "id" to placeOfInterest.id,
+                        "name" to placeOfInterest.name,
+                        "description" to placeOfInterest.description,
+                        "categoryId" to placeOfInterest.categoryId,
+                        "locationId" to placeOfInterest.locationId,
+                        "imagePath" to placeOfInterest.imagePath,
+                        "authorEmail" to placeOfInterest.authorEmail
+                    )
+                    if (placeOfInterest.imagePath!!.isNotEmpty()) {
+                        val file = File(placeOfInterest.imagePath)
+                        val inputStream = FileInputStream(file)
+                        uploadFile(inputStream, file.name)
+                    }
+                    db.collection("PlacesOfInterest").document(placeOfInterest.name).set(dataToAdd)
+                        .addOnCompleteListener { result ->
+                            onResult(result.exception)
+                        }
+                }
+
             }.addOnCompleteListener { result ->
                 onResult(result.exception)
             }
         }
 
-        fun removeDataFromFirestore(onResult: (Throwable?) -> Unit) {
+        fun addOrUpdateCategories(category: Category, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val v = db.collection("Scores").document("Level1")
+            val dataFromFS = db.collection("Categories").document(category.name)
 
-            v.delete()
+            db.runTransaction { transaction ->
+                val doc = transaction.get(dataFromFS)
+                if (doc.exists()) {
+                    transaction.update(dataFromFS, "name", category.name)
+                    transaction.update(dataFromFS, "description", category.description)
+                    null
+                } else{
+                    val dataToAdd = hashMapOf(
+                        "id" to category.id,
+                        "authorEmail" to category.authorEmail,
+                        "name" to category.name,
+                        "description" to category.description
+                    )
+                    db.collection("Categories").document(category.name).set(dataToAdd)
+                        .addOnCompleteListener { result ->
+                            onResult(result.exception)
+                        }
+                }
+
+            }.addOnCompleteListener { result ->
+                onResult(result.exception)
+            }
+        }
+        fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToRemove = db.collection("Categories").document(category.name)
+
+            dataToRemove.delete()
+                .addOnCompleteListener { onResult(it.exception) }
+        }
+        fun removeLocationFromFireStone(location: Location, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToRemove = db.collection("Locations").document(location.name)
+
+            dataToRemove.delete()
+                .addOnCompleteListener { onResult(it.exception) }
+        }
+        fun removePlaceOfInterestFromFireStone(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToRemove = db.collection("PlacesOfInterest").document(placeOfInterest.name)
+
+            dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
 

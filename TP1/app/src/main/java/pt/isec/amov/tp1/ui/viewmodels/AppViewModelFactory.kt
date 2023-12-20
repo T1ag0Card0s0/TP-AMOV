@@ -44,6 +44,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     addLocalForm!!.descrition.value,
                     addLocalForm!!.imagePath.value
                 )
+
             }
 
             ItemType.PLACE_OF_INTEREST -> {
@@ -69,6 +70,21 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
     fun addCategory(name: String, description:String){
         appData.addCategory(name,description)
+    }
+
+    fun getMyLocations(): List<Local> {
+        return appData.getMyLocations()
+    }
+
+    fun getMyPlacesOfInterest(): List<Local> {
+        return appData.getMyPlacesOfInterest()
+    }
+    fun getMyCategories(): List<Category>{
+        return appData.getMyCategories()
+    }
+
+    fun getPlacesOfInterest(): List<PlaceOfInterest> {
+        return appData.getPlaceOfInterest(selectedLocation.value!!.id)
     }
 }
 
