@@ -31,7 +31,8 @@ fun ListCategories(
     categories: List<Category>,
     modifier: Modifier = Modifier,
     onSelected: (Category) -> Unit,
-    onDetails: (Category) -> Unit
+    onDetails: (Category) -> Unit,
+    onRemove: (Category) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -50,7 +51,7 @@ fun ListCategories(
                 Box(modifier = modifier.fillMaxSize()) {
                     Row(modifier = modifier.align(Alignment.CenterEnd)){
                         IconButton(
-                            onClick = { onDetails(it) },
+                            onClick = { onRemove(it) },
                         ) {
                             Icon(imageVector = Icons.Rounded.Remove, contentDescription ="Remove")
                         }

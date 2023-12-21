@@ -32,14 +32,14 @@ class FStorageUtil {
                 val inputStream = FileInputStream(file)
                 uploadFile(inputStream, file.name)
             }
-            db.collection("Locations").document(location.name).set(dataToAdd)
+            db.collection("Locations").document(location.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)
                 }
         }
         fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToUpdate = db.collection("Locations").document(location.name)
+            val dataToUpdate = db.collection("Locations").document(location.id)
 
             db.runTransaction { transaction ->
                 val doc = transaction.get(dataToUpdate)
@@ -73,14 +73,14 @@ class FStorageUtil {
                 val inputStream = FileInputStream(file)
                 uploadFile(inputStream, file.name)
             }
-            db.collection("PlacesOfInterest").document(placeOfInterest.name).set(dataToAdd)
+            db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)
                 }
         }
         fun updatePlaceOfInterestInFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToUpdate = db.collection("PlacesOfInterest").document(placeOfInterest.name)
+            val dataToUpdate = db.collection("PlacesOfInterest").document(placeOfInterest.id)
 
             db.runTransaction { transaction ->
                 val doc = transaction.get(dataToUpdate)
@@ -108,14 +108,14 @@ class FStorageUtil {
                 "description" to category.description,
                 "authorEmail" to category.authorEmail
             )
-            db.collection("Categories").document(category.name).set(dataToAdd)
+            db.collection("Categories").document(category.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)
                 }
         }
         fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToUpdate = db.collection("Categories").document(category.name)
+            val dataToUpdate = db.collection("Categories").document(category.id)
 
             db.runTransaction { transaction ->
                 val doc = transaction.get(dataToUpdate)
@@ -134,49 +134,35 @@ class FStorageUtil {
         }
         fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToRemove = db.collection("Categories").document(category.name)
+            val dataToRemove = db.collection("Categories").document(category.id)
 
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
         fun removeLocationFromFireStone(location: Location, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToRemove = db.collection("Locations").document(location.name)
+            val dataToRemove = db.collection("Locations").document(location.id)
 
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
         fun removePlaceOfInterestFromFireStone(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataToRemove = db.collection("PlacesOfInterest").document(placeOfInterest.name)
+            val dataToRemove = db.collection("PlacesOfInterest").document(placeOfInterest.id)
 
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
 
-        private var listenerRegistration: ListenerRegistration? = null
+        private var categoryListenerRegistration: ListenerRegistration? = null
+        private var placeOfInterestListenerRegistration: ListenerRegistration? = null
+        private var locationListenerRegistration: ListenerRegistration? = null
 
-        fun startObserver(onNewValues: (Long, Long) -> Unit) {
-            stopObserver()
-            val db = Firebase.firestore
-            listenerRegistration = db.collection("Scores").document("Level1")
-                .addSnapshotListener { docSS, e ->
-                    if (e != null) {
-                        return@addSnapshotListener
-                    }
-                    if (docSS != null && docSS.exists()) {
-                        val nrgames = docSS.getLong("nrgames") ?: 0
-                        val topscore = docSS.getLong("topscore") ?: 0
-                        Log.i("Firestore", "$nrgames : $topscore")
-                        onNewValues(nrgames, topscore)
-                    }
-                }
-        }
         fun startCategoryObserver(onNewValue: (List<Category>?) -> Unit) {
             val db = Firebase.firestore
             val collectionReference = db.collection("Categories")
 
-            listenerRegistration = collectionReference
+            categoryListenerRegistration = collectionReference
                 .addSnapshotListener { querySnapshot, e ->
                     if (e != null) {
                         Log.e("Firestore", "Error listening for categories", e)
@@ -203,7 +189,7 @@ class FStorageUtil {
             val db = Firebase.firestore
             val collectionReference = db.collection("Locations")
 
-            listenerRegistration = collectionReference
+            locationListenerRegistration = collectionReference
                 .addSnapshotListener { querySnapshot, e ->
                     if (e != null) {
                         Log.e("Firestore", "Error listening for categories", e)
@@ -232,7 +218,7 @@ class FStorageUtil {
             val db = Firebase.firestore
             val collectionReference = db.collection("Locations")
 
-            listenerRegistration = collectionReference
+            placeOfInterestListenerRegistration = collectionReference
                 .addSnapshotListener { querySnapshot, e ->
                     if (e != null) {
                         Log.e("Firestore", "Error listening for categories", e)
@@ -260,7 +246,9 @@ class FStorageUtil {
                 }
         }
         fun stopObserver() {
-            listenerRegistration?.remove()
+            categoryListenerRegistration?.remove()
+            locationListenerRegistration?.remove()
+            placeOfInterestListenerRegistration?.remove()
         }
 // Storage
 

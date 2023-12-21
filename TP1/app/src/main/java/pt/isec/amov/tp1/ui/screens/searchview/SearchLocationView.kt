@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -18,14 +19,16 @@ import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun SearchLocationView(
-    locations: List<Location>,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier,
     onSelect: (Location)-> Unit,
     onDetails: (Location)-> Unit
 ) {
+    val locations = viewModel.locations.observeAsState()
     var isAlphabetiOrderByExpanded by remember {mutableStateOf(false)}
     var alphabeticOrderBy by remember { mutableStateOf("") }
     var isDistanceOrderByExpanded by remember {mutableStateOf(false)}
@@ -74,15 +77,16 @@ fun SearchLocationView(
                 modifier = modifier.weight(1f).padding(start = 3.dp,end = 3.dp)
             )
         }
-        ListLocals(
-            locals = locations,
-            onSelected = {
-                onSelect(it as Location)
-            },
-            onDetails = {
-                onDetails(it as Location)
-            }
-        )
+        if(locations.value!=null)
+            ListLocals(
+                locals = locations.value!!,
+                onSelected = {
+                    onSelect(it as Location)
+                },
+                onDetails = {
+                    onDetails(it as Location)
+                }
+            )
 
     }
 }

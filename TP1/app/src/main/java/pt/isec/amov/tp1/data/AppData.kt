@@ -55,71 +55,24 @@ data class Category(
 
 class AppData{
     val user = mutableStateOf(FAuthUtil.currentUser?.toUser())
-    private val locations = mutableListOf<Location>()
-    private val placesOfInterest = mutableListOf<PlaceOfInterest>()
-    var categories = MutableLiveData<List<Category>>()
+    private val _locations = MutableLiveData<List<Location>?>()
+    private val _placesOfInterest = MutableLiveData<List<PlaceOfInterest>?>()
+    private val _categories = MutableLiveData<List<Category>?>()
+    val categories: LiveData<List<Category>?>
+        get() = _categories
+    val locations: LiveData<List<Location>?>
+        get() = _locations
+    val placesOfInterest: LiveData<List<PlaceOfInterest>?>
+        get() = _placesOfInterest
 
-    fun getLocations():List<Location>{
-        return locations
+    fun setCategories(c: List<Category>){
+        _categories.value = c
     }
-    fun getPlaceOfInterest(id:String): List<PlaceOfInterest> {
-        return placesOfInterest.filter { it.locationId == id }
+    fun setLocations(l: List<Location>){
+        _locations.value = l
     }
-    fun getSelectedLocalName(id:String):String?{
-        val local= locations.find { it.id == id }
-        return local?.name
-    }
-    fun addLocation(
-        name: String,
-        description: String,
-        imagePath: String?
-    ){
-        val l = Location(
-            UUID.randomUUID().toString(),
-            user.value!!.email,
-            name,
-            description,
-            imagePath)
-
-        locations.add(l)
-        //FStorageUtil.addLocationToFirestore(l, onResult = {})
-    }
-    fun addPlaceOfInterest(
-        name: String,
-        description: String,
-        imagePath: String?,
-        category: Category,
-        locationId: String
-    ){
-        val p =  PlaceOfInterest(
-            UUID.randomUUID().toString(),
-            user.value!!.email,
-            name,
-            description,
-            imagePath,
-            category.id,
-            locationId
-        )
-        placesOfInterest.add(p)
-    }
-    fun addCategory(
-        name: String,
-        description: String
-    ){
-        val c: Category = Category(UUID.randomUUID().toString(),user.value!!.email,name,description)
-        //categories.add(c);
-    }
-
-    fun getMyLocations(): List<Local> {
-        return locations.filter { it.authorEmail == user.value!!.email }
-    }
-
-    fun getMyPlacesOfInterest(): List<Local> {
-        return placesOfInterest.filter { it.authorEmail == user.value!!.email }
-    }
-
-    fun getMyCategories(): List<Category> {
-        return categories.value!!.filter { it.authorEmail == user.value!!.email }
+    fun setPlacesOfInterest(p: List<PlaceOfInterest>){
+        _placesOfInterest.value = p
     }
 
 }
