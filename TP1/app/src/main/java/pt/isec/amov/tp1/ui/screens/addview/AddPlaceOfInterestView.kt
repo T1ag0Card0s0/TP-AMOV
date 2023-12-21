@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +41,7 @@ fun AddPlaceOfInterestView(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val categories = appViewModel.getCategories().observeAsState()
     var optCategory by remember { mutableStateOf("") }
     var isExpandedCategories by remember { mutableStateOf(false) }
     Box(
@@ -70,7 +72,7 @@ fun AddPlaceOfInterestView(
             Spacer(modifier = modifier.height(24.dp))
             MyExposedDropDownMenu(
                 isExpanded = isExpandedCategories,
-                options = appViewModel.getCategories().map { it.name },
+                options = categories.value!!.map { it.name },
                 selectedOption = optCategory,
                 placeholder = stringResource(R.string.select_categories),
                 label = stringResource(R.string.categories),
@@ -82,7 +84,7 @@ fun AddPlaceOfInterestView(
                     optCategory = it
                     isExpandedCategories = false
                     appViewModel.addLocalForm!!.category.value =
-                        appViewModel.getCategories().find { c -> c.name == optCategory }
+                        categories.value!!.find { c -> c.name == optCategory }
                 }
             )
             Spacer(modifier = modifier.height(24.dp))

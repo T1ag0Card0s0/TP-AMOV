@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,19 +26,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.composables.ListCategories
 import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
+import java.util.UUID
 
 @Composable
 fun MyContributionsView(
+    appViewModel: AppViewModel,
+    fireBaseViewModel: FireBaseViewModel,
     viewModel: AppViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    var myCategories = appViewModel.getCategories().observeAsState()
     var isExpanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -137,7 +144,7 @@ fun MyContributionsView(
                     .fillMaxSize()
                     .padding(8.dp) ){
                     ListCategories(
-                        categories = viewModel.getMyCategories(),
+                        categories = myCategories.value!!.filter { it.authorEmail == fireBaseViewModel.user.value!!.email },
                         onSelected = {},
                         onDetails = {}
                     )
@@ -175,8 +182,14 @@ fun MyContributionsView(
                         confirmButton = {
                             Button(
                                 onClick = {
-                                    // Handle the input data as needed
-                                    viewModel.addCategory(nameInput,descriptionInput)
+                                    fireBaseViewModel.addCategoryToFireStore(
+                                        Category(
+                                            UUID.randomUUID().toString(),
+                                            viewModel.appData.user.value!!.email,
+                                            nameInput,
+                                            descriptionInput
+                                        )
+                                    )
                                     showDialog = false
                                 }
                             ) {

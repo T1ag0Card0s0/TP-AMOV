@@ -1,6 +1,8 @@
 package pt.isec.amov.tp1.data
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import pt.isec.amov.tp1.ui.viewmodels.toUser
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 import pt.isec.amov.tp1.utils.firebase.FStorageUtil
@@ -55,7 +57,8 @@ class AppData{
     val user = mutableStateOf(FAuthUtil.currentUser?.toUser())
     private val locations = mutableListOf<Location>()
     private val placesOfInterest = mutableListOf<PlaceOfInterest>()
-    val categories = mutableListOf<Category>()
+    var categories = MutableLiveData<List<Category>>()
+
     fun getLocations():List<Location>{
         return locations
     }
@@ -79,12 +82,7 @@ class AppData{
             imagePath)
 
         locations.add(l)
-        if (imagePath!!.isNotEmpty()) {
-            val file = File(imagePath)
-            val inputStream = FileInputStream(file)
-            FStorageUtil.uploadFile(inputStream, file.name)
-        }
-        FStorageUtil.addOrUpdateLocationToFirestore(l, onResult = {})
+        //FStorageUtil.addLocationToFirestore(l, onResult = {})
     }
     fun addPlaceOfInterest(
         name: String,
@@ -103,15 +101,13 @@ class AppData{
             locationId
         )
         placesOfInterest.add(p)
-        FStorageUtil.addOrUpdatePlaceOfInterestToFirestore(p, onResult = {})
     }
     fun addCategory(
         name: String,
         description: String
     ){
         val c: Category = Category(UUID.randomUUID().toString(),user.value!!.email,name,description)
-        categories.add(c);
-        FStorageUtil.addOrUpdateCategories(c, onResult = {})
+        //categories.add(c);
     }
 
     fun getMyLocations(): List<Local> {
@@ -123,7 +119,7 @@ class AppData{
     }
 
     fun getMyCategories(): List<Category> {
-        return categories.filter { it.authorEmail == user.value!!.email }
+        return categories.value!!.filter { it.authorEmail == user.value!!.email }
     }
 
 }

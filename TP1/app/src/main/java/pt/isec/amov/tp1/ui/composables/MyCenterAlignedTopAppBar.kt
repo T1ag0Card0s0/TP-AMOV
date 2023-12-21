@@ -24,10 +24,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
-import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,33 +73,18 @@ fun MyCenterAlignedTopAppBarr(
                 IconButton(onClick = {
                     when (currentScreen) {
                         Screens.ADD_PLACE_OF_INTEREST -> {
-                            if (viewModel.addLocal(ItemType.PLACE_OF_INTEREST)) {
-                                navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Failed to add",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            fireBaseViewModel.addPlaceOfInterestToFireStore(
+                                viewModel.buildPlaceOfInterestFromAddForm()!!
+                            )
                         }
-
                         Screens.ADD_LOCATIONS -> {
-                            if (viewModel.addLocal(ItemType.LOCATION)) {
-                                navController.navigate(Screens.SEARCH_LOCATIONS.route)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Failed to add",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            fireBaseViewModel.addLocationToFireStore(
+                                viewModel.buildLocationFromAddForm()!!
+                            )
                         }
-
                         Screens.CHOOSE_COORDINATES -> {
-
+                            navController.navigateUp()
                         }
-
                         else -> {}
                     }
                 }) {

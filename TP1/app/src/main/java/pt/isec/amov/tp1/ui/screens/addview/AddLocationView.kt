@@ -28,12 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.ItemType
 
 @Composable
 fun AddLocationView(

@@ -7,6 +7,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,6 +40,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    fireBaseViewModel.startObserver()
+    val categories = viewModel.getCategories().observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
@@ -119,7 +122,7 @@ fun MainScreen(
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route) {
                 SearchPlaceOfInterestView(
                     placesOfInterest = viewModel.getPlacesOfInterest(),
-                    categories = viewModel.getCategories(),
+                    categories = categories.value!!,
                     location = viewModel.selectedLocation.value!!,
                     onDetails = { placeOfInterest ->
                         viewModel.selecedPlaceOfInterest.value = placeOfInterest
@@ -153,6 +156,8 @@ fun MainScreen(
             }
             composable(Screens.MY_CONTRIBUTIONS.route) {
                 MyContributionsView(
+                    viewModel,
+                    fireBaseViewModel,
                     viewModel,
                     navController
                 )

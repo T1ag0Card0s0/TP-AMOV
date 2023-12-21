@@ -4,7 +4,6 @@ import android.content.res.AssetManager
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -19,104 +18,116 @@ import java.io.InputStream
 
 class FStorageUtil {
     companion object {
-        fun addOrUpdateLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit){
+        fun addLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataFromFS = db.collection("Locations").document(location.name)
+            val dataToAdd = hashMapOf(
+                "id" to location.id,
+                "name" to location.name,
+                "description" to location.description,
+                "imagePath" to location.imagePath,
+                "authorEmail" to location.authorEmail
+            )
+            if (location.imagePath!!.isNotEmpty()) {
+                val file = File(location.imagePath)
+                val inputStream = FileInputStream(file)
+                uploadFile(inputStream, file.name)
+            }
+            db.collection("Locations").document(location.name).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
+        fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToUpdate = db.collection("Locations").document(location.name)
 
             db.runTransaction { transaction ->
-                val doc = transaction.get(dataFromFS)
+                val doc = transaction.get(dataToUpdate)
                 if (doc.exists()) {
-                    transaction.update(dataFromFS, "name", location.name)
-                    transaction.update(dataFromFS, "description", location.description)
-                    transaction.update(dataFromFS, "imagePath", location.imagePath)
-                    transaction.update(dataFromFS, "authorEmail", location.authorEmail)
+                    transaction.update(dataToUpdate, "name", location.name)
+                    transaction.update(dataToUpdate, "description", location.description)
+                    transaction.update(dataToUpdate, "imagePath", location.imagePath)
                     null
-                } else{
-                    val dataToAdd = hashMapOf(
-                        "id" to location.id,
-                        "name" to location.name,
-                        "description" to location.description,
-                        "imagePath" to location.imagePath,
-                        "authorEmail" to location.authorEmail
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
                     )
-                    if (location.imagePath!!.isNotEmpty()) {
-                        val file = File(location.imagePath)
-                        val inputStream = FileInputStream(file)
-                        uploadFile(inputStream, file.name)
-                    }
-                    db.collection("Locations").document(location.name).set(dataToAdd)
-                        .addOnCompleteListener { result ->
-                            onResult(result.exception)
-                        }
-                }
-
             }.addOnCompleteListener { result ->
                 onResult(result.exception)
             }
         }
-        fun addOrUpdatePlaceOfInterestToFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+        fun addPlaceOfInterestToFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataFromFS = db.collection("PlacesOfInterest").document(placeOfInterest.name)
+            val dataToAdd = hashMapOf(
+                "id" to placeOfInterest.id,
+                "name" to placeOfInterest.name,
+                "description" to placeOfInterest.description,
+                "imagePath" to placeOfInterest.imagePath,
+                "authorEmail" to placeOfInterest.authorEmail,
+                "locationId" to placeOfInterest.locationId,
+                "categoryId" to placeOfInterest.categoryId
+            )
+            if (placeOfInterest.imagePath!!.isNotEmpty()) {
+                val file = File(placeOfInterest.imagePath)
+                val inputStream = FileInputStream(file)
+                uploadFile(inputStream, file.name)
+            }
+            db.collection("PlacesOfInterest").document(placeOfInterest.name).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
+        fun updatePlaceOfInterestInFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToUpdate = db.collection("PlacesOfInterest").document(placeOfInterest.name)
 
             db.runTransaction { transaction ->
-                val doc = transaction.get(dataFromFS)
+                val doc = transaction.get(dataToUpdate)
                 if (doc.exists()) {
-                    transaction.update(dataFromFS, "name", placeOfInterest.name)
-                    transaction.update(dataFromFS, "description", placeOfInterest.description)
-                    transaction.update(dataFromFS, "categoryId", placeOfInterest.categoryId)
-                    transaction.update(dataFromFS, "locationId", placeOfInterest.locationId)
-                    transaction.update(dataFromFS, "imagePath", placeOfInterest.imagePath)
-                    transaction.update(dataFromFS, "authorEmail", placeOfInterest.authorEmail)
+                    transaction.update(dataToUpdate, "name", placeOfInterest.name)
+                    transaction.update(dataToUpdate, "description", placeOfInterest.description)
+                    transaction.update(dataToUpdate, "imagePath", placeOfInterest.imagePath)
+                    transaction.update(dataToUpdate, "locationId", placeOfInterest.locationId)
+                    transaction.update(dataToUpdate, "categoryId", placeOfInterest.categoryId)
                     null
-                } else{
-                    val dataToAdd = hashMapOf(
-                        "id" to placeOfInterest.id,
-                        "name" to placeOfInterest.name,
-                        "description" to placeOfInterest.description,
-                        "categoryId" to placeOfInterest.categoryId,
-                        "locationId" to placeOfInterest.locationId,
-                        "imagePath" to placeOfInterest.imagePath,
-                        "authorEmail" to placeOfInterest.authorEmail
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
                     )
-                    if (placeOfInterest.imagePath!!.isNotEmpty()) {
-                        val file = File(placeOfInterest.imagePath)
-                        val inputStream = FileInputStream(file)
-                        uploadFile(inputStream, file.name)
-                    }
-                    db.collection("PlacesOfInterest").document(placeOfInterest.name).set(dataToAdd)
-                        .addOnCompleteListener { result ->
-                            onResult(result.exception)
-                        }
-                }
-
             }.addOnCompleteListener { result ->
                 onResult(result.exception)
             }
         }
-
-        fun addOrUpdateCategories(category: Category, onResult: (Throwable?) -> Unit){
+        fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit){
             val db = Firebase.firestore
-            val dataFromFS = db.collection("Categories").document(category.name)
+            val dataToAdd = hashMapOf(
+                "id" to category.id,
+                "name" to category.name,
+                "description" to category.description,
+                "authorEmail" to category.authorEmail
+            )
+            db.collection("Categories").document(category.name).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
+        fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit){
+            val db = Firebase.firestore
+            val dataToUpdate = db.collection("Categories").document(category.name)
 
             db.runTransaction { transaction ->
-                val doc = transaction.get(dataFromFS)
+                val doc = transaction.get(dataToUpdate)
                 if (doc.exists()) {
-                    transaction.update(dataFromFS, "name", category.name)
-                    transaction.update(dataFromFS, "description", category.description)
+                    transaction.update(dataToUpdate, "name", category.name)
+                    transaction.update(dataToUpdate, "description", category.description)
                     null
-                } else{
-                    val dataToAdd = hashMapOf(
-                        "id" to category.id,
-                        "authorEmail" to category.authorEmail,
-                        "name" to category.name,
-                        "description" to category.description
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
                     )
-                    db.collection("Categories").document(category.name).set(dataToAdd)
-                        .addOnCompleteListener { result ->
-                            onResult(result.exception)
-                        }
-                }
-
             }.addOnCompleteListener { result ->
                 onResult(result.exception)
             }
@@ -161,22 +172,97 @@ class FStorageUtil {
                     }
                 }
         }
+        fun startCategoryObserver(onNewValue: (List<Category>?) -> Unit) {
+            val db = Firebase.firestore
+            val collectionReference = db.collection("Categories")
 
+            listenerRegistration = collectionReference
+                .addSnapshotListener { querySnapshot, e ->
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for categories", e)
+                        onNewValue(null)
+                        return@addSnapshotListener
+                    }
+
+                    val categories: MutableList<Category> = mutableListOf()
+
+                    querySnapshot?.documents?.forEach { document ->
+                        val id = document.getString("id") ?: ""
+                        val name = document.getString("name") ?: ""
+                        val description = document.getString("description") ?: ""
+                        val authorEmail = document.getString("authorEmail") ?: ""
+
+                        val category = Category(id,authorEmail, name, description)
+                        categories.add(category)
+                    }
+
+                    onNewValue(categories)
+                }
+        }
+        fun startLocationObserver(onNewValue: (List<Location>?) -> Unit) {
+            val db = Firebase.firestore
+            val collectionReference = db.collection("Locations")
+
+            listenerRegistration = collectionReference
+                .addSnapshotListener { querySnapshot, e ->
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for categories", e)
+                        onNewValue(null)
+                        return@addSnapshotListener
+                    }
+
+                    val locations: MutableList<Location> = mutableListOf()
+
+                    querySnapshot?.documents?.forEach { document ->
+
+                        val location = Location(
+                            document.getString("id") ?: "",
+                            document.getString("authorEmail") ?: "",
+                            document.getString("name") ?: "",
+                            document.getString("description") ?: "",
+                            document.getString("imagePath")?:""
+                            )
+                        locations.add(location)
+                    }
+
+                    onNewValue(locations)
+                }
+        }
+        fun startPlacesOfInterestObserver(onNewValue: (List<PlaceOfInterest>?) -> Unit) {
+            val db = Firebase.firestore
+            val collectionReference = db.collection("Locations")
+
+            listenerRegistration = collectionReference
+                .addSnapshotListener { querySnapshot, e ->
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for categories", e)
+                        onNewValue(null)
+                        return@addSnapshotListener
+                    }
+
+                    val placesOfInterest: MutableList<PlaceOfInterest> = mutableListOf()
+
+                    querySnapshot?.documents?.forEach { document ->
+
+                        val placeOfInterest = PlaceOfInterest(
+                            document.getString("id") ?: "",
+                            document.getString("authorEmail") ?: "",
+                            document.getString("name") ?: "",
+                            document.getString("description") ?: "",
+                            document.getString("imagePath")?:"",
+                            document.getString("categoryId")?:"",
+                            document.getString("locationId")?:""
+                        )
+                        placesOfInterest.add(placeOfInterest)
+                    }
+
+                    onNewValue(placesOfInterest)
+                }
+        }
         fun stopObserver() {
             listenerRegistration?.remove()
         }
-
 // Storage
-
-        fun getFileFromAsset(assetManager: AssetManager, strName: String): InputStream? {
-            var istr: InputStream? = null
-            try {
-                istr = assetManager.open(strName)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            return istr
-        }
 
 //https://firebase.google.com/docs/storage/android/upload-files
 
@@ -206,6 +292,8 @@ class FStorageUtil {
 
 
         }
+
+
 
     }
 }

@@ -27,16 +27,17 @@ import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModelFactory
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModelFactory
+import pt.isec.amov.tp1.utils.firebase.FStorageUtil
 
 class MainActivity : ComponentActivity() {
     private val app by lazy{
         application as App
     }
-    private val fireBaseViewModel: FireBaseViewModel by viewModels{
-        FireBaseViewModelFactory(app.appData)
-    }
     private val appViewModel : AppViewModel by viewModels{
         AppViewModelFactory(app.appData)
+    }
+    private val fireBaseViewModel: FireBaseViewModel by viewModels{
+        FireBaseViewModelFactory(app.appData)
     }
     private val locationViewModel : LocalViewModel by viewModels{
         LocalViewModelFactory(app.locationHandler)

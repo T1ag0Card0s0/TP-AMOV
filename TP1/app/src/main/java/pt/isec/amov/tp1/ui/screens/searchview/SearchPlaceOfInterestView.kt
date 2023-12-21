@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
@@ -31,6 +33,7 @@ fun SearchPlaceOfInterestView(
     modifier: Modifier = Modifier,
     onDetails: (PlaceOfInterest) -> Unit
 ) {
+
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
     var isAlphabetiOrderByExpanded by remember { mutableStateOf(false) }
@@ -82,7 +85,7 @@ fun SearchPlaceOfInterestView(
                 },
                 modifier = modifier
                     .weight(1f)
-                    .padding(start = 3.dp,end = 3.dp)
+                    .padding(start = 3.dp, end = 3.dp)
             )
         }
         MyExposedDropDownMenu(
@@ -99,7 +102,7 @@ fun SearchPlaceOfInterestView(
             },
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp,start = 3.dp,end = 3.dp)
+                .padding(top = 6.dp, start = 3.dp, end = 3.dp)
         )
 
         Text(
