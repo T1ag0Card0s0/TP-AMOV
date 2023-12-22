@@ -17,7 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.MyCenterAlignedTopAppBarr
+import pt.isec.amov.tp1.ui.composables.MyFloatingActionButton
 import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
 import pt.isec.amov.tp1.ui.screens.addview.AddPlaceOfInterestView
 import pt.isec.amov.tp1.ui.screens.detailview.LocationDetailsView
@@ -29,24 +31,26 @@ import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun MainScreen(
     viewModel: AppViewModel,
     locationViewModel: LocalViewModel,
-    fireBaseViewModel: FireBaseViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    fireBaseViewModel.startObserver()
-    val categories = viewModel.getCategories().observeAsState()
+    viewModel.startObserver()
+    val categories = viewModel.categories.observeAsState()
+    val placesOfInterest = viewModel.placesOfInterest.observeAsState()
+    val locations = viewModel.locations.observeAsState()
+
     val snackbarHostState = remember { SnackbarHostState() }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember { mutableStateOf(false) }
     var showMoreVert by remember { mutableStateOf(false) }
+    var showFloatingActionButton by remember { mutableStateOf(false)}
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
         showTopBar = Screens.valueOf(destination.route!!).showAppBar
@@ -63,11 +67,14 @@ fun MainScreen(
             Screens.PLACE_OF_INTEREST_DETAILS.route,
             Screens.CREDITS.route,
             Screens.CHOOSE_COORDINATES.route,
-            Screens.MY_CONTRIBUTIONS.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
             Screens.SEARCH_LOCATIONS.route
+        )
+        showFloatingActionButton = destination.route in listOf(
+            Screens.SEARCH_LOCATIONS.route,
+            Screens.SEARCH_PLACES_OF_INTEREST.route
         )
     }
     Scaffold(
@@ -81,10 +88,17 @@ fun MainScreen(
                     Screens.valueOf(currentScreen!!.destination.route!!),
                     navController,
                     viewModel,
-                    fireBaseViewModel,
                     showArrowBack,
                     showDoneIcon,
                     showMoreVert
+                )
+        },
+        floatingActionButton = {
+            if(showFloatingActionButton)
+                MyFloatingActionButton(
+                    viewModel = viewModel,
+                    navController = navController,
+                    currentScreen = Screens.valueOf(currentScreen!!.destination.route!!)
                 )
         }
     ) {
@@ -96,19 +110,19 @@ fun MainScreen(
         ) {
             composable(Screens.LOGIN.route) {
                 LoginForm(
-                    fireBaseViewModel = fireBaseViewModel,
+                    viewModel = viewModel,
                     navController = navController
                 )
             }
             composable(Screens.REGISTER.route) {
                 RegisterForm(
-                    fireBaseViewModel = fireBaseViewModel,
+                    viewModel = viewModel,
                     navController = navController
                 )
             }
             composable(Screens.SEARCH_LOCATIONS.route) {
                 SearchLocationView(
-                    locations = viewModel.getLocations(),
+                    viewModel = viewModel,
                     onSelect = { location ->
                         viewModel.selectedLocation.value = location
                         navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
@@ -121,8 +135,7 @@ fun MainScreen(
             }
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route) {
                 SearchPlaceOfInterestView(
-                    placesOfInterest = viewModel.getPlacesOfInterest(),
-                    categories = categories.value!!,
+                    viewModel = viewModel,
                     location = viewModel.selectedLocation.value!!,
                     onDetails = { placeOfInterest ->
                         viewModel.selecedPlaceOfInterest.value = placeOfInterest
@@ -152,14 +165,6 @@ fun MainScreen(
             composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {
                 PlaceOfInterestDetailsView(
                     placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
-                )
-            }
-            composable(Screens.MY_CONTRIBUTIONS.route) {
-                MyContributionsView(
-                    viewModel,
-                    fireBaseViewModel,
-                    viewModel,
-                    navController
                 )
             }
             composable(Screens.CHOOSE_COORDINATES.route) {

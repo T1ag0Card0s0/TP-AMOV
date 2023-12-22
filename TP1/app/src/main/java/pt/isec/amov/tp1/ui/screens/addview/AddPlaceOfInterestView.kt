@@ -41,7 +41,7 @@ fun AddPlaceOfInterestView(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val categories = appViewModel.getCategories().observeAsState()
+    val categories =  appViewModel.appData.categories.observeAsState()
     var optCategory by remember { mutableStateOf("") }
     var isExpandedCategories by remember { mutableStateOf(false) }
     Box(

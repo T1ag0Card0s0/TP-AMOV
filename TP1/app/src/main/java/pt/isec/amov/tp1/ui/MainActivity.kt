@@ -23,11 +23,8 @@ import pt.isec.amov.tp1.ui.screens.MainScreen
 import pt.isec.amov.tp1.ui.theme.TP1Theme
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModelFactory
-import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
-import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModelFactory
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModelFactory
-import pt.isec.amov.tp1.utils.firebase.FStorageUtil
 
 class MainActivity : ComponentActivity() {
     private val app by lazy{
@@ -35,9 +32,6 @@ class MainActivity : ComponentActivity() {
     }
     private val appViewModel : AppViewModel by viewModels{
         AppViewModelFactory(app.appData)
-    }
-    private val fireBaseViewModel: FireBaseViewModel by viewModels{
-        FireBaseViewModelFactory(app.appData)
     }
     private val locationViewModel : LocalViewModel by viewModels{
         LocalViewModelFactory(app.locationHandler)
@@ -50,7 +44,7 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             TP1Theme {
-                MainScreen(appViewModel,locationViewModel,fireBaseViewModel);
+                MainScreen(appViewModel,locationViewModel);
             }
         }
         verifyPermissions()

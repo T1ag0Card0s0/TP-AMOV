@@ -33,11 +33,11 @@ import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun RegisterForm(
-    fireBaseViewModel: FireBaseViewModel,
+    viewModel: AppViewModel,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
 ){
@@ -45,8 +45,8 @@ fun RegisterForm(
     val password = remember{ mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
     val name = remember { mutableStateOf("") }
-    val error = remember{fireBaseViewModel.error}
-    val user by remember{fireBaseViewModel.user}
+    val error = remember{viewModel.error}
+    val user by remember{viewModel.user}
     val options = listOf(
         Screens.LOGIN.route,
         Screens.CREDITS.route
@@ -108,7 +108,7 @@ fun RegisterForm(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { fireBaseViewModel.createUserWithEmail(email.value,password.value) },
+                onClick = { viewModel.createUserWithEmail(email.value,password.value) },
                 enabled = true,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()

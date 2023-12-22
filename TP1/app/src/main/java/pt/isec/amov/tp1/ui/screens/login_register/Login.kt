@@ -34,16 +34,18 @@ import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+
 @Composable
 fun LoginForm(
-    fireBaseViewModel: FireBaseViewModel,
+    viewModel: AppViewModel,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
 ) {
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val error = remember { fireBaseViewModel.error }
-    val user by remember { fireBaseViewModel.user }
+    val email = remember{ mutableStateOf("") }
+    val password = remember{ mutableStateOf("") }
+    val error = remember{viewModel.error}
+    val user by remember{viewModel.user}
     val options = listOf(
         Screens.REGISTER.route,
         Screens.CREDITS.route
@@ -92,7 +94,7 @@ fun LoginForm(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { fireBaseViewModel.signInWithEmail(email.value, password.value) },
+                onClick = { viewModel.signInWithEmail(email.value,password.value) },
                 enabled = true,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()
