@@ -24,16 +24,17 @@ import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun SearchPlaceOfInterestView(
-    placesOfInterest: List<PlaceOfInterest>,
-    categories: List<Category>,
+    viewModel: AppViewModel,
     location: Location,
     modifier: Modifier = Modifier,
     onDetails: (PlaceOfInterest) -> Unit
 ) {
-
+    val placesOfInterest = viewModel.placesOfInterest.observeAsState()
+    val categories= viewModel.categories.observeAsState()
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
     var isAlphabetiOrderByExpanded by remember { mutableStateOf(false) }
@@ -90,7 +91,7 @@ fun SearchPlaceOfInterestView(
         }
         MyExposedDropDownMenu(
             isExpanded = isExpandedCategories,
-            options = categories.map { it.name },
+            options = categories.value!!.map { it.name },
             selectedOption = selectedCategory,
             placeholder = stringResource(R.string.select_categories),
             label = stringResource(R.string.categories),
@@ -109,12 +110,17 @@ fun SearchPlaceOfInterestView(
             text = "In ${location.name}",
             fontSize = 30.sp
         )
-        ListLocals(
-            locals = placesOfInterest,
-            onSelected = {},
-            onDetails = {
-                onDetails(it as PlaceOfInterest)
-            }
-        )
+        if(placesOfInterest.value!=null)
+            ListLocals(
+                locals =
+                if(!viewModel.isMyContributions.value)
+                    placesOfInterest.value!!
+                else
+                    placesOfInterest.value!!.filter { it.authorEmail == viewModel.user.value!!.email } ,
+                onSelected = {},
+                onDetails = {
+                    onDetails(it as PlaceOfInterest)
+                }
+            )
     }
 }

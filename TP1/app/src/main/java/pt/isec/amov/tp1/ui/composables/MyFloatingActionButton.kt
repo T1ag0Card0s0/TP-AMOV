@@ -27,7 +27,8 @@ import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 @Composable
 fun MyFloatingActionButton(
     viewModel: AppViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    currentScreen: Screens
 ){
     var showMoreAddOptions by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -59,7 +60,15 @@ fun MyFloatingActionButton(
             )
         }
         FloatingActionButton(onClick = {
-
+            when(currentScreen){
+                Screens.SEARCH_LOCATIONS->{
+                    navController.navigate(Screens.ADD_LOCATIONS.route)
+                }
+                Screens.SEARCH_PLACES_OF_INTEREST->{
+                    navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
+                }
+                else->{}
+            }
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }

@@ -45,12 +45,11 @@ fun MyCenterAlignedTopAppBarr(
             if (showArrowBack) {
                 IconButton(onClick = {
                     when (currentScreen) {
-                        Screens.SEARCH_PLACES_OF_INTEREST, Screens.MY_CONTRIBUTIONS -> {
+                        Screens.SEARCH_PLACES_OF_INTEREST -> {
                             navController.navigate(
                                 Screens.SEARCH_LOCATIONS.route
                             )
                         }
-
                         else -> navController.navigateUp()
                     }
                 }
@@ -93,16 +92,20 @@ fun MyCenterAlignedTopAppBarr(
                         contentDescription = "More Vert"
                     )
                 }
+
                 DropdownMenu(
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }) {
                     DropdownMenuItem(
                         text = {
-                            Text(stringResource(R.string.my_contributions))
+                            if(!viewModel.isMyContributions.value)
+                                Text(stringResource(R.string.my_contributions))
+                            else
+                                Text(stringResource(R.string.show_all_content))
                         },
                         onClick = {
+                            viewModel.isMyContributions.value = !viewModel.isMyContributions.value
                             isExpanded = false
-                            navController.navigate(Screens.MY_CONTRIBUTIONS.route)
                         }
                     )
                     DropdownMenuItem(

@@ -216,7 +216,7 @@ class FStorageUtil {
         }
         fun startPlacesOfInterestObserver(onNewValue: (List<PlaceOfInterest>?) -> Unit) {
             val db = Firebase.firestore
-            val collectionReference = db.collection("Locations")
+            val collectionReference = db.collection("PlacesOfInterest")
 
             placeOfInterestListenerRegistration = collectionReference
                 .addSnapshotListener { querySnapshot, e ->

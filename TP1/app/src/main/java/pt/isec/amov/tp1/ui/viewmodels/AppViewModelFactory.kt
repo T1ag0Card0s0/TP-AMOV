@@ -31,6 +31,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     val selectedLocation: MutableState<Location?> = mutableStateOf(null)
     val selecedPlaceOfInterest: MutableState<PlaceOfInterest?> = mutableStateOf(null)
+    val isMyContributions = mutableStateOf(false)
     private val _error = mutableStateOf<String?>(null)
     val user : MutableState<User?>
         get() = appData.user
