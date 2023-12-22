@@ -71,7 +71,7 @@ class _ListScreenState extends State<ListScreen> {
                 orderByValue = value!;
               });
             },
-            items: ['name', 'description', 'id']
+            items: ['name', 'other']
                 .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -97,21 +97,20 @@ class _ListScreenState extends State<ListScreen> {
               children: [
                 // Mostrar cards das localizações
                 Column(
-                  children: locations
-                      .map(
-                        (location) => Card(
-                      child: Column(
+                  children: locations.map((location) => Card(
+                    child: ListTile(
+                      title: Row(
                         children: [
-                          Image.network(location.imagePath),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(location.name),
                           ),
+                          Spacer(),
+                          Icon(Icons.more_vert), // Icone de tres pontos
                         ],
                       ),
                     ),
-                  )
-                      .toList(),
+                  )).toList(),
                 ),
               ],
             );
