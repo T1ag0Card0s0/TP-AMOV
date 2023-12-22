@@ -33,7 +33,6 @@ import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
@@ -87,7 +86,7 @@ fun LoginForm(
             PasswordField(
                 value = password.value,
                 onChange = { password.value = it },
-                submit = { fireBaseViewModel.signInWithEmail(email.value, password.value) },
+                submit = { viewModel.signInWithEmail(email.value, password.value) },
                 label = stringResource(R.string.password),
                 stringResource(R.string.enter_your_password),
                 modifier = Modifier.fillMaxWidth()
