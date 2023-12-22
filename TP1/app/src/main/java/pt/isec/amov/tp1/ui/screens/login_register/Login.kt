@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.login_register
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,37 +22,50 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.PasswordField
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.FireBaseViewModel
-
 @Composable
 fun LoginForm(
     fireBaseViewModel: FireBaseViewModel,
     navController: NavHostController?,
     modifier: Modifier = Modifier,
 ) {
-    val email = remember{ mutableStateOf("") }
-    val password = remember{ mutableStateOf("") }
-    val error = remember{fireBaseViewModel.error}
-    val user by remember{fireBaseViewModel.user}
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val error = remember { fireBaseViewModel.error }
+    val user by remember { fireBaseViewModel.user }
     val options = listOf(
         Screens.REGISTER.route,
-        Screens.CREDITS.route)
-    LaunchedEffect(key1 = user){
-        if(user!=null&&error.value==null) navController!!.navigate(Screens.SEARCH_LOCATIONS.route)
+        Screens.CREDITS.route
+    )
+
+    LaunchedEffect(key1 = user) {
+        if (user != null && error.value == null) navController?.navigate(Screens.SEARCH_LOCATIONS.route)
     }
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(16.dp)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.amov),
+            contentDescription = null,
+            modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+        )
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,23 +75,24 @@ fun LoginForm(
         ) {
             MyTextField(
                 value = email.value,
-                onChange = { email.value=it},
+                onChange = { email.value = it },
                 stringResource(R.string.enter_your_email),
-                stringResource(R.string.email),
-                Icons.Default.Person,
+                label = stringResource(R.string.email),
+                icon = Icons.Default.Person,
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(16.dp))
             PasswordField(
                 value = password.value,
                 onChange = { password.value = it },
-                submit = { },
-                stringResource(R.string.password),
+                submit = { fireBaseViewModel.signInWithEmail(email.value, password.value) },
+                label = stringResource(R.string.password),
                 stringResource(R.string.enter_your_password),
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { fireBaseViewModel.signInWithEmail(email.value,password.value) },
+                onClick = { fireBaseViewModel.signInWithEmail(email.value, password.value) },
                 enabled = true,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -85,7 +100,7 @@ fun LoginForm(
                 Text(stringResource(R.string.submit))
             }
         }
-        Column (
+        Column(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
@@ -93,20 +108,16 @@ fun LoginForm(
                 .fillMaxWidth(0.3f)
                 .fillMaxHeight(0.75f)
         ) {
-            for(btnName in options)
+            options.forEach { btnName ->
                 Button(
-                    onClick = { navController?.navigate(btnName)},
-                    modifier = modifier
-                        .fillMaxWidth()
+                    onClick = { navController?.navigate(btnName) },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = btnName)
                 }
+            }
         }
     }
 }
 
-@Preview
-@Composable
-fun LoginPreview(){
 
-}
