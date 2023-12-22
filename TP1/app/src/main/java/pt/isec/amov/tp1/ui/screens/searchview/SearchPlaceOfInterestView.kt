@@ -114,9 +114,12 @@ fun SearchPlaceOfInterestView(
             ListLocals(
                 locals =
                 if(!viewModel.isMyContributions.value)
-                    placesOfInterest.value!!
+                    placesOfInterest.value!!.filter { it.locationId == viewModel.selectedLocation.value!!.id }
                 else
-                    placesOfInterest.value!!.filter { it.authorEmail == viewModel.user.value!!.email } ,
+                    placesOfInterest.value!!.filter {
+                        it.locationId == viewModel.selectedLocation.value!!.id &&
+                        it.authorEmail == viewModel.user.value!!.email
+                                                    } ,
                 onSelected = {},
                 onDetails = {
                     onDetails(it as PlaceOfInterest)
