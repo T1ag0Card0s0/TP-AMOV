@@ -29,26 +29,28 @@ class FStorageUtil {
                     inputStream,
                     location.id + "." + file.extension,
                     onSuccess = {
-                        location.imageName = location.id + "." + file.extension
                         Log.i("Image inserted", "Success $it")
                         location.imageUri = it
-                        val dataToAdd = hashMapOf(
-                            "id" to location.id,
-                            "name" to location.name,
-                            "description" to location.description,
-                            "imageName" to location.imageName,
-                            "authorEmail" to location.authorEmail,
-                            "imageUri" to location.imageUri
-                        )
-                        db.collection("Locations").document(location.id).set(dataToAdd)
-                            .addOnCompleteListener { result ->
-                                onResult(result.exception)
-                            }
+                        updateLocationInFirestore(location){
+
+                        }
                     }
                 )
-
+                location.imageName = location.id + "." + file.extension
             }
 
+            val dataToAdd = hashMapOf(
+                "id" to location.id,
+                "name" to location.name,
+                "description" to location.description,
+                "imageName" to location.imageName,
+                "authorEmail" to location.authorEmail,
+                "imageUri" to location.imageUri
+            )
+            db.collection("Locations").document(location.id).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
         }
 
         fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit) {
@@ -61,6 +63,7 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "name", location.name)
                     transaction.update(dataToUpdate, "description", location.description)
                     transaction.update(dataToUpdate, "imageName", location.imageName)
+                    transaction.update(dataToUpdate,"imageUri",location.imageUri)
                     null
                 } else
                     throw FirebaseFirestoreException(
