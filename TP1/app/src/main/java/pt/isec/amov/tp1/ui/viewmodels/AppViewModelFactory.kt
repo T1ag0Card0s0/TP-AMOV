@@ -3,6 +3,7 @@ package pt.isec.amov.tp1.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,6 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Category
-import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.data.User

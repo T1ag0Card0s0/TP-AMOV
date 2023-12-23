@@ -1,46 +1,57 @@
 package pt.isec.amov.tp1.utils.firebase
 
-import android.content.res.AssetManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
+import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import java.io.File
 import java.io.FileInputStream
-import java.io.IOException
 import java.io.InputStream
 
 
 class FStorageUtil {
     companion object {
-        fun addLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit){
+        fun addLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
-            val dataToAdd = hashMapOf(
-                "id" to location.id,
-                "name" to location.name,
-                "description" to location.description,
-                "imagePath" to location.imagePath,
-                "authorEmail" to location.authorEmail
-            )
-            if (location.imagePath!!.isNotEmpty()) {
-                val file = File(location.imagePath)
+            if (location.imageName!!.isNotEmpty()) {
+                val file = File(location.imageName!!)
                 val inputStream = FileInputStream(file)
-                uploadFile(inputStream, location.id+".jpg")
+                uploadFile(
+                    inputStream,
+                    location.id + "." + file.extension,
+                    onSuccess = {
+                        location.imageName = location.id + "." + file.extension
+                        Log.i("Image inserted", "Success $it")
+                        location.imageUri = it
+                        val dataToAdd = hashMapOf(
+                            "id" to location.id,
+                            "name" to location.name,
+                            "description" to location.description,
+                            "imageName" to location.imageName,
+                            "authorEmail" to location.authorEmail,
+                            "imageUri" to location.imageUri
+                        )
+                        db.collection("Locations").document(location.id).set(dataToAdd)
+                            .addOnCompleteListener { result ->
+                                onResult(result.exception)
+                            }
+                    }
+                )
+
             }
-            db.collection("Locations").document(location.id).set(dataToAdd)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
+
         }
-        fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit){
+
+        fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("Locations").document(location.id)
 
@@ -49,7 +60,7 @@ class FStorageUtil {
                 if (doc.exists()) {
                     transaction.update(dataToUpdate, "name", location.name)
                     transaction.update(dataToUpdate, "description", location.description)
-                    transaction.update(dataToUpdate, "imagePath", location.imagePath)
+                    transaction.update(dataToUpdate, "imageName", location.imageName)
                     null
                 } else
                     throw FirebaseFirestoreException(
@@ -60,28 +71,40 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-        fun addPlaceOfInterestToFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+
+        fun addPlaceOfInterestToFirestore(
+            placeOfInterest: PlaceOfInterest,
+            onResult: (Throwable?) -> Unit
+        ) {
             val db = Firebase.firestore
+            if (placeOfInterest.imageName!!.isNotEmpty()) {
+                val file = File(placeOfInterest.imageName!!)
+                val inputStream = FileInputStream(file)
+                uploadFile(inputStream, placeOfInterest.id + "." + file.extension) {
+                    placeOfInterest.imageUri = it
+                }
+                placeOfInterest.imageName = placeOfInterest.id + "." + file.extension
+            }
             val dataToAdd = hashMapOf(
                 "id" to placeOfInterest.id,
                 "name" to placeOfInterest.name,
                 "description" to placeOfInterest.description,
-                "imagePath" to placeOfInterest.imagePath,
+                "imageName" to placeOfInterest.imageName,
                 "authorEmail" to placeOfInterest.authorEmail,
                 "locationId" to placeOfInterest.locationId,
-                "categoryId" to placeOfInterest.categoryId
+                "categoryId" to placeOfInterest.categoryId,
+                "imageUri" to placeOfInterest.imageUri
             )
-            if (placeOfInterest.imagePath!!.isNotEmpty()) {
-                val file = File(placeOfInterest.imagePath)
-                val inputStream = FileInputStream(file)
-                uploadFile(inputStream, placeOfInterest.id+".jpg")
-            }
             db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)
                 }
         }
-        fun updatePlaceOfInterestInFirestore(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+
+        fun updatePlaceOfInterestInFirestore(
+            placeOfInterest: PlaceOfInterest,
+            onResult: (Throwable?) -> Unit
+        ) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("PlacesOfInterest").document(placeOfInterest.id)
 
@@ -90,7 +113,7 @@ class FStorageUtil {
                 if (doc.exists()) {
                     transaction.update(dataToUpdate, "name", placeOfInterest.name)
                     transaction.update(dataToUpdate, "description", placeOfInterest.description)
-                    transaction.update(dataToUpdate, "imagePath", placeOfInterest.imagePath)
+                    transaction.update(dataToUpdate, "imageName", placeOfInterest.imageName)
                     transaction.update(dataToUpdate, "locationId", placeOfInterest.locationId)
                     transaction.update(dataToUpdate, "categoryId", placeOfInterest.categoryId)
                     null
@@ -103,7 +126,8 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-        fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit){
+
+        fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToAdd = hashMapOf(
                 "id" to category.id,
@@ -116,7 +140,8 @@ class FStorageUtil {
                     onResult(result.exception)
                 }
         }
-        fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit){
+
+        fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("Categories").document(category.id)
 
@@ -135,21 +160,27 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-        fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit){
+
+        fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("Categories").document(category.id)
 
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
-        fun removeLocationFromFireStone(location: Location, onResult: (Throwable?) -> Unit){
+
+        fun removeLocationFromFireStone(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("Locations").document(location.id)
 
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
-        fun removePlaceOfInterestFromFireStone(placeOfInterest: PlaceOfInterest, onResult: (Throwable?) -> Unit){
+
+        fun removePlaceOfInterestFromFireStone(
+            placeOfInterest: PlaceOfInterest,
+            onResult: (Throwable?) -> Unit
+        ) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("PlacesOfInterest").document(placeOfInterest.id)
 
@@ -181,21 +212,21 @@ class FStorageUtil {
                         val description = document.getString("description") ?: ""
                         val authorEmail = document.getString("authorEmail") ?: ""
 
-                        val category = Category(id,authorEmail, name, description)
+                        val category = Category(id, authorEmail, name, description)
                         categories.add(category)
                     }
 
                     onNewValue(categories)
                 }
         }
+
         fun startLocationObserver(onNewValue: (List<Location>?) -> Unit) {
             val db = Firebase.firestore
             val collectionReference = db.collection("Locations")
-
             locationListenerRegistration = collectionReference
                 .addSnapshotListener { querySnapshot, e ->
                     if (e != null) {
-                        Log.e("Firestore", "Error listening for categories", e)
+                        Log.e("Firestore", "Error listening for locations", e)
                         onNewValue(null)
                         return@addSnapshotListener
                     }
@@ -203,21 +234,15 @@ class FStorageUtil {
                     val locations: MutableList<Location> = mutableListOf()
 
                     querySnapshot?.documents?.forEach { document ->
-                        var bitmap: Bitmap? = null
-                        val storageRef = Firebase.storage.reference.child("${document.getString("id") ?: ""}.jpg")
-                        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {
-                            bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                        }.addOnFailureListener {
-                            Log.e("Firestore", "Error fetching image", it)
-                        }
+
                         val location = Location(
                             document.getString("id") ?: "",
                             document.getString("authorEmail") ?: "",
                             document.getString("name") ?: "",
                             document.getString("description") ?: "",
-                            document.getString("imagePath")?:"",
-                            bitmap
-                            )
+                            document.getString("imageName") ?: "",
+                            document.getString("imageUri")
+                        )
 
                         locations.add(location)
                     }
@@ -225,6 +250,7 @@ class FStorageUtil {
                     onNewValue(locations)
                 }
         }
+
         fun startPlacesOfInterestObserver(onNewValue: (List<PlaceOfInterest>?) -> Unit) {
             val db = Firebase.firestore
             val collectionReference = db.collection("PlacesOfInterest")
@@ -240,16 +266,16 @@ class FStorageUtil {
                     val placesOfInterest: MutableList<PlaceOfInterest> = mutableListOf()
 
                     querySnapshot?.documents?.forEach { document ->
-
+                        val imageUri: MutableLiveData<String?> = MutableLiveData(null)
                         val placeOfInterest = PlaceOfInterest(
                             document.getString("id") ?: "",
                             document.getString("authorEmail") ?: "",
                             document.getString("name") ?: "",
                             document.getString("description") ?: "",
-                            document.getString("imagePath")?:"",
-                            document.getString("categoryId")?:"",
-                            document.getString("locationId")?:"",
-                            null
+                            document.getString("imageName") ?: "",
+                            document.getString("categoryId") ?: "",
+                            document.getString("locationId") ?: "",
+                            document.getString("imageUri")
                         )
                         placesOfInterest.add(placeOfInterest)
                     }
@@ -257,16 +283,16 @@ class FStorageUtil {
                     onNewValue(placesOfInterest)
                 }
         }
+
         fun stopObserver() {
             categoryListenerRegistration?.remove()
             locationListenerRegistration?.remove()
             placeOfInterestListenerRegistration?.remove()
         }
 // Storage
-
 //https://firebase.google.com/docs/storage/android/upload-files
 
-        fun uploadFile(inputStream: InputStream, imgFile: String) {
+        fun uploadFile(inputStream: InputStream, imgFile: String, onSuccess: (String) -> Unit) {
             val storage = Firebase.storage
             val ref1 = storage.reference
             val ref2 = ref1.child("images")
@@ -283,8 +309,9 @@ class FStorageUtil {
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-                    println(downloadUri.toString())
+                    onSuccess(downloadUri.toString())
                 } else {
+                    Log.i("Image insert", "Failed")
                     // Handle failures
                     // ...
                 }
@@ -292,7 +319,6 @@ class FStorageUtil {
 
 
         }
-
 
 
     }

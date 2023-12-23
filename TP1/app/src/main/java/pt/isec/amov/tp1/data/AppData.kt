@@ -1,15 +1,12 @@
 package pt.isec.amov.tp1.data
 
-import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.storage.StorageReference
 import pt.isec.amov.tp1.ui.viewmodels.toUser
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
-import pt.isec.amov.tp1.utils.firebase.FStorageUtil
-import java.io.File
-import java.io.FileInputStream
-import java.util.UUID
 
 open class Contribution(
     open val authorEmail: String
@@ -20,8 +17,8 @@ open class Local(
     open val name: String,
     override val authorEmail: String,
     open val description: String,
-    open val imagePath: String?,
-    open var image: Bitmap?
+    open val imageName: String?,
+    open val imageUri: String?
 ):Contribution(authorEmail)
 
 
@@ -30,20 +27,20 @@ data class Location(
     override val authorEmail: String,
     override val name: String,
     override val description: String,
-    override val imagePath: String?,
-    override var image: Bitmap?,
-):Local(authorEmail,id,name,description,imagePath, image)
+    override var imageName: String?,
+    override var imageUri: String?
+):Local(authorEmail,id,name,description,imageName,imageUri)
 
 data class PlaceOfInterest(
     override val id: String,
     override val authorEmail: String,
     override val name: String,
     override val description: String,
-    override val imagePath: String?,
+    override var imageName: String?,
     val categoryId: String,
     val locationId: String,
-    override var image: Bitmap?
-):Local(authorEmail,id,name,description,imagePath,image)
+    override var imageUri: String?,
+):Local(authorEmail,id,name,description,imageName,imageUri)
 
 data class User(
     val userName: String,

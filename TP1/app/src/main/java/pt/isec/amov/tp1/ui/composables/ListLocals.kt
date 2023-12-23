@@ -1,7 +1,6 @@
 package pt.isec.amov.tp1.ui.composables
 
-import android.widget.ImageView
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,14 +20,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import pt.isec.amov.tp1.data.Local
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,27 +35,28 @@ fun ListLocals(
     locals: List<Local>,
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,
-    onDetails:(Local)-> Unit
-){
-
+    onDetails: (Local) -> Unit
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-    ){
+    ) {
         items(
             locals,
             key = { it.id }
-        ){
+        ) {
             Card(
                 elevation = CardDefaults.cardElevation(4.dp),
                 modifier = modifier
                     .padding(8.dp),
-                onClick = {onSelected(it)}
+                onClick = { onSelected(it) }
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    IconButton(onClick = { onDetails(it) },
-                        modifier=modifier.align(Alignment.TopEnd)) {
-                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription ="Details" )
+                    IconButton(
+                        onClick = { onDetails(it) },
+                        modifier = modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Details")
                     }
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -71,15 +70,14 @@ fun ListLocals(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        if(it.image!=null)
-                            Image(bitmap = it.image!!.asImageBitmap(), contentDescription = " " )
-
-                        else
+                        if (it.imageUri != null) {
                             AsyncImage(
-                                model = it.imagePath,
-                                contentDescription = "Image",
+                                model =it.imageUri!!,
+                                contentDescription = "Local image",
                                 contentScale = ContentScale.Fit,
+                                modifier = modifier.fillMaxSize()
                             )
+                        }
                     }
                 }
 
