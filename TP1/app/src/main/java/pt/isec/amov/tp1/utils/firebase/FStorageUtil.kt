@@ -1,11 +1,14 @@
 package pt.isec.amov.tp1.utils.firebase
 
 import android.content.res.AssetManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
@@ -30,7 +33,7 @@ class FStorageUtil {
             if (location.imagePath!!.isNotEmpty()) {
                 val file = File(location.imagePath)
                 val inputStream = FileInputStream(file)
-                uploadFile(inputStream, file.name)
+                uploadFile(inputStream, location.id+".jpg")
             }
             db.collection("Locations").document(location.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
@@ -71,7 +74,7 @@ class FStorageUtil {
             if (placeOfInterest.imagePath!!.isNotEmpty()) {
                 val file = File(placeOfInterest.imagePath)
                 val inputStream = FileInputStream(file)
-                uploadFile(inputStream, file.name)
+                uploadFile(inputStream, placeOfInterest.id+".jpg")
             }
             db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
@@ -200,14 +203,22 @@ class FStorageUtil {
                     val locations: MutableList<Location> = mutableListOf()
 
                     querySnapshot?.documents?.forEach { document ->
-
+                        var bitmap: Bitmap? = null
+                        val storageRef = Firebase.storage.reference.child("${document.getString("id") ?: ""}.jpg")
+                        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {
+                            bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                        }.addOnFailureListener {
+                            Log.e("Firestore", "Error fetching image", it)
+                        }
                         val location = Location(
                             document.getString("id") ?: "",
                             document.getString("authorEmail") ?: "",
                             document.getString("name") ?: "",
                             document.getString("description") ?: "",
-                            document.getString("imagePath")?:""
+                            document.getString("imagePath")?:"",
+                            bitmap
                             )
+
                         locations.add(location)
                     }
 
@@ -237,7 +248,8 @@ class FStorageUtil {
                             document.getString("description") ?: "",
                             document.getString("imagePath")?:"",
                             document.getString("categoryId")?:"",
-                            document.getString("locationId")?:""
+                            document.getString("locationId")?:"",
+                            null
                         )
                         placesOfInterest.add(placeOfInterest)
                     }

@@ -1,5 +1,7 @@
 package pt.isec.amov.tp1.ui.composables
 
+import android.widget.ImageView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +22,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import pt.isec.amov.tp1.data.Local
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,11 +71,15 @@ fun ListLocals(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        AsyncImage(
-                            model = it.imagePath,
-                            contentDescription = "Image",
-                            contentScale = ContentScale.Fit,
-                        )
+                        if(it.image!=null)
+                            Image(bitmap = it.image!!.asImageBitmap(), contentDescription = " " )
+
+                        else
+                            AsyncImage(
+                                model = it.imagePath,
+                                contentDescription = "Image",
+                                contentScale = ContentScale.Fit,
+                            )
                     }
                 }
 

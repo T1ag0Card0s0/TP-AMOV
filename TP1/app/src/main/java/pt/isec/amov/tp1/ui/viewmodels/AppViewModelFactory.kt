@@ -98,7 +98,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     appData.user.value!!.email,
                     addLocalForm!!.name.value,
                     addLocalForm!!.descrition.value,
-                    addLocalForm!!.imagePath.value
+                    addLocalForm!!.imagePath.value,
+                    null
                 )
             ){exception->
                 _error.value = exception?.message
@@ -121,7 +122,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     addLocalForm!!.descrition.value,
                     addLocalForm!!.imagePath.value,
                     addLocalForm!!.category.value!!.id,
-                    selectedLocation.value!!.id
+                    selectedLocation.value!!.id,
+                    null
                 )
             ){exception->
                 _error.value = exception?.message

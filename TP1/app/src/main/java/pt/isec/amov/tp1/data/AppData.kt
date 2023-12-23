@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.data
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,8 +20,10 @@ open class Local(
     open val name: String,
     override val authorEmail: String,
     open val description: String,
-    open val imagePath: String?
+    open val imagePath: String?,
+    open var image: Bitmap?
 ):Contribution(authorEmail)
+
 
 data class Location(
     override val id: String,
@@ -28,7 +31,8 @@ data class Location(
     override val name: String,
     override val description: String,
     override val imagePath: String?,
-):Local(authorEmail,id,name,description,imagePath)
+    override var image: Bitmap?,
+):Local(authorEmail,id,name,description,imagePath, image)
 
 data class PlaceOfInterest(
     override val id: String,
@@ -37,8 +41,9 @@ data class PlaceOfInterest(
     override val description: String,
     override val imagePath: String?,
     val categoryId: String,
-    val locationId: String
-):Local(authorEmail,id,name,description,imagePath)
+    val locationId: String,
+    override var image: Bitmap?
+):Local(authorEmail,id,name,description,imagePath,image)
 
 data class User(
     val userName: String,
