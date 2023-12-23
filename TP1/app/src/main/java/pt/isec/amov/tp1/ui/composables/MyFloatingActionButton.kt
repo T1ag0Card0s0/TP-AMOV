@@ -65,7 +65,8 @@ fun MyFloatingActionButton(
                     navController.navigate(Screens.ADD_LOCATIONS.route)
                 }
                 Screens.SEARCH_PLACES_OF_INTEREST->{
-                    navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
+                    showMoreAddOptions=!showMoreAddOptions
+                    //navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
                 }
                 else->{}
             }

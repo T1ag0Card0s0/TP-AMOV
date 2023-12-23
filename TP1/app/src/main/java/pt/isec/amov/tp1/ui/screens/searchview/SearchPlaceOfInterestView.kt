@@ -43,9 +43,18 @@ fun SearchPlaceOfInterestView(
     var distanceOrderBy by remember { mutableStateOf("") }
     Column(
         modifier = modifier
-            .padding(8.dp)
+            .padding(start=8.dp, end=8.dp)
             .fillMaxSize()
     ) {
+        Row (
+            horizontalArrangement = Arrangement.Center,
+            modifier = modifier.fillMaxWidth()
+        ){
+            Text(
+                text = "In ${location.name}",
+                fontSize = 30.sp
+            )
+        }
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
@@ -106,10 +115,6 @@ fun SearchPlaceOfInterestView(
                 .padding(top = 6.dp, start = 3.dp, end = 3.dp)
         )
 
-        Text(
-            text = "In ${location.name}",
-            fontSize = 30.sp
-        )
         if(placesOfInterest.value!=null)
             ListLocals(
                 locals =

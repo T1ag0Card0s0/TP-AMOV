@@ -20,6 +20,7 @@ import java.io.InputStream
 
 class FStorageUtil {
     companion object {
+        //Adds
         fun addLocationToFirestore(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             if (location.imageName!!.isNotEmpty()) {
@@ -53,6 +54,60 @@ class FStorageUtil {
                 }
         }
 
+
+        fun addPlaceOfInterestToFirestore(
+            placeOfInterest: PlaceOfInterest,
+            onResult: (Throwable?) -> Unit
+        ) {
+            val db = Firebase.firestore
+            if (placeOfInterest.imageName!!.isNotEmpty()) {
+                val file = File(placeOfInterest.imageName!!)
+                val inputStream = FileInputStream(file)
+                uploadFile(
+                    inputStream,
+                    placeOfInterest.id + "." + file.extension,
+                    onSuccess = {
+                        placeOfInterest.imageUri = it
+                        updatePlaceOfInterestInFirestore(placeOfInterest){
+
+                        }
+                    }
+                )
+                placeOfInterest.imageName = placeOfInterest.id + "." + file.extension
+            }
+            val dataToAdd = hashMapOf(
+                "id" to placeOfInterest.id,
+                "name" to placeOfInterest.name,
+                "description" to placeOfInterest.description,
+                "imageName" to placeOfInterest.imageName,
+                "authorEmail" to placeOfInterest.authorEmail,
+                "locationId" to placeOfInterest.locationId,
+                "categoryId" to placeOfInterest.categoryId,
+                "imageUri" to placeOfInterest.imageUri
+            )
+            db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
+
+
+
+        fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit) {
+            val db = Firebase.firestore
+            val dataToAdd = hashMapOf(
+                "id" to category.id,
+                "name" to category.name,
+                "description" to category.description,
+                "authorEmail" to category.authorEmail
+            )
+            db.collection("Categories").document(category.id).set(dataToAdd)
+                .addOnCompleteListener { result ->
+                    onResult(result.exception)
+                }
+        }
+        //Updates
+
         fun updateLocationInFirestore(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("Locations").document(location.id)
@@ -74,36 +129,6 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-
-        fun addPlaceOfInterestToFirestore(
-            placeOfInterest: PlaceOfInterest,
-            onResult: (Throwable?) -> Unit
-        ) {
-            val db = Firebase.firestore
-            if (placeOfInterest.imageName!!.isNotEmpty()) {
-                val file = File(placeOfInterest.imageName!!)
-                val inputStream = FileInputStream(file)
-                uploadFile(inputStream, placeOfInterest.id + "." + file.extension) {
-                    placeOfInterest.imageUri = it
-                }
-                placeOfInterest.imageName = placeOfInterest.id + "." + file.extension
-            }
-            val dataToAdd = hashMapOf(
-                "id" to placeOfInterest.id,
-                "name" to placeOfInterest.name,
-                "description" to placeOfInterest.description,
-                "imageName" to placeOfInterest.imageName,
-                "authorEmail" to placeOfInterest.authorEmail,
-                "locationId" to placeOfInterest.locationId,
-                "categoryId" to placeOfInterest.categoryId,
-                "imageUri" to placeOfInterest.imageUri
-            )
-            db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
-        }
-
         fun updatePlaceOfInterestInFirestore(
             placeOfInterest: PlaceOfInterest,
             onResult: (Throwable?) -> Unit
@@ -119,6 +144,7 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "imageName", placeOfInterest.imageName)
                     transaction.update(dataToUpdate, "locationId", placeOfInterest.locationId)
                     transaction.update(dataToUpdate, "categoryId", placeOfInterest.categoryId)
+                    transaction.update(dataToUpdate,"imageUri",placeOfInterest.imageUri)
                     null
                 } else
                     throw FirebaseFirestoreException(
@@ -129,21 +155,6 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-
-        fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit) {
-            val db = Firebase.firestore
-            val dataToAdd = hashMapOf(
-                "id" to category.id,
-                "name" to category.name,
-                "description" to category.description,
-                "authorEmail" to category.authorEmail
-            )
-            db.collection("Categories").document(category.id).set(dataToAdd)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
-        }
-
         fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("Categories").document(category.id)
@@ -163,7 +174,7 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
-
+        //Removes
         fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("Categories").document(category.id)
@@ -190,7 +201,7 @@ class FStorageUtil {
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
-
+        //Observers
         private var categoryListenerRegistration: ListenerRegistration? = null
         private var placeOfInterestListenerRegistration: ListenerRegistration? = null
         private var locationListenerRegistration: ListenerRegistration? = null
@@ -292,9 +303,7 @@ class FStorageUtil {
             locationListenerRegistration?.remove()
             placeOfInterestListenerRegistration?.remove()
         }
-// Storage
-//https://firebase.google.com/docs/storage/android/upload-files
-
+        // Storage
         fun uploadFile(inputStream: InputStream, imgFile: String, onSuccess: (String) -> Unit) {
             val storage = Firebase.storage
             val ref1 = storage.reference

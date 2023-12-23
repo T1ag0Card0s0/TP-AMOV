@@ -14,7 +14,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +44,7 @@ fun AddPlaceOfInterestView(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val categories =  appViewModel.appData.categories.observeAsState()
+    val categories = appViewModel.appData.categories.observeAsState()
     var optCategory by remember { mutableStateOf("") }
     var isExpandedCategories by remember { mutableStateOf(false) }
     Box(
@@ -76,8 +79,8 @@ fun AddPlaceOfInterestView(
                 selectedOption = optCategory,
                 placeholder = stringResource(R.string.select_categories),
                 label = stringResource(R.string.categories),
-                onExpandChange = { /*TODO*/isExpandedCategories = !isExpandedCategories },
-                onDismissRequest = { /*TODO*/
+                onExpandChange = { isExpandedCategories = !isExpandedCategories },
+                onDismissRequest = {
                     isExpandedCategories = false
                 },
                 onClick = {
@@ -85,7 +88,8 @@ fun AddPlaceOfInterestView(
                     isExpandedCategories = false
                     appViewModel.addLocalForm!!.category.value =
                         categories.value!!.find { c -> c.name == optCategory }
-                }
+                },
+                modifier = modifier.padding(start = 6.dp, end = 6.dp)
             )
             Spacer(modifier = modifier.height(24.dp))
             Row {
