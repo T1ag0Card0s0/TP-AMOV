@@ -44,4 +44,7 @@
     <string name="add_place_of_interest">Add Place Of Interest</string>
     <string name="details">Details</string>
     <string name="show_all_content">Show All Content</string>
+    <string name="author_email">Author Email</string>
+    <string name="map_view">Map View</string>
+    <string name="submited_by">Submited By</string>
 </resources>
