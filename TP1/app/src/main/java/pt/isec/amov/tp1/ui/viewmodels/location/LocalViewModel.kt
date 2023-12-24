@@ -5,17 +5,11 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.utils.location.LocationHandler
 
 class LocalViewModel(private val locationHandler: LocationHandler) : ViewModel() {
-    val POIs = listOf(
-        Coordinates("Liverpool",53.430819,-2.960828),
-        Coordinates("Manchester City",53.482989,-2.200292),
-        Coordinates("Manchester United",53.463056,-2.291389),
-        Coordinates("Bayern Munich", 48.218775, 11.624753),
-        Coordinates("Barcelona",41.38087,2.122802),
-        Coordinates("Real Madrid",40.45306,-3.68835)
-    )
+    val POIs : MutableList<Coordinates>? = null
     // Permissions
     var coarseLocationPermission = false
     var fineLocationPermission = false

@@ -29,12 +29,12 @@ class FStorageUtil {
                     onSuccess = {
                         Log.i("Image inserted", "Success $it")
                         location.imageUri = it
-                        updateLocationInFirestore(location){
+                        updateLocationInFirestore(location) {
 
                         }
                     }
                 )
-                        location.imageName = location.id + "." + file.extension
+                location.imageName = location.id + "." + file.extension
             }
 
             val dataToAdd = hashMapOf(
@@ -67,7 +67,7 @@ class FStorageUtil {
                     placeOfInterest.id + "." + file.extension,
                     onSuccess = {
                         placeOfInterest.imageUri = it
-                        updatePlaceOfInterestInFirestore(placeOfInterest){
+                        updatePlaceOfInterestInFirestore(placeOfInterest) {
 
                         }
                     }
@@ -91,7 +91,6 @@ class FStorageUtil {
                     onResult(result.exception)
                 }
         }
-
 
 
         fun addCategoryToFirestore(category: Category, onResult: (Throwable?) -> Unit) {
@@ -119,9 +118,9 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "name", location.name)
                     transaction.update(dataToUpdate, "description", location.description)
                     transaction.update(dataToUpdate, "imageName", location.imageName)
-                    transaction.update(dataToUpdate,"imageUri",location.imageUri)
-                    transaction.update(dataToUpdate,"latitude",location.latitude)
-                    transaction.update(dataToUpdate,"longitude",location.longitude)
+                    transaction.update(dataToUpdate, "imageUri", location.imageUri)
+                    transaction.update(dataToUpdate, "latitude", location.latitude)
+                    transaction.update(dataToUpdate, "longitude", location.longitude)
 
                     null
                 } else
@@ -133,6 +132,7 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
+
         fun updatePlaceOfInterestInFirestore(
             placeOfInterest: PlaceOfInterest,
             onResult: (Throwable?) -> Unit
@@ -148,9 +148,9 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "imageName", placeOfInterest.imageName)
                     transaction.update(dataToUpdate, "locationId", placeOfInterest.locationId)
                     transaction.update(dataToUpdate, "categoryId", placeOfInterest.categoryId)
-                    transaction.update(dataToUpdate,"imageUri",placeOfInterest.imageUri)
-                    transaction.update(dataToUpdate,"latitude",placeOfInterest.latitude)
-                    transaction.update(dataToUpdate,"longitude",placeOfInterest.longitude)
+                    transaction.update(dataToUpdate, "imageUri", placeOfInterest.imageUri)
+                    transaction.update(dataToUpdate, "latitude", placeOfInterest.latitude)
+                    transaction.update(dataToUpdate, "longitude", placeOfInterest.longitude)
                     null
                 } else
                     throw FirebaseFirestoreException(
@@ -161,6 +161,7 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
+
         fun updateCategoryInFirestore(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToUpdate = db.collection("Categories").document(category.id)
@@ -180,6 +181,7 @@ class FStorageUtil {
                 onResult(result.exception)
             }
         }
+
         //Removes
         fun removeCategoryFromFireStone(category: Category, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
@@ -207,6 +209,7 @@ class FStorageUtil {
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
+
         //Observers
         private var categoryListenerRegistration: ListenerRegistration? = null
         private var placeOfInterestListenerRegistration: ListenerRegistration? = null
@@ -262,8 +265,8 @@ class FStorageUtil {
                             document.getString("description") ?: "",
                             document.getString("imageName") ?: "",
                             document.getString("imageUri"),
-                            document.getDouble("latitude")?:0.0,
-                            document.getDouble("longitude")?:0.0
+                            document.getDouble("latitude") ?: 0.0,
+                            document.getDouble("longitude") ?: 0.0
                         )
 
                         locations.add(location)
@@ -297,8 +300,8 @@ class FStorageUtil {
                             document.getString("categoryId") ?: "",
                             document.getString("locationId") ?: "",
                             document.getString("imageUri"),
-                            document.getDouble("latitude")?:0.0,
-                            document.getDouble("longitude")?:0.0
+                            document.getDouble("latitude") ?: 0.0,
+                            document.getDouble("longitude") ?: 0.0
 
                         )
                         placesOfInterest.add(placeOfInterest)
@@ -313,8 +316,13 @@ class FStorageUtil {
             locationListenerRegistration?.remove()
             placeOfInterestListenerRegistration?.remove()
         }
+
         // Storage
-        private fun uploadFile(inputStream: InputStream, imgFile: String, onSuccess: (String) -> Unit) {
+        private fun uploadFile(
+            inputStream: InputStream,
+            imgFile: String,
+            onSuccess: (String) -> Unit
+        ) {
             val storage = Firebase.storage
             val ref1 = storage.reference
             val ref2 = ref1.child("images")

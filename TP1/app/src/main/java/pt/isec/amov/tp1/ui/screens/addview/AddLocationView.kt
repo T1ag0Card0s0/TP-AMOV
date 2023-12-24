@@ -79,7 +79,7 @@ fun AddLocationView(
                 Spacer(modifier = modifier.width(8.dp))
                 Button(
                     onClick = {
-                        navController.navigate(Screens.CHOOSE_COORDINATES.route)
+                        navController.navigate(Screens.CHOOSE_LOCATION_COORDINATES.route)
                     }
                 ) {
                     Text(stringResource(R.string.choose_location))

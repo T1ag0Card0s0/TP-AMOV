@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 
@@ -55,6 +56,7 @@ fun MyFloatingActionButton(
                 },
                 onClick = {
                     showMoreAddOptions = false
+                    viewModel.addLocalForm = AddLocalForm()
                     navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
                 }
             )
@@ -62,11 +64,11 @@ fun MyFloatingActionButton(
         FloatingActionButton(onClick = {
             when(currentScreen){
                 Screens.SEARCH_LOCATIONS->{
+                    viewModel.addLocalForm = AddLocalForm()
                     navController.navigate(Screens.ADD_LOCATIONS.route)
                 }
                 Screens.SEARCH_PLACES_OF_INTEREST->{
                     showMoreAddOptions=!showMoreAddOptions
-                    //navController.navigate(Screens.ADD_PLACE_OF_INTEREST.route)
                 }
                 else->{}
             }

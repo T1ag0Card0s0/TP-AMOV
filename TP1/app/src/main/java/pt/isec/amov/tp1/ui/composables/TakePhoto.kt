@@ -1,11 +1,19 @@
 package pt.isec.amov.tp1.ui.composables
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -30,6 +38,15 @@ fun TakePhoto(
 ) {
     val context= LocalContext.current
     var tempFile by remember { mutableStateOf("") }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri == null) {
+            imagePath.value = ""
+            return@rememberLauncherForActivityResult
+        }
+        imagePath.value = FileUtils.createFileFromUri(context, uri)
+    }
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
@@ -43,17 +60,27 @@ fun TakePhoto(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Button(onClick = {
-            tempFile = FileUtils.getTempFilename(context)
-            val fileUri = FileProvider.getUriForFile(
-                context,
-                "pt.isec.amov.tp1.android.file-provider",
-                File(tempFile)
-            )
-            cameraLauncher.launch(fileUri)
-        }) {
-            Text(text = stringResource(R.string.take_picture))
+        Row (
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Button(onClick = {
+                tempFile = FileUtils.getTempFilename(context)
+                val fileUri = FileProvider.getUriForFile(
+                    context,
+                    "pt.isec.amov.tp1.android.file-provider",
+                    File(tempFile)
+                )
+                cameraLauncher.launch(fileUri)
+            }) {
+                // Text(text = stringResource(R.string.take_picture))
+                Icon(imageVector = Icons.Default.PhotoCamera, contentDescription = "Take photo")
+            }
+            Button(onClick = { galleryLauncher.launch(PickVisualMediaRequest()) }) {
+                Icon(imageVector = Icons.Default.Photo, contentDescription = "Choose from galary")
+            }
         }
+
         Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
                 model = imagePath.value,

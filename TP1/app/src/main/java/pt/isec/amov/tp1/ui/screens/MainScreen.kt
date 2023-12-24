@@ -12,12 +12,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pt.isec.amov.tp1.data.Location
+import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.ui.composables.MyCenterAlignedTopAppBarr
 import pt.isec.amov.tp1.ui.composables.MyFloatingActionButton
 import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
@@ -41,10 +42,6 @@ fun MainScreen(
     navController: NavHostController = rememberNavController()
 ) {
     viewModel.startObserver()
-    val categories = viewModel.categories.observeAsState()
-    val placesOfInterest = viewModel.placesOfInterest.observeAsState()
-    val locations = viewModel.locations.observeAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
@@ -57,7 +54,8 @@ fun MainScreen(
         showDoneIcon = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route,
-            Screens.CHOOSE_COORDINATES.route
+            Screens.CHOOSE_LOCATION_COORDINATES.route,
+            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route
         )
         showArrowBack = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
@@ -66,7 +64,8 @@ fun MainScreen(
             Screens.LOCATION_DETAILS.route,
             Screens.PLACE_OF_INTEREST_DETAILS.route,
             Screens.CREDITS.route,
-            Screens.CHOOSE_COORDINATES.route,
+            Screens.CHOOSE_LOCATION_COORDINATES.route,
+            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -144,7 +143,6 @@ fun MainScreen(
                 )
             }
             composable(Screens.ADD_LOCATIONS.route) {
-                viewModel.addLocalForm = AddLocalForm()
                 AddLocationView(
                     appViewModel = viewModel,
                     navController = navController,
@@ -152,7 +150,6 @@ fun MainScreen(
                 )
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route) {
-                viewModel.addLocalForm = AddLocalForm()
                 AddPlaceOfInterestView(
                     appViewModel = viewModel,
                     navController = navController,
@@ -169,9 +166,20 @@ fun MainScreen(
                     placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
                 )
             }
-            composable(Screens.CHOOSE_COORDINATES.route) {
+            composable(Screens.CHOOSE_LOCATION_COORDINATES.route) {
+                val locations = viewModel.locations.observeAsState()
                 ChooseCoordinates(
-                    locationViewModel = locationViewModel
+                    locationViewModel = locationViewModel,
+                    viewModel = viewModel,
+                    locals = locations.value!!
+                )
+            }
+            composable(Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route){
+                val placesOfInterest = viewModel.placesOfInterest.observeAsState()
+                ChooseCoordinates(
+                    locationViewModel = locationViewModel,
+                    viewModel = viewModel,
+                    locals = placesOfInterest.value!!
                 )
             }
             composable(Screens.CREDITS.route) {

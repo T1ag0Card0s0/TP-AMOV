@@ -72,8 +72,6 @@ fun MyCenterAlignedTopAppBarr(
                         Screens.ADD_LOCATIONS -> {
                             viewModel.addLocation()
                         }
-                        Screens.CHOOSE_COORDINATES -> {
-                        }
                         else -> {}
                     }
                 }) {

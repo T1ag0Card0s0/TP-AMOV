@@ -14,10 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -105,7 +102,7 @@ fun AddPlaceOfInterestView(
                 Spacer(modifier = modifier.width(8.dp))
                 Button(
                     onClick = {
-                        navController.navigate(Screens.CHOOSE_COORDINATES.route)
+                        navController.navigate(Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route)
                     }
                 ) {
                     Text(stringResource(R.string.choose_location))
