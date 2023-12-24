@@ -179,6 +179,11 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         }
     }
 
+    fun getCategoryById(categoryId: String): Category? {
+        if(appData.categories.value==null) return null
+        return appData.categories.value!!.find { it.id == categoryId }
+    }
+
 }
 
 class AddLocalForm {
