@@ -60,12 +60,14 @@ fun LocationDetailsView(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
+            Card (modifier = modifier.fillMaxWidth()){
+                AsyncImage(
+                    model = location.imageUri,
+                    contentDescription = "Location Image",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
-            AsyncImage(
-                model = location.imageUri,
-                contentDescription = "Location Image",
-                modifier = Modifier.fillMaxWidth()
-            )
             CreditCard(credit = stringResource(R.string.description) + ": " + location.description)
 
             Card(
@@ -73,38 +75,28 @@ fun LocationDetailsView(
                     .height(300.dp)
                     .fillMaxWidth(),
             ) {
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.fillMaxWidth()
-                ){
-                    Text(
-                        text = stringResource(R.string.map_view),
-                        fontSize = 24.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    AndroidView(
-                        factory = { context ->
-                            val mapView = MapView(context).apply {
-                                setTileSource(TileSourceFactory.MAPNIK)
-                                setMultiTouchControls(true)
-                                controller.setCenter(geoPoint)
-                                controller.setZoom(13.0)
-                                overlays.add(
-                                    Marker(this).apply {
-                                        position = geoPoint
-                                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                                        title = location.name
-                                    }
-                                )
-                            }
-                            mapView
-                        },
-                        update = { view ->
-                            view.controller.setCenter(geoPoint)
+
+                AndroidView(
+                    factory = { context ->
+                        val mapView = MapView(context).apply {
+                            setTileSource(TileSourceFactory.MAPNIK)
+                            setMultiTouchControls(true)
+                            controller.setCenter(geoPoint)
+                            controller.setZoom(13.0)
+                            overlays.add(
+                                Marker(this).apply {
+                                    position = geoPoint
+                                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                                    title = location.name
+                                }
+                            )
                         }
-                    )
-                }
+                        mapView
+                    },
+                    update = { view ->
+                        view.controller.setCenter(geoPoint)
+                    }
+                )
 
             }
             Row(

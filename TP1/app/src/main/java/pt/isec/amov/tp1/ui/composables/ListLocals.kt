@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -75,12 +76,15 @@ fun ListLocals(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         if(it.imageUri!=null){
-                            AsyncImage(
-                                model =it.imageUri!!,
-                                contentDescription = "Local image",
-                                contentScale = ContentScale.Fit,
-                                modifier = modifier.fillMaxSize()
-                            )
+                            Card (modifier = modifier.fillMaxSize()){
+                                AsyncImage(
+                                    model =it.imageUri!!,
+                                    contentDescription = "Local image",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = modifier.fillMaxSize()
+                                )
+                            }
+
                         }
                     }
                 }
