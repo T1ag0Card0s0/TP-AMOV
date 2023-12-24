@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,13 +33,16 @@ import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun AddLocationView(
     appViewModel: AppViewModel,
+    locationViewModel: LocalViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ){
+    val location = locationViewModel.currentLocation.observeAsState()
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -66,7 +70,10 @@ fun AddLocationView(
             )
             Spacer(modifier = modifier.height(24.dp))
             Row {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    appViewModel.addLocalForm!!.latitude=location.value!!.latitude
+                    appViewModel.addLocalForm!!.longitude=location.value!!.longitude
+                }) {
                     Text(text = stringResource(R.string.current_location))
                 }
                 Spacer(modifier = modifier.width(8.dp))

@@ -18,7 +18,9 @@ open class Local(
     override val authorEmail: String,
     open val description: String,
     open val imageName: String?,
-    open val imageUri: String?
+    open val imageUri: String?,
+    open val latitude: Double,
+    open val longitude: Double
 ):Contribution(authorEmail)
 
 
@@ -28,8 +30,10 @@ data class Location(
     override val name: String,
     override val description: String,
     override var imageName: String?,
-    override var imageUri: String?
-):Local(authorEmail,id,name,description,imageName,imageUri)
+    override var imageUri: String?,
+    override val latitude: Double,
+    override val longitude: Double
+):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude)
 
 data class PlaceOfInterest(
     override val id: String,
@@ -40,7 +44,9 @@ data class PlaceOfInterest(
     val categoryId: String,
     val locationId: String,
     override var imageUri: String?,
-):Local(authorEmail,id,name,description,imageName,imageUri)
+    override val latitude: Double,
+    override val longitude: Double
+):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude)
 
 data class User(
     val userName: String,

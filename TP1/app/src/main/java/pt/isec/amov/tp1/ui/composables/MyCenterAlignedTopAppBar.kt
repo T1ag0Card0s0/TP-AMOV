@@ -110,6 +110,15 @@ fun MyCenterAlignedTopAppBarr(
                     )
                     DropdownMenuItem(
                         text = {
+                               Text(stringResource(R.string.credits_title))
+                        },
+                        onClick = {
+                            navController.navigate(Screens.CREDITS.route)
+                            isExpanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = {
                             Text(stringResource(R.string.logout))
                         },
                         onClick = {

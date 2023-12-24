@@ -1,10 +1,7 @@
 package pt.isec.amov.tp1.utils.firebase
 
 
-import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
@@ -37,7 +34,7 @@ class FStorageUtil {
                         }
                     }
                 )
-                location.imageName = location.id + "." + file.extension
+                        location.imageName = location.id + "." + file.extension
             }
 
             val dataToAdd = hashMapOf(
@@ -46,7 +43,9 @@ class FStorageUtil {
                 "description" to location.description,
                 "imageName" to location.imageName,
                 "authorEmail" to location.authorEmail,
-                "imageUri" to location.imageUri
+                "imageUri" to location.imageUri,
+                "latitude" to location.latitude,
+                "longitude" to location.longitude
             )
             db.collection("Locations").document(location.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
@@ -83,7 +82,9 @@ class FStorageUtil {
                 "authorEmail" to placeOfInterest.authorEmail,
                 "locationId" to placeOfInterest.locationId,
                 "categoryId" to placeOfInterest.categoryId,
-                "imageUri" to placeOfInterest.imageUri
+                "imageUri" to placeOfInterest.imageUri,
+                "latitude" to placeOfInterest.latitude,
+                "longitude" to placeOfInterest.longitude
             )
             db.collection("PlacesOfInterest").document(placeOfInterest.id).set(dataToAdd)
                 .addOnCompleteListener { result ->
@@ -119,6 +120,9 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "description", location.description)
                     transaction.update(dataToUpdate, "imageName", location.imageName)
                     transaction.update(dataToUpdate,"imageUri",location.imageUri)
+                    transaction.update(dataToUpdate,"latitude",location.latitude)
+                    transaction.update(dataToUpdate,"longitude",location.longitude)
+
                     null
                 } else
                     throw FirebaseFirestoreException(
@@ -145,6 +149,8 @@ class FStorageUtil {
                     transaction.update(dataToUpdate, "locationId", placeOfInterest.locationId)
                     transaction.update(dataToUpdate, "categoryId", placeOfInterest.categoryId)
                     transaction.update(dataToUpdate,"imageUri",placeOfInterest.imageUri)
+                    transaction.update(dataToUpdate,"latitude",placeOfInterest.latitude)
+                    transaction.update(dataToUpdate,"longitude",placeOfInterest.longitude)
                     null
                 } else
                     throw FirebaseFirestoreException(
@@ -255,7 +261,9 @@ class FStorageUtil {
                             document.getString("name") ?: "",
                             document.getString("description") ?: "",
                             document.getString("imageName") ?: "",
-                            document.getString("imageUri")
+                            document.getString("imageUri"),
+                            document.getDouble("latitude")?:0.0,
+                            document.getDouble("longitude")?:0.0
                         )
 
                         locations.add(location)
@@ -280,7 +288,6 @@ class FStorageUtil {
                     val placesOfInterest: MutableList<PlaceOfInterest> = mutableListOf()
 
                     querySnapshot?.documents?.forEach { document ->
-                        val imageUri: MutableLiveData<String?> = MutableLiveData(null)
                         val placeOfInterest = PlaceOfInterest(
                             document.getString("id") ?: "",
                             document.getString("authorEmail") ?: "",
@@ -289,7 +296,10 @@ class FStorageUtil {
                             document.getString("imageName") ?: "",
                             document.getString("categoryId") ?: "",
                             document.getString("locationId") ?: "",
-                            document.getString("imageUri")
+                            document.getString("imageUri"),
+                            document.getDouble("latitude")?:0.0,
+                            document.getDouble("longitude")?:0.0
+
                         )
                         placesOfInterest.add(placeOfInterest)
                     }
@@ -304,7 +314,7 @@ class FStorageUtil {
             placeOfInterestListenerRegistration?.remove()
         }
         // Storage
-        fun uploadFile(inputStream: InputStream, imgFile: String, onSuccess: (String) -> Unit) {
+        private fun uploadFile(inputStream: InputStream, imgFile: String, onSuccess: (String) -> Unit) {
             val storage = Firebase.storage
             val ref1 = storage.reference
             val ref2 = ref1.child("images")

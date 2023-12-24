@@ -37,13 +37,16 @@ import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun AddPlaceOfInterestView(
     appViewModel: AppViewModel,
+    locationViewModel: LocalViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val location = locationViewModel.currentLocation.observeAsState()
     val categories = appViewModel.appData.categories.observeAsState()
     var optCategory by remember { mutableStateOf("") }
     var isExpandedCategories by remember { mutableStateOf(false) }
@@ -93,7 +96,10 @@ fun AddPlaceOfInterestView(
             )
             Spacer(modifier = modifier.height(24.dp))
             Row {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    appViewModel.addLocalForm!!.latitude = location.value!!.latitude
+                    appViewModel.addLocalForm!!.longitude = location.value!!.longitude
+                }) {
                     Text(text = stringResource(R.string.current_location))
                 }
                 Spacer(modifier = modifier.width(8.dp))

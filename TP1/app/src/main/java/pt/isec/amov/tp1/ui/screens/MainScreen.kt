@@ -147,14 +147,16 @@ fun MainScreen(
                 viewModel.addLocalForm = AddLocalForm()
                 AddLocationView(
                     appViewModel = viewModel,
-                    navController = navController
+                    navController = navController,
+                    locationViewModel = locationViewModel
                 )
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route) {
                 viewModel.addLocalForm = AddLocalForm()
                 AddPlaceOfInterestView(
                     appViewModel = viewModel,
-                    navController = navController
+                    navController = navController,
+                    locationViewModel = locationViewModel
                 )
             }
             composable(Screens.LOCATION_DETAILS.route) {

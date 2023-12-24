@@ -94,12 +94,14 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         viewModelScope.launch {
             FStorageUtil.addLocationToFirestore(
                 Location(
-                    UUID.randomUUID().toString(),
-                    appData.user.value!!.email,
-                    addLocalForm!!.name.value,
-                    addLocalForm!!.descrition.value,
-                    addLocalForm!!.imagePath.value,
-                    null
+                    id = UUID.randomUUID().toString(),
+                    authorEmail = appData.user.value!!.email,
+                    name = addLocalForm!!.name.value,
+                    description = addLocalForm!!.descrition.value,
+                    imageName = addLocalForm!!.imagePath.value,
+                    imageUri = null,
+                    latitude = addLocalForm!!.latitude!!,
+                    longitude = addLocalForm!!.longitude!!
                 )
             ){exception->
                 _error.value = exception?.message
@@ -112,18 +114,22 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             addLocalForm!!.descrition.value.isEmpty() ||
             addLocalForm!!.imagePath.value.isEmpty()
         ) return
-        if (addLocalForm!!.category.value == null) return
+        if (addLocalForm!!.category.value == null||
+            addLocalForm!!.latitude==null||
+            addLocalForm!!.longitude==null) return
         viewModelScope.launch {
             FStorageUtil.addPlaceOfInterestToFirestore(
                 PlaceOfInterest(
-                    UUID.randomUUID().toString(),
-                    appData.user.value!!.email,
-                    addLocalForm!!.name.value,
-                    addLocalForm!!.descrition.value,
-                    addLocalForm!!.imagePath.value,
-                    addLocalForm!!.category.value!!.id,
-                    selectedLocation.value!!.id,
-                    null
+                    id = UUID.randomUUID().toString(),
+                    authorEmail = appData.user.value!!.email,
+                    name = addLocalForm!!.name.value,
+                    description = addLocalForm!!.descrition.value,
+                    imageName =  addLocalForm!!.imagePath.value,
+                    categoryId = addLocalForm!!.category.value!!.id,
+                    locationId = selectedLocation.value!!.id,
+                    imageUri = null,
+                    latitude = addLocalForm!!.latitude!!,
+                    longitude = addLocalForm!!.longitude!!
                 )
             ){exception->
                 _error.value = exception?.message
@@ -180,6 +186,8 @@ class AddLocalForm {
     val descrition: MutableState<String> = mutableStateOf("")
     val imagePath: MutableState<String> = mutableStateOf("")
     val category: MutableState<Category?> = mutableStateOf(null)
+    var latitude : Double? = null
+    var longitude : Double? = null
 }
 
 fun FirebaseUser.toUser(): User {
