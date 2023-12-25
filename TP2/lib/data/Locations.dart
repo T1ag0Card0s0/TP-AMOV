@@ -1,5 +1,5 @@
 
-class Location {
+class Locations {
   final String id;
   final String name;
   final String description;
@@ -7,7 +7,7 @@ class Location {
   final double latitude;
   final double longitude;
 
-  Location({
+  Locations({
     required this.id,
     required this.name,
     required this.description,
@@ -16,8 +16,8 @@ class Location {
     required this.longitude
   });
 
-  factory Location.fromMap(Map<String, dynamic> data, String documentId) {
-    return Location(
+  factory Locations.fromMap(Map<String, dynamic> data, String documentId) {
+    return Locations(
       id: documentId,
       name: data['name'] ?? '',
       description: data['description'] ?? '',

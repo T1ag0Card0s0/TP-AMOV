@@ -1,13 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tp2/DetailsScreen.dart';
 import 'package:tp2/ListScreen.dart';
-import 'PlacesOfInterestScreen.dart';
+import 'package:tp2/PlacesOfInterestScreen.dart';
+import 'package:tp2/RecentPlacesScreen.dart';
+import 'DetailsPlaceScreen.dart';
 import 'firebase_options.dart';
 
 void initFirebase() async {
@@ -38,6 +36,8 @@ class MyApp extends StatelessWidget {
         LoginPage.routeName : (context) => const LoginPage(title: 'Flutter Demo Home Page'),
         ListScreen.routeName : (context) => const ListScreen(),
         DetailsScreen.routeName : (context) => const DetailsScreen(),
+        DetailsPlaceScreen.routeName : (context) => const DetailsPlaceScreen(),
+        RecentPlacesScreen.routeName : (context) => const RecentPlacesScreen(),
         PlacesOfInterestScreen.routeName : (context) => const PlacesOfInterestScreen()
       },
     );

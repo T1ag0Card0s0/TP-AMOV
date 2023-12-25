@@ -1,24 +1,22 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tp2/data/PlacesOfInterest.dart';
 
-import 'data/Locations.dart';
+class DetailsPlaceScreen extends StatefulWidget {
+  const DetailsPlaceScreen({super.key});
 
-class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
-
-  static const String routeName = '/DetailsScreen';
+  static const String routeName = '/DetailsPlaceScreen';
 
   @override
-  State<DetailsScreen> createState() => _DetailsScreenState();
+  State<DetailsPlaceScreen> createState() => _DetailsPlaceScreenState();
 }
 
-class _DetailsScreenState extends State<DetailsScreen> {
-
+class _DetailsPlaceScreenState extends State<DetailsPlaceScreen> {
   @override
   Widget build(BuildContext context) {
     // Recupera os argumentos passados
-    final Locations location = ModalRoute.of(context)!.settings.arguments as Locations;
+    final PlaceOfInterest location = ModalRoute.of(context)!.settings.arguments as PlaceOfInterest;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,10 +63,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 // Descrição da localização
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    location.description,
+                  child: Text("Autor: ${location.authorEmail}",
                     style: const TextStyle(
-                        fontSize: 20.0,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),

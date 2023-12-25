@@ -1,6 +1,4 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class PlaceOfInterest{
   final String id;
   final String authorEmail;
@@ -24,17 +22,31 @@ class PlaceOfInterest{
     required this.longitude
 });
 
-  factory PlaceOfInterest.fromMap(Map<String, dynamic> data, String documentId) {
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'authorEmail': authorEmail,
+      'imageName': imageName,
+      'imageUri': imageUri,
+      'latitude': latitude,
+      'longitude': longitude,
+      'categoryId': categoryId,
+      'locationId': locationId,
+    };
+  }
+
+  factory PlaceOfInterest.fromJson(Map<String, dynamic> json) {
     return PlaceOfInterest(
-        id: documentId,
-        name: data['name'] ?? '',
-        authorEmail: data['authorEmail'] ?? '',
-        imageName: data['imageName'] ?? '',
-        categoryId: data['categoryId'] ?? '',
-        locationId: data['locationId'] ?? '',
-        imageUri: data['imageUri'] ?? '',
-        latitude: data['latitude'] ?? '',
-        longitude: data['longitude'] ?? ''
+      id: json['id'],
+      name: json['name'],
+      authorEmail: json['authorEmail'],
+      imageName: json['imageName'],
+      imageUri: json['imageUri'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      categoryId: json['categoryId'],
+      locationId: json['locationId'],
     );
   }
 }
