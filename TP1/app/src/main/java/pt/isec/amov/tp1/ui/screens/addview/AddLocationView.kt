@@ -67,8 +67,8 @@ fun AddLocationView(
             Spacer(modifier = modifier.height(24.dp))
             Row {
                 Button(onClick = {
-                    appViewModel.addLocalForm!!.latitude=location.value!!.latitude
-                    appViewModel.addLocalForm!!.longitude=location.value!!.longitude
+                    appViewModel.addLocalForm!!.latitude.value=location.value!!.latitude
+                    appViewModel.addLocalForm!!.longitude.value=location.value!!.longitude
                 }) {
                     Text(text = stringResource(R.string.current_location))
                 }

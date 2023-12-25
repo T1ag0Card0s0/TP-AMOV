@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
@@ -42,6 +43,14 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = appData.placesOfInterest
     val error : MutableState<String?>
         get() = _error
+    val selecetLocationGeoPoint: GeoPoint?
+        get() = if(selectedLocation.value==null) null
+                else GeoPoint(
+                    selectedLocation.value!!.latitude,
+                    selectedLocation.value!!.longitude
+                )
+
+
     fun createUserWithEmail(email:String, password:String){
         if(email.isBlank() || password.isBlank()) return
         viewModelScope.launch {
@@ -88,7 +97,9 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         if (addLocalForm == null) return
         if (addLocalForm!!.name.value.isEmpty() ||
             addLocalForm!!.descrition.value.isEmpty() ||
-            addLocalForm!!.imagePath.value.isEmpty()
+            addLocalForm!!.imagePath.value.isEmpty()||
+            addLocalForm!!.latitude.value == null||
+            addLocalForm!!.longitude.value == null
         ) return
         viewModelScope.launch {
             FStorageUtil.addLocationToFirestore(
@@ -99,8 +110,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     description = addLocalForm!!.descrition.value,
                     imageName = addLocalForm!!.imagePath.value,
                     imageUri = null,
-                    latitude = addLocalForm!!.latitude!!,
-                    longitude = addLocalForm!!.longitude!!
+                    latitude = addLocalForm!!.latitude.value!!,
+                    longitude = addLocalForm!!.longitude.value!!
                 )
             ){exception->
                 _error.value = exception?.message
@@ -114,8 +125,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             addLocalForm!!.imagePath.value.isEmpty()
         ) return
         if (addLocalForm!!.category.value == null||
-            addLocalForm!!.latitude==null||
-            addLocalForm!!.longitude==null) return
+            addLocalForm!!.latitude.value==null||
+            addLocalForm!!.longitude.value==null) return
         viewModelScope.launch {
             FStorageUtil.addPlaceOfInterestToFirestore(
                 PlaceOfInterest(
@@ -127,8 +138,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     categoryId = addLocalForm!!.category.value!!.id,
                     locationId = selectedLocation.value!!.id,
                     imageUri = null,
-                    latitude = addLocalForm!!.latitude!!,
-                    longitude = addLocalForm!!.longitude!!
+                    latitude = addLocalForm!!.latitude.value!!,
+                    longitude = addLocalForm!!.longitude.value!!
                 )
             ){exception->
                 _error.value = exception?.message
@@ -166,31 +177,44 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun startObserver(){
-        //Categories
+    fun startAllObservers(){
+        stopAllObservers()
+        startCategoriesObserver()
+        startLocationsObserver()
+        startPlacesOfInterestObserver()
+    }
+    fun startCategoriesObserver(){
         viewModelScope.launch {
             FStorageUtil.startCategoryObserver {categories->
                 appData.setCategories(categories!!)
             }
         }
-        //Locations
+    }
+    fun startLocationsObserver(){
         viewModelScope.launch {
             FStorageUtil.startLocationObserver {locations->
                 appData.setLocations(locations!!)
             }
         }
-        //PlacesOfInterest
+    }
+    fun startPlacesOfInterestObserver(){
         viewModelScope.launch {
             FStorageUtil.startPlacesOfInterestObserver { placesOfInterest->
                 appData.setPlacesOfInterest(placesOfInterest!!)
             }
         }
     }
-
+    fun stopAllObservers() {
+        viewModelScope.launch {
+            FStorageUtil.stopAllObservers()
+        }
+    }
     fun getCategoryById(categoryId: String): Category? {
         if(appData.categories.value==null) return null
         return appData.categories.value!!.find { it.id == categoryId }
     }
+
+
 
 }
 
@@ -199,8 +223,8 @@ class AddLocalForm {
     val descrition: MutableState<String> = mutableStateOf("")
     val imagePath: MutableState<String> = mutableStateOf("")
     val category: MutableState<Category?> = mutableStateOf(null)
-    var latitude : Double? = null
-    var longitude : Double? = null
+    var latitude : MutableState<Double?> = mutableStateOf(null)
+    var longitude : MutableState<Double?> = mutableStateOf(null)
 }
 
 fun FirebaseUser.toUser(): User {
