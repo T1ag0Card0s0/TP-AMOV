@@ -57,7 +57,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     location.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -68,12 +68,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     location.description,
+                    style: const TextStyle(
+                        fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                // Latitude e longitude
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Latitude: ${location.latitude.toStringAsFixed(6)}, Longitude: ${location.longitude.toStringAsFixed(6)}',
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
-                // Laatitude e longitude
-
-
               ],
             ),
           ),
