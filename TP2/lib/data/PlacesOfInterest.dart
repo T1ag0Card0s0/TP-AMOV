@@ -1,4 +1,6 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class PlaceOfInterest{
   final String id;
   final String authorEmail;
@@ -36,3 +38,4 @@ class PlaceOfInterest{
     );
   }
 }
+
