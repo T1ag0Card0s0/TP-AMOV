@@ -40,7 +40,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    viewModel.startObserver()
+    //viewModel.startObserver()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
@@ -108,6 +108,7 @@ fun MainScreen(
                 .padding(it)
         ) {
             composable(Screens.LOGIN.route) {
+                viewModel.stopAllObservers()
                 LoginForm(
                     viewModel = viewModel,
                     navController = navController
@@ -120,6 +121,7 @@ fun MainScreen(
                 )
             }
             composable(Screens.SEARCH_LOCATIONS.route) {
+                viewModel.startAllObservers()
                 SearchLocationView(
                     viewModel = viewModel,
                     onSelect = { location ->
@@ -170,19 +172,15 @@ fun MainScreen(
                 )
             }
             composable(Screens.CHOOSE_LOCATION_COORDINATES.route) {
-                val locations = viewModel.locations.observeAsState()
                 ChooseCoordinates(
                     locationViewModel = locationViewModel,
                     viewModel = viewModel,
-                    locals = locations.value!!
                 )
             }
             composable(Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route){
-                val placesOfInterest = viewModel.placesOfInterest.observeAsState()
                 ChooseCoordinates(
                     locationViewModel = locationViewModel,
                     viewModel = viewModel,
-                    locals = placesOfInterest.value!!
                 )
             }
             composable(Screens.PLACES_OF_INTEREST_MAP.route){

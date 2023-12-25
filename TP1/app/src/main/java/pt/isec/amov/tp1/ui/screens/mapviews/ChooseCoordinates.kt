@@ -23,7 +23,6 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
-import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
@@ -32,7 +31,6 @@ import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 fun ChooseCoordinates(
     locationViewModel: LocalViewModel,
     viewModel: AppViewModel,
-    locals: List<Local>,
     modifier: Modifier = Modifier
 ) {
     val location = locationViewModel.currentLocation.observeAsState()
@@ -64,24 +62,12 @@ fun ChooseCoordinates(
                         setMultiTouchControls(true)
                         controller.setCenter(geoPoint)
                         controller.setZoom(18.0)
-                        for (local in locals) {
-                            overlays.add(
-                                Marker(this).apply {
-                                    position = GeoPoint(local.latitude, local.longitude)
-                                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                                    title = local.name
-                                }
-                            )
-                        }
                     }
                     val tapOverlay = MapEventsOverlay(object: MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
-                            viewModel.addLocalForm!!.latitude = p!!.latitude
-                            viewModel.addLocalForm!!.longitude = p.longitude
-                            // Remove only the marker with the title "Selected Position"
+                            viewModel.addLocalForm!!.latitude.value = p!!.latitude
+                            viewModel.addLocalForm!!.longitude.value = p.longitude
                             mapView.overlays.removeAll { it is Marker && it.title == "Selected Position" }
-
-                            // Add a new marker for the tapped position
                             mapView.overlays.add(
                                 Marker(mapView).apply {
                                     position = p
@@ -92,7 +78,6 @@ fun ChooseCoordinates(
                             return true
                         }
                         override fun longPressHelper(p: GeoPoint?): Boolean {
-                            // Do whatever
                             return true
                         }
                     })

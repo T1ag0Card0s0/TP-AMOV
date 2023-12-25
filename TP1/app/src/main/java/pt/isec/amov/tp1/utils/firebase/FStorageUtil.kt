@@ -314,7 +314,7 @@ class FStorageUtil {
                 }
         }
 
-        fun stopObserver() {
+        fun stopAllObservers() {
             categoryListenerRegistration?.remove()
             locationListenerRegistration?.remove()
             placeOfInterestListenerRegistration?.remove()
