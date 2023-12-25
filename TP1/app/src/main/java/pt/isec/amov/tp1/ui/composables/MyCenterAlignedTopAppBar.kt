@@ -123,6 +123,7 @@ fun MyCenterAlignedTopAppBarr(
                             isExpanded = false
                             viewModel.signOut()
                             navController.navigate(Screens.LOGIN.route)
+
                         }
                     )
                 }

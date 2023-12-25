@@ -21,31 +21,40 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Local
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListLocals(
     locals: List<Local>,
-    userEmail: String,
+    userEmail: String?,
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
     onRemove: (Local)->Unit
 ) {
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -54,6 +63,9 @@ fun ListLocals(
             locals,
             key = { it.id }
         ) {
+            var isExpanded by remember{
+                mutableStateOf(false)
+            }
             Card(
                 elevation = CardDefaults.cardElevation(4.dp),
                 modifier = modifier
@@ -61,21 +73,31 @@ fun ListLocals(
                 onClick = { onSelected(it) }
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    Row ( modifier = modifier.align(Alignment.TopEnd)){
-                        if(it.authorEmail == userEmail) {
-                            IconButton(
-                                onClick = { onRemove(it) },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Remove,
-                                    contentDescription = "Remove"
-                                )
-                            }
-                        }
+                    Column ( modifier = modifier.align(Alignment.TopEnd)){
                         IconButton(
-                            onClick = { onDetails(it) },
+                            onClick = { isExpanded=!isExpanded },
                         ) {
-                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Details")
+                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More Oprions")
+                        }
+                        DropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false}) {
+                            if(userEmail!=null) {
+                                if (it.authorEmail == userEmail) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.remove)) },
+                                        onClick = {
+                                            isExpanded = false
+                                            onRemove(it)
+                                        }
+                                    )
+                                }
+                            }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.details))  }
+                                , onClick = {
+                                    isExpanded=false
+                                    onDetails(it)
+                                }
+                            )
                         }
                     }
 

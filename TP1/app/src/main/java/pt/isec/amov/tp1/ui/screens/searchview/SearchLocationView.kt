@@ -80,11 +80,11 @@ fun SearchLocationView(
         if(locations.value!=null)
             ListLocals(
                 locals =
-                if(!viewModel.isMyContributions.value)
-                    locations.value!!
+                if(viewModel.user.value!=null&&viewModel.isMyContributions.value)
+                    locations.value!!.filter { it.authorEmail == viewModel.user.value!!.email }
                 else
-                    locations.value!!.filter { it.authorEmail == viewModel.user.value!!.email },
-                userEmail = viewModel.user.value!!.email,
+                    locations.value!!,
+                userEmail = viewModel.user.value?.email,
                 onSelected = {
                     onSelect(it as Location)
                 },

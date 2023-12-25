@@ -47,4 +47,5 @@
     <string name="author_email">Author Email</string>
     <string name="map_view">Map View</string>
     <string name="submited_by">Submited By</string>
+    <string name="remove">Remove</string>
 </resources>
