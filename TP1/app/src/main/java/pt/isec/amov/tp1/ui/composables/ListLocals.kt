@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,9 +40,11 @@ import pt.isec.amov.tp1.data.Local
 @Composable
 fun ListLocals(
     locals: List<Local>,
+    userEmail: String,
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,
-    onDetails: (Local) -> Unit
+    onDetails: (Local) -> Unit,
+    onRemove: (Local)->Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -57,12 +61,24 @@ fun ListLocals(
                 onClick = { onSelected(it) }
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    IconButton(
-                        onClick = { onDetails(it) },
-                        modifier = modifier.align(Alignment.TopEnd)
-                    ) {
-                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Details")
+                    Row ( modifier = modifier.align(Alignment.TopEnd)){
+                        if(it.authorEmail == userEmail) {
+                            IconButton(
+                                onClick = { onRemove(it) },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Remove,
+                                    contentDescription = "Remove"
+                                )
+                            }
+                        }
+                        IconButton(
+                            onClick = { onDetails(it) },
+                        ) {
+                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Details")
+                        }
                     }
+
                     Column(
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier

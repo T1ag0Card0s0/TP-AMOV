@@ -84,11 +84,15 @@ fun SearchLocationView(
                     locations.value!!
                 else
                     locations.value!!.filter { it.authorEmail == viewModel.user.value!!.email },
+                userEmail = viewModel.user.value!!.email,
                 onSelected = {
                     onSelect(it as Location)
                 },
                 onDetails = {
                     onDetails(it as Location)
+                },
+                onRemove={
+                    viewModel.removeLocation(it as Location)
                 }
             )
 

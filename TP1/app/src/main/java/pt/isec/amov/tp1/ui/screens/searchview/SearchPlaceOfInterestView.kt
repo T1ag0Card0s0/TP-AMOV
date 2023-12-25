@@ -43,7 +43,7 @@ fun SearchPlaceOfInterestView(
     var distanceOrderBy by remember { mutableStateOf("") }
     Column(
         modifier = modifier
-            .padding(start=8.dp, end=8.dp)
+            .padding(start = 8.dp, end = 8.dp)
             .fillMaxSize()
     ) {
         Row (
@@ -125,9 +125,13 @@ fun SearchPlaceOfInterestView(
                         it.locationId == viewModel.selectedLocation.value!!.id &&
                         it.authorEmail == viewModel.user.value!!.email
                                                     } ,
+                userEmail = viewModel.user.value!!.email,
                 onSelected = {},
                 onDetails = {
                     onDetails(it as PlaceOfInterest)
+                },
+                onRemove = {
+                    viewModel.removePlaceOfInterest(it as PlaceOfInterest )
                 }
             )
     }

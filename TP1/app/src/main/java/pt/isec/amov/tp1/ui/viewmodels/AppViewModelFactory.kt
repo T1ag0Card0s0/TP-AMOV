@@ -145,11 +145,20 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     fun updateCategory(){
 
     }
-    fun removeLocation(){
-
+    fun removeLocation(l: Location){
+        if(placesOfInterest.value!!.find { it.locationId==l.id }!=null) return
+        viewModelScope.launch {
+            FStorageUtil.removeLocationFromFireStone(l){ exp ->
+                _error.value = exp?.message
+            }
+        }
     }
-    fun removePlaceOfInterest(){
-
+    fun removePlaceOfInterest(poi: PlaceOfInterest){
+        viewModelScope.launch {
+            FStorageUtil.removePlaceOfInterestFromFireStone(poi){ exp ->
+                _error.value = exp?.message
+            }
+        }
     }
     fun removeCategory(c: Category){
         viewModelScope.launch {

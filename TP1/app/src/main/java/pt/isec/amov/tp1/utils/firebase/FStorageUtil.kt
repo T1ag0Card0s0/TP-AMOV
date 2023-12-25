@@ -194,7 +194,7 @@ class FStorageUtil {
         fun removeLocationFromFireStone(location: Location, onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("Locations").document(location.id)
-
+            removeFile(location.imageName!!)
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
@@ -205,9 +205,12 @@ class FStorageUtil {
         ) {
             val db = Firebase.firestore
             val dataToRemove = db.collection("PlacesOfInterest").document(placeOfInterest.id)
-
+            removeFile(placeOfInterest.imageName!!)
             dataToRemove.delete()
-                .addOnCompleteListener { onResult(it.exception) }
+                .addOnCompleteListener {
+
+                    onResult(it.exception)
+                }
         }
 
         //Observers
@@ -318,6 +321,15 @@ class FStorageUtil {
         }
 
         // Storage
+        fun removeFile(
+            imgFile: String
+        ){
+            val storage = Firebase.storage
+            val ref1 = storage.reference
+            val ref2 = ref1.child("images")
+            val ref3 = ref2.child(imgFile)
+            ref3.delete()
+        }
         private fun uploadFile(
             inputStream: InputStream,
             imgFile: String,
