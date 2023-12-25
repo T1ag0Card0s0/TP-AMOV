@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Local
 
@@ -52,7 +53,7 @@ fun ListLocals(
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
-    onRemove: (Local)->Unit
+    onRemove: (Local) -> Unit
 ) {
 
     LazyColumn(
@@ -63,7 +64,7 @@ fun ListLocals(
             locals,
             key = { it.id }
         ) {
-            var isExpanded by remember{
+            var isExpanded by remember {
                 mutableStateOf(false)
             }
             Card(
@@ -73,14 +74,19 @@ fun ListLocals(
                 onClick = { onSelected(it) }
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    Column ( modifier = modifier.align(Alignment.TopEnd)){
+                    Column(modifier = modifier.align(Alignment.TopEnd)) {
                         IconButton(
-                            onClick = { isExpanded=!isExpanded },
+                            onClick = { isExpanded = !isExpanded },
                         ) {
-                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More Oprions")
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More Oprions"
+                            )
                         }
-                        DropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false}) {
-                            if(userEmail!=null) {
+                        DropdownMenu(
+                            expanded = isExpanded,
+                            onDismissRequest = { isExpanded = false }) {
+                            if (userEmail != null) {
                                 if (it.authorEmail == userEmail) {
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.remove)) },
@@ -92,9 +98,8 @@ fun ListLocals(
                                 }
                             }
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.details))  }
-                                , onClick = {
-                                    isExpanded=false
+                                text = { Text(stringResource(R.string.details)) }, onClick = {
+                                    isExpanded = false
                                     onDetails(it)
                                 }
                             )
@@ -113,12 +118,13 @@ fun ListLocals(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        if(it.imageUri!=null){
-                            Card (modifier = modifier.fillMaxSize()){
+                        Box(modifier = modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                            if (it.imageUri != null) {
                                 AsyncImage(
-                                    model =it.imageUri!!,
+                                    model = it.imageUri!!,
                                     contentDescription = "Local image",
-                                    contentScale = ContentScale.Fit,
+                                    contentScale = ContentScale.FillWidth,
                                     modifier = modifier.fillMaxSize()
                                 )
                             }
