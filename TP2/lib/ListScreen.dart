@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tp2/DetailsScreen.dart';
+import 'PlacesOfInterestScreen.dart';
 import 'data/Location.dart';
 
 class LocationService {
@@ -30,7 +31,9 @@ class LocationService {
           id: doc.id,
           name: data['name'],
           description: data['description'],
-          imagePath: data['imagePath'],
+          imageUri: data['imageUri'],
+          latitude: data['latitude'],
+          longitude: data['longitude']
         ));
       }
     }
@@ -124,9 +127,17 @@ class _ListScreenState extends State<ListScreen> {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   List<Location> locations = snapshot.data!;
-
                   return ListView(
                     children: locations.map((location) => Card(
+                      child:GestureDetector(
+                        onTap: () {
+                          // Navegar para uma tela ao tocar em qualquer lugar da Card, exceto nos três pontinhos
+                          Navigator.pushNamed(
+                            context,
+                            PlacesOfInterestScreen.routeName,
+                            arguments: location,
+                          );
+                        },
                       child: ListTile(
                         title: Row(
                           children: [
@@ -150,6 +161,7 @@ class _ListScreenState extends State<ListScreen> {
                           ],
                         ),
                       ),
+                      ),
                     )).toList(),
                   );
                 }
@@ -166,6 +178,8 @@ class _ListScreenState extends State<ListScreen> {
     _locationService.getLocations(orderByValue, searchTerm);
   }
 }
+
+
 
 
 

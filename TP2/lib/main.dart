@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tp2/DetailsScreen.dart';
 import 'package:tp2/ListScreen.dart';
+import 'PlacesOfInterestScreen.dart';
 import 'firebase_options.dart';
 
 void initFirebase() async {
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginPage.routeName : (context) => const LoginPage(title: 'Flutter Demo Home Page'),
         ListScreen.routeName : (context) => const ListScreen(),
-        DetailsScreen.routeName : (context) => const DetailsScreen()
+        DetailsScreen.routeName : (context) => const DetailsScreen(),
+        PlacesOfInterestScreen.routeName : (context) => const PlacesOfInterestScreen()
       },
     );
   }
