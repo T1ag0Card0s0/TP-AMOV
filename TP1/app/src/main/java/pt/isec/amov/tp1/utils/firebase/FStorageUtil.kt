@@ -321,7 +321,7 @@ class FStorageUtil {
         }
 
         // Storage
-        fun removeFile(
+        private fun removeFile(
             imgFile: String
         ){
             val storage = Firebase.storage

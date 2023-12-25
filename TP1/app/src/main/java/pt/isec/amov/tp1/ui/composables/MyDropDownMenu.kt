@@ -15,7 +15,8 @@ fun MyDropDownMenu(
 ){
     DropdownMenu(
         expanded = isExpanded,
-        onDismissRequest = { onClick("")}) {
+        onDismissRequest = { onClick("")},
+        modifier = modifier) {
         for(option in options)
             DropdownMenuItem(
                 text = {

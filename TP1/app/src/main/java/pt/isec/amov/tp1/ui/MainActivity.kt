@@ -44,30 +44,30 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             TP1Theme {
-                MainScreen(appViewModel,locationViewModel);
+                MainScreen(appViewModel,locationViewModel)
             }
         }
         verifyPermissions()
         if(
             ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE
             )!= PackageManager.PERMISSION_GRANTED||
             ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )!= PackageManager.PERMISSION_GRANTED||
             ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             )!= PackageManager.PERMISSION_GRANTED
 
         ) {
             verifyMultiplePermissions.launch(
                 arrayOf(
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
                 )
             )
         }
@@ -75,16 +75,16 @@ class MainActivity : ComponentActivity() {
         if(
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU&&
             ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
-            verifySinglePermission.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+            verifySinglePermission.launch(Manifest.permission.READ_MEDIA_IMAGES)
         }
     }
-    val verifyMultiplePermissions = registerForActivityResult(
+    private val verifyMultiplePermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ){
 
     }
-    val verifySinglePermission = registerForActivityResult(
+    private val verifySinglePermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ){
 
