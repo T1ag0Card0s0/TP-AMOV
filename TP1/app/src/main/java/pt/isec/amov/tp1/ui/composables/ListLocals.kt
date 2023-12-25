@@ -1,23 +1,18 @@
 package pt.isec.amov.tp1.ui.composables
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,11 +21,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,7 +44,7 @@ fun ListLocals(
     modifier: Modifier = Modifier,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
-    onRemove: (Local)->Unit
+    onRemove: (Local) -> Unit
 ) {
 
     LazyColumn(
@@ -63,7 +55,7 @@ fun ListLocals(
             locals,
             key = { it.id }
         ) {
-            var isExpanded by remember{
+            var isExpanded by remember {
                 mutableStateOf(false)
             }
             Card(
@@ -73,14 +65,19 @@ fun ListLocals(
                 onClick = { onSelected(it) }
             ) {
                 Box(modifier = modifier.fillMaxSize()) {
-                    Column ( modifier = modifier.align(Alignment.TopEnd)){
+                    Column(modifier = modifier.align(Alignment.TopEnd)) {
                         IconButton(
-                            onClick = { isExpanded=!isExpanded },
+                            onClick = { isExpanded = !isExpanded },
                         ) {
-                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More Oprions")
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More Oprions"
+                            )
                         }
-                        DropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false}) {
-                            if(userEmail!=null) {
+                        DropdownMenu(
+                            expanded = isExpanded,
+                            onDismissRequest = { isExpanded = false }) {
+                            if (userEmail != null) {
                                 if (it.authorEmail == userEmail) {
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.remove)) },
@@ -92,9 +89,8 @@ fun ListLocals(
                                 }
                             }
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.details))  }
-                                , onClick = {
-                                    isExpanded=false
+                                text = { Text(stringResource(R.string.details)) }, onClick = {
+                                    isExpanded = false
                                     onDetails(it)
                                 }
                             )
@@ -113,12 +109,13 @@ fun ListLocals(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        if(it.imageUri!=null){
-                            Card (modifier = modifier.fillMaxSize()){
+                        Box(modifier = modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                            if (it.imageUri != null) {
                                 AsyncImage(
-                                    model =it.imageUri!!,
+                                    model = it.imageUri!!,
                                     contentDescription = "Local image",
-                                    contentScale = ContentScale.Fit,
+                                    contentScale = ContentScale.FillWidth,
                                     modifier = modifier.fillMaxSize()
                                 )
                             }

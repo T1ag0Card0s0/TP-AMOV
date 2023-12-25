@@ -12,13 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.ui.composables.MyCenterAlignedTopAppBarr
 import pt.isec.amov.tp1.ui.composables.MyFloatingActionButton
 import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
@@ -30,7 +28,6 @@ import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
 import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
 import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
-import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 

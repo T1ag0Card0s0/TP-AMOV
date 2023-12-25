@@ -1,10 +1,8 @@
 package pt.isec.amov.tp1.data
 
-import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.storage.StorageReference
 import pt.isec.amov.tp1.ui.viewmodels.toUser
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 

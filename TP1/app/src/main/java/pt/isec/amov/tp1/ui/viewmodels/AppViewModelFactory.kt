@@ -3,7 +3,6 @@ package pt.isec.amov.tp1.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -19,7 +18,7 @@ import pt.isec.amov.tp1.utils.firebase.FStorageUtil
 import java.util.UUID
 
 class AppViewModelFactory(
-    val appData: AppData
+    private val appData: AppData
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return AppViewModel(appData) as T
