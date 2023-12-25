@@ -97,7 +97,9 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         if (addLocalForm == null) return
         if (addLocalForm!!.name.value.isEmpty() ||
             addLocalForm!!.descrition.value.isEmpty() ||
-            addLocalForm!!.imagePath.value.isEmpty()
+            addLocalForm!!.imagePath.value.isEmpty()||
+            addLocalForm!!.latitude == null||
+            addLocalForm!!.longitude == null
         ) return
         viewModelScope.launch {
             FStorageUtil.addLocationToFirestore(
