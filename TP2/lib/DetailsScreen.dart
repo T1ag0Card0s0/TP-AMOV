@@ -23,7 +23,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalhes'),
+        title: Text('Details'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,11 +33,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Imagem da localização AINDA EXEMPLO
+                // Imagem da localização
                 Image.network(
-                  'https://habitability.com.br/wp-content/uploads/2022/04/Cidadade-compacta-680x405.png',
+                  location.imageUri,
                   height: 200.0,
                   fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
                 ),
                 // Nome da localização
                 Padding(
@@ -58,6 +71,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
+                // Laatitude e longitude
+
+
               ],
             ),
           ),
