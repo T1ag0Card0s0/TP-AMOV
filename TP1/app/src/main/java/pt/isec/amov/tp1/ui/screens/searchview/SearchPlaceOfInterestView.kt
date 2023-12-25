@@ -23,17 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
+import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun SearchPlaceOfInterestView(
     viewModel: AppViewModel,
     location: Location,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     onDetails: (PlaceOfInterest) -> Unit
 ) {
@@ -61,7 +64,7 @@ fun SearchPlaceOfInterestView(
             )
             IconButton(
                 onClick = {
-                    /*TODO: Mostrar os locais de interesse num mapa */
+                    navController.navigate(Screens.PLACES_OF_INTEREST_MAP.route)
                 },
                 modifier = modifier.align(Alignment.CenterEnd)
             ) {

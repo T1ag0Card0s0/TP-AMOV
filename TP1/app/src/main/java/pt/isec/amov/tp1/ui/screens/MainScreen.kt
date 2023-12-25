@@ -26,6 +26,8 @@ import pt.isec.amov.tp1.ui.screens.detailview.PlaceOfInterestDetailsView
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
 import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
+import pt.isec.amov.tp1.ui.screens.mapviews.ChooseCoordinates
+import pt.isec.amov.tp1.ui.screens.mapviews.LocalMapView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
@@ -62,7 +64,8 @@ fun MainScreen(
             Screens.PLACE_OF_INTEREST_DETAILS.route,
             Screens.CREDITS.route,
             Screens.CHOOSE_LOCATION_COORDINATES.route,
-            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route
+            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route,
+            Screens.PLACES_OF_INTEREST_MAP.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -133,6 +136,7 @@ fun MainScreen(
                 SearchPlaceOfInterestView(
                     viewModel = viewModel,
                     location = viewModel.selectedLocation.value!!,
+                    navController = navController,
                     onDetails = { placeOfInterest ->
                         viewModel.selecedPlaceOfInterest.value = placeOfInterest
                         navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
@@ -179,6 +183,15 @@ fun MainScreen(
                     locationViewModel = locationViewModel,
                     viewModel = viewModel,
                     locals = placesOfInterest.value!!
+                )
+            }
+            composable(Screens.PLACES_OF_INTEREST_MAP.route){
+                val placesOfInterest = viewModel.placesOfInterest.observeAsState()
+                LocalMapView(
+                    initCenteredGeoPoint=viewModel.selecetLocationGeoPoint,
+                    locals = placesOfInterest.value!!.filter {poi->
+                        poi.locationId == viewModel.selectedLocation.value!!.id
+                    }
                 )
             }
             composable(Screens.CREDITS.route) {

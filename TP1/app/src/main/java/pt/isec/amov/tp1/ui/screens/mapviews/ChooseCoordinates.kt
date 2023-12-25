@@ -1,4 +1,4 @@
-package pt.isec.amov.tp1.ui.screens
+package pt.isec.amov.tp1.ui.screens.mapviews
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

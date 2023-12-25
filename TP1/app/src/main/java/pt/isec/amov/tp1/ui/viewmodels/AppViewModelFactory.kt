@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
@@ -42,6 +43,14 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = appData.placesOfInterest
     val error : MutableState<String?>
         get() = _error
+    val selecetLocationGeoPoint: GeoPoint?
+        get() = if(selectedLocation.value==null) null
+                else GeoPoint(
+                    selectedLocation.value!!.latitude,
+                    selectedLocation.value!!.longitude
+                )
+
+
     fun createUserWithEmail(email:String, password:String){
         if(email.isBlank() || password.isBlank()) return
         viewModelScope.launch {
