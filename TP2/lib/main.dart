@@ -28,12 +28,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TP2',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       initialRoute: LoginPage.routeName,
       routes: {
-        LoginPage.routeName : (context) => const LoginPage(title: 'Flutter Demo Home Page'),
+        LoginPage.routeName : (context) => const LoginPage(),
         ListScreen.routeName : (context) => const ListScreen(),
         DetailsScreen.routeName : (context) => const DetailsScreen(),
         DetailsPlaceScreen.routeName : (context) => const DetailsPlaceScreen(),
@@ -45,10 +45,9 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.title});
+  const LoginPage({super.key});
 
   static const String routeName = '/';
-  final String title;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -59,10 +58,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text("Welcome!"),
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: Center(
 
@@ -75,8 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               tag: "btnSecond",
               child: ElevatedButton(
                   onPressed: () async {
-
-                    var obj = await Navigator.pushNamed(
+                    await Navigator.pushNamed(
                         context, ListScreen.routeName
                     );
                   },

@@ -65,7 +65,8 @@ class _ListScreenState extends State<ListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Hero(tag: "btnSecond", child: Text('Localizações')),
+        title: const Text('Locations'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -75,7 +76,7 @@ class _ListScreenState extends State<ListScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Pesquisar Localização',
+                labelText: 'Search Local',
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
@@ -127,7 +128,7 @@ class _ListScreenState extends State<ListScreen> {
                               context, RecentPlacesScreen.routeName
                           );
                         },
-                        child: const Text('Ver Recentes')
+                        child: const Text('Recent Places')
                     ),
                 ),
               ]

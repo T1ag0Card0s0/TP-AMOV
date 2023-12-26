@@ -1,14 +1,9 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:tp2/RecentLocationManager.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
-import 'package:tp2/data/Categories.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'DetailsPlaceScreen.dart';
 import 'PlacesOfInterestScreen.dart';
-import 'data/Locations.dart';
+
 
 class RecentPlacesScreen extends StatefulWidget {
   const RecentPlacesScreen({super.key});
@@ -18,53 +13,8 @@ class RecentPlacesScreen extends StatefulWidget {
   State<RecentPlacesScreen> createState() => _RecentPlacesScreenState();
 }
 
-
 class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
-  // Location
-  Location currentLocation = Location();
-
-  bool _serviceEnabled = false;
-  PermissionStatus _permissionGranted = PermissionStatus.denied;
-  LocationData _locationData = LocationData.fromMap({
-    "latitude": 40.192639,
-    "longitude": -8.411899,
-  });
-
-  void getLocation() async {
-    _serviceEnabled = await currentLocation.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await currentLocation.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await currentLocation.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await currentLocation.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    _locationData = await currentLocation.getLocation();
-    setState(() { });
-  }
-
-  // end Location
-
-  static const List<String> orderOptions = [
-    'Alphabetical Asc (A -> Z)',
-    'Alphabetical Desc (Z -> A)',
-    'Distance',
-  ];
-
-  final PlacesService _placesService = PlacesService();
-  final CategoryService _categoryService = CategoryService();
-  late List<Categories> _categories = [];
-  String ?_selectedCategory;
-  String locationId = "";
   String ?placeId;
-  String ?orderByValue ;
   bool? _liked;
 
   @override
@@ -147,7 +97,8 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
                                             });
                                           },
                                           icon: const Icon(
-                                              Icons.thumb_up_alt_outlined));
+                                              Icons.thumb_up_alt_outlined)
+                                      );
                                     } else {
                                       return IconButton(
                                         icon: Icon(
@@ -235,10 +186,6 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
             ),
           )
       );
-  }
-  // Função para atualizar a lista de localizações com base no Dropdown
-  void _updatePlaces() {
-    _placesService.getPlaces(orderByValue, _selectedCategory, locationId, _locationData);
   }
 }
 
