@@ -75,7 +75,7 @@ fun ListLocals(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "More Oprions"
+                                contentDescription = "More Options"
                             )
                         }
                         DropdownMenu(

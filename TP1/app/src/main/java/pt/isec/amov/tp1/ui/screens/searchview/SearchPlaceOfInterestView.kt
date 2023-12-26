@@ -60,6 +60,7 @@ fun SearchPlaceOfInterestView(
 
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
+    var selectedCategoryId by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -122,22 +123,35 @@ fun SearchPlaceOfInterestView(
             onClick = {
                 isExpandedCategories = false
                 selectedCategory = categories.value!![it].name
+                selectedCategoryId = categories.value!![it].id
             },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 6.dp, start = 3.dp, end = 3.dp)
         )
 
-        if (placesOfInterest.value != null)
-            ListLocals(
-                locals =
-                if (!viewModel.isMyContributions.value)
+        if (placesOfInterest.value != null) {
+            val filteredPlacesOfInterest = if (selectedCategory.isNotEmpty()) {
+                // Filtra os locais de interesse com base na categoria selecionada
+                placesOfInterest.value!!.filter {
+                    it.categoryId == selectedCategoryId &&
+                            (it.locationId == viewModel.selectedLocation.value!!.id) &&
+                            (!viewModel.isMyContributions.value || it.authorEmail == viewModel.user.value!!.email)
+                }
+            } else {
+                // Caso nenhuma categoria seja selecionada, exibe todos os locais de interesse
+                if (!viewModel.isMyContributions.value) {
                     placesOfInterest.value!!.filter { it.locationId == viewModel.selectedLocation.value!!.id }
-                else
+                } else {
                     placesOfInterest.value!!.filter {
                         it.locationId == viewModel.selectedLocation.value!!.id &&
                                 it.authorEmail == viewModel.user.value!!.email
-                    },
+                    }
+                }
+            }
+
+            ListLocals(
+                locals = filteredPlacesOfInterest,
                 userEmail = viewModel.user.value!!.email,
                 onSelected = {},
                 onDetails = {
@@ -147,5 +161,6 @@ fun SearchPlaceOfInterestView(
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
                 }
             )
+        }
     }
 }
