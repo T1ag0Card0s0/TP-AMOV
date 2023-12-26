@@ -26,7 +26,7 @@ fun Credits(
     val creditsList = listOf(
         "Tiago Rafael Santos Cardoso, 2021138999, a2021138999@isec.pt",
         "Daniela Correia, 2021143404, a2021143404@isec.pt",
-        "João Neves, 2021143404, a2021143404@isec.pt"
+        "João Neves, 2021133564, a2021133564@isec.pt"
     )
 
     Column(

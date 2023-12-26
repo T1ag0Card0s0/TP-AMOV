@@ -1,5 +1,4 @@
-
-class PlaceOfInterest{
+class PlaceOfInterest {
   final String id;
   final String authorEmail;
   final String name;
@@ -19,8 +18,8 @@ class PlaceOfInterest{
     required this.locationId,
     required this.imageUri,
     required this.latitude,
-    required this.longitude
-});
+    required this.longitude,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -43,11 +42,10 @@ class PlaceOfInterest{
       authorEmail: json['authorEmail'],
       imageName: json['imageName'],
       imageUri: json['imageUri'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      latitude: (json['latitude'] ?? 0.0) is double ? json['latitude'] : double.parse(json['latitude'] ?? '0'),
+      longitude: (json['longitude'] ?? 0.0) is double ? json['longitude'] : double.parse(json['longitude'] ?? '0'),
       categoryId: json['categoryId'],
       locationId: json['locationId'],
     );
   }
 }
-

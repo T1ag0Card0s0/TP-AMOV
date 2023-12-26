@@ -31,14 +31,14 @@ class PlacesService {
       collection = await db.collection('PlacesOfInterest').orderBy('name', descending: true).get();
     } else if (orderBy == 'Distance') {
       collection.docs.sort((a, b) {
-        double distanceA = Locations.distanceCalculater(
+        double distanceA = Locations.distanceCalculator(
           location.latitude!,
           location.longitude!,
           a['latitude'],
           a['longitude'],
         );
 
-        double distanceB = Locations.distanceCalculater(
+        double distanceB = Locations.distanceCalculator(
           location.latitude!,
           location.longitude!,
           b['latitude'],
