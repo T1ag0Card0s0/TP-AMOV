@@ -84,7 +84,7 @@ fun AddPlaceOfInterestView(
                     isExpandedCategories = false
                 },
                 onClick = {
-                    optCategory = it
+                    optCategory = categories.value!![it].name
                     isExpandedCategories = false
                     appViewModel.addLocalForm!!.category.value =
                         categories.value!!.find { c -> c.name == optCategory }

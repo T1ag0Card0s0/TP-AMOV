@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -20,19 +21,26 @@ import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun SearchLocationView(
     viewModel: AppViewModel,
+    locationViewModel: LocalViewModel,
     modifier: Modifier = Modifier,
     onSelect: (Location)-> Unit,
     onDetails: (Location)-> Unit
 ) {
+    val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val locations = viewModel.locations.observeAsState()
     var isAlphabetiOrderByExpanded by remember {mutableStateOf(false)}
     var alphabeticOrderBy by remember { mutableStateOf("") }
     var isDistanceOrderByExpanded by remember {mutableStateOf(false)}
     var distanceOrderBy by remember { mutableStateOf("") }
+    var orderByOptions = listOf(
+        stringResource(R.string.ascendent),
+        stringResource(R.string.descendent)
+    )
     Column(
         modifier = modifier
             .padding(8.dp)
@@ -44,10 +52,7 @@ fun SearchLocationView(
         ) {
             MyExposedDropDownMenu(
                 isExpanded = isAlphabetiOrderByExpanded,
-                options = listOf(
-                    stringResource(R.string.ascendent),
-                    stringResource(R.string.descendent)
-                ),
+                options =orderByOptions,
                 selectedOption = alphabeticOrderBy,
                 placeholder = stringResource(R.string.orderBy),
                 label = stringResource(R.string.alphabetic),
@@ -55,16 +60,16 @@ fun SearchLocationView(
                 onDismissRequest = { isAlphabetiOrderByExpanded = false },
                 onClick = {
                     isAlphabetiOrderByExpanded = false
-                    alphabeticOrderBy=it
+                    alphabeticOrderBy=orderByOptions[it]
+                    viewModel.locationsOrderByAlphabetically(it==0)
                 },
-                modifier = modifier.weight(1f).padding(start = 3.dp,end = 3.dp)
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = 3.dp, end = 3.dp)
             )
             MyExposedDropDownMenu(
                 isExpanded = isDistanceOrderByExpanded,
-                options = listOf(
-                    stringResource(R.string.ascendent),
-                    stringResource(R.string.descendent)
-                ),
+                options = orderByOptions,
                 selectedOption = distanceOrderBy,
                 placeholder = stringResource(R.string.orderBy),
                 label = stringResource(R.string.distance),
@@ -72,9 +77,16 @@ fun SearchLocationView(
                 onDismissRequest = { isDistanceOrderByExpanded=false },
                 onClick = {
                     isDistanceOrderByExpanded = false
-                    distanceOrderBy=it
+                    distanceOrderBy= orderByOptions[it]
+                    viewModel.locationsOrderByDistance(
+                        currentCoordinates.value!!.latitude,
+                        currentCoordinates.value!!.longitude,
+                        it==0
+                    )
                 },
-                modifier = modifier.weight(1f).padding(start = 3.dp,end = 3.dp)
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = 3.dp, end = 3.dp)
             )
         }
         if(locations.value!=null)

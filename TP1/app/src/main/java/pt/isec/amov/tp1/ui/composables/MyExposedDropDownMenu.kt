@@ -24,7 +24,7 @@ fun MyExposedDropDownMenu(
     label: String,
     onExpandChange: ()->Unit,
     onDismissRequest: ()->Unit,
-    onClick: (String) -> Unit,
+    onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     ExposedDropdownMenuBox(
@@ -64,21 +64,21 @@ fun MyExposedDropDownMenu(
             expanded = isExpanded,
             onDismissRequest = { onDismissRequest()},
         ) {
-            for (option in options)
+            for ((index, option) in options.withIndex()) {
                 DropdownMenuItem(
                     text = {
                         Row(
-                            horizontalArrangement =Arrangement.Center ,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
-                        ){
+                        ) {
                             Text(text = option)
                         }
-
                     },
                     onClick = {
-                        onClick(option)
+                        onClick(index)  // Pass the index instead of the option
                     },
                 )
+            }
         }
     }
 }

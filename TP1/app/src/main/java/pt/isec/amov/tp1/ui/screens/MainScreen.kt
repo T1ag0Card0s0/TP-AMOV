@@ -124,6 +124,7 @@ fun MainScreen(
                 viewModel.startAllObservers()
                 SearchLocationView(
                     viewModel = viewModel,
+                    locationViewModel = locationViewModel,
                     onSelect = { location ->
                         viewModel.selectedLocation.value = location
                         navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
@@ -137,6 +138,7 @@ fun MainScreen(
             composable(Screens.SEARCH_PLACES_OF_INTEREST.route) {
                 SearchPlaceOfInterestView(
                     viewModel = viewModel,
+                    locationViewModel = locationViewModel,
                     location = viewModel.selectedLocation.value!!,
                     navController = navController,
                     onDetails = { placeOfInterest ->

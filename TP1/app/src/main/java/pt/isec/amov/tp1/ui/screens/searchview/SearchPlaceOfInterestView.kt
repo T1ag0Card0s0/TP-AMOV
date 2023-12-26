@@ -31,15 +31,18 @@ import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun SearchPlaceOfInterestView(
     viewModel: AppViewModel,
+    locationViewModel: LocalViewModel,
     location: Location,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     onDetails: (PlaceOfInterest) -> Unit
 ) {
+    val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val placesOfInterest = viewModel.placesOfInterest.observeAsState()
     val categories = viewModel.categories.observeAsState()
     var isExpandedCategories by remember { mutableStateOf(false) }
@@ -48,6 +51,10 @@ fun SearchPlaceOfInterestView(
     var alphabeticOrderBy by remember { mutableStateOf("") }
     var isDistanceOrderByExpanded by remember { mutableStateOf(false) }
     var distanceOrderBy by remember { mutableStateOf("") }
+    var orderByOptions =listOf(
+        stringResource(R.string.ascendent),
+        stringResource(R.string.descendent)
+    )
     Column(
         modifier = modifier
             .padding(start = 8.dp, end = 8.dp)
@@ -82,10 +89,7 @@ fun SearchPlaceOfInterestView(
         ) {
             MyExposedDropDownMenu(
                 isExpanded = isAlphabetiOrderByExpanded,
-                options = listOf(
-                    stringResource(R.string.ascendent),
-                    stringResource(R.string.descendent)
-                ),
+                options = orderByOptions,
                 selectedOption = alphabeticOrderBy,
                 placeholder = stringResource(R.string.orderBy),
                 label = stringResource(R.string.alphabetic),
@@ -93,7 +97,8 @@ fun SearchPlaceOfInterestView(
                 onDismissRequest = { isAlphabetiOrderByExpanded = false },
                 onClick = {
                     isAlphabetiOrderByExpanded = false
-                    alphabeticOrderBy = it
+                    alphabeticOrderBy = orderByOptions[it]
+                    viewModel.placesOfInterestOrderByAlphabetically(it==0)
                 },
                 modifier = modifier
                     .weight(1f)
@@ -101,10 +106,7 @@ fun SearchPlaceOfInterestView(
             )
             MyExposedDropDownMenu(
                 isExpanded = isDistanceOrderByExpanded,
-                options = listOf(
-                    stringResource(R.string.ascendent),
-                    stringResource(R.string.descendent)
-                ),
+                options = orderByOptions,
                 selectedOption = distanceOrderBy,
                 placeholder = stringResource(R.string.orderBy),
                 label = stringResource(R.string.distance),
@@ -112,7 +114,12 @@ fun SearchPlaceOfInterestView(
                 onDismissRequest = { isDistanceOrderByExpanded = false },
                 onClick = {
                     isDistanceOrderByExpanded = false
-                    distanceOrderBy = it
+                    distanceOrderBy = orderByOptions[it]
+                    viewModel.placesOfInterestOrderByDistance(
+                        currentCoordinates.value!!.latitude,
+                        currentCoordinates.value!!.longitude,
+                        it==0
+                    )
                 },
                 modifier = modifier
                     .weight(1f)
@@ -129,7 +136,7 @@ fun SearchPlaceOfInterestView(
             onDismissRequest = { isExpandedCategories = false },
             onClick = {
                 isExpandedCategories = false
-                selectedCategory = it
+                selectedCategory = categories.value!![it].name
             },
             modifier = modifier
                 .fillMaxWidth()

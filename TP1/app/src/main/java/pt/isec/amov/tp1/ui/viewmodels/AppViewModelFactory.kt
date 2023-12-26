@@ -15,7 +15,10 @@ import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.data.User
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
-import pt.isec.amov.tp1.utils.firebase.FStorageUtil
+import pt.isec.amov.tp1.utils.firebase.FStorageAdd
+import pt.isec.amov.tp1.utils.firebase.FStorageObserver
+import pt.isec.amov.tp1.utils.firebase.FStorageOrder
+import pt.isec.amov.tp1.utils.firebase.FStorageRemove
 import java.util.UUID
 
 class AppViewModelFactory(
@@ -81,7 +84,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
 
     fun addCategory(name: String, description:String){
         viewModelScope.launch {
-            FStorageUtil.addCategoryToFirestore(
+            FStorageAdd.category(
                 Category(
                     UUID.randomUUID().toString(),
                     user.value!!.email,
@@ -102,7 +105,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             addLocalForm!!.longitude.value == null
         ) return
         viewModelScope.launch {
-            FStorageUtil.addLocationToFirestore(
+            FStorageAdd.location(
                 Location(
                     id = UUID.randomUUID().toString(),
                     authorEmail = appData.user.value!!.email,
@@ -128,7 +131,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             addLocalForm!!.latitude.value==null||
             addLocalForm!!.longitude.value==null) return
         viewModelScope.launch {
-            FStorageUtil.addPlaceOfInterestToFirestore(
+            FStorageAdd.placeOfInterest(
                 PlaceOfInterest(
                     id = UUID.randomUUID().toString(),
                     authorEmail = appData.user.value!!.email,
@@ -158,21 +161,21 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     fun removeLocation(l: Location){
         if(placesOfInterest.value!!.find { it.locationId==l.id }!=null) return
         viewModelScope.launch {
-            FStorageUtil.removeLocationFromFireStone(l){ exp ->
+            FStorageRemove.location(l){ exp ->
                 _error.value = exp?.message
             }
         }
     }
     fun removePlaceOfInterest(poi: PlaceOfInterest){
         viewModelScope.launch {
-            FStorageUtil.removePlaceOfInterestFromFireStone(poi){ exp ->
+            FStorageRemove.placeOfInterest(poi){ exp ->
                 _error.value = exp?.message
             }
         }
     }
     fun removeCategory(c: Category){
         viewModelScope.launch {
-            FStorageUtil.removeCategoryFromFireStone(c){ exp ->
+            FStorageRemove.category(c){ exp ->
                 _error.value = exp?.message
             }
         }
@@ -185,28 +188,28 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
     fun startCategoriesObserver(){
         viewModelScope.launch {
-            FStorageUtil.startCategoryObserver {categories->
+            FStorageObserver.observeCategory {categories->
                 appData.setCategories(categories!!)
             }
         }
     }
     fun startLocationsObserver(){
         viewModelScope.launch {
-            FStorageUtil.startLocationObserver {locations->
+            FStorageObserver.observeLocation {locations->
                 appData.setLocations(locations!!)
             }
         }
     }
     fun startPlacesOfInterestObserver(){
         viewModelScope.launch {
-            FStorageUtil.startPlacesOfInterestObserver { placesOfInterest->
+            FStorageObserver.observePlaceOfInterest { placesOfInterest->
                 appData.setPlacesOfInterest(placesOfInterest!!)
             }
         }
     }
     fun stopAllObservers() {
         viewModelScope.launch {
-            FStorageUtil.stopAllObservers()
+            FStorageObserver.stopAllObservers()
         }
     }
     fun getCategoryById(categoryId: String): Category? {
@@ -214,6 +217,67 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         return appData.categories.value!!.find { it.id == categoryId }
     }
 
+    fun locationsOrderByAlphabetically(ascendent: Boolean) {
+        if(ascendent) {
+            viewModelScope.launch {
+                FStorageOrder.locationByNameAscending { locations ->
+                    appData.setLocations(locations!!)
+                }
+            }
+        }else{
+            viewModelScope.launch {
+                FStorageOrder.locationByNameDescending { locations ->
+                    appData.setLocations(locations!!)
+                }
+            }
+        }
+
+    }
+    fun placesOfInterestOrderByAlphabetically(ascendent: Boolean){
+        if(ascendent) {
+            viewModelScope.launch {
+                FStorageOrder.placeOfInterestByNameAscending { placesOfInterest ->
+                    appData.setPlacesOfInterest(placesOfInterest!!)
+                }
+            }
+        }else{
+            viewModelScope.launch {
+                FStorageOrder.placeOfInterestByNameDescending { placesOfInterest ->
+                    appData.setPlacesOfInterest(placesOfInterest!!)
+                }
+            }
+        }
+    }
+    fun locationsOrderByDistance(latitude:Double,longitude:Double ,ascendent: Boolean){
+        if(ascendent) {
+            viewModelScope.launch {
+                FStorageOrder.locationsByDistanceAscending(latitude,longitude) { locations ->
+                    appData.setLocations(locations!!)
+                }
+            }
+        }else{
+            viewModelScope.launch {
+                FStorageOrder.locationsByDistanceDescending(latitude,longitude) { locations ->
+                    appData.setLocations(locations!!)
+                }
+            }
+        }
+    }
+    fun placesOfInterestOrderByDistance(latitude:Double,longitude:Double ,ascendent: Boolean){
+        if(ascendent) {
+            viewModelScope.launch {
+                FStorageOrder.placesOfInterestByDistanceAscending(latitude,longitude) { placesOfInterest ->
+                    appData.setPlacesOfInterest(placesOfInterest!!)
+                }
+            }
+        }else{
+            viewModelScope.launch {
+                FStorageOrder.placesOfInterestByDistanceDescending(latitude,longitude) { placesOfInterest ->
+                    appData.setPlacesOfInterest(placesOfInterest!!)
+                }
+            }
+        }
+    }
 
 
 }
