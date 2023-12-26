@@ -40,6 +40,7 @@ dependencies:
   location: ^5.0.0
   firebase_core: any
   cloud_firestore: any
+  flutter_map: ^0.13.0
 
 dev_dependencies:
   flutter_test:

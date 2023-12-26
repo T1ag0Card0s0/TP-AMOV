@@ -1,13 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tp2/DetailsScreen.dart';
 import 'package:tp2/ListScreen.dart';
-import 'PlacesOfInterestScreen.dart';
+import 'package:tp2/PlacesOfInterestScreen.dart';
+import 'package:tp2/RecentPlacesScreen.dart';
+import 'DetailsPlaceScreen.dart';
 import 'firebase_options.dart';
 
 void initFirebase() async {
@@ -30,14 +28,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TP2',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       initialRoute: LoginPage.routeName,
       routes: {
-        LoginPage.routeName : (context) => const LoginPage(title: 'Flutter Demo Home Page'),
+        LoginPage.routeName : (context) => const LoginPage(),
         ListScreen.routeName : (context) => const ListScreen(),
         DetailsScreen.routeName : (context) => const DetailsScreen(),
+        DetailsPlaceScreen.routeName : (context) => const DetailsPlaceScreen(),
+        RecentPlacesScreen.routeName : (context) => const RecentPlacesScreen(),
         PlacesOfInterestScreen.routeName : (context) => const PlacesOfInterestScreen()
       },
     );
@@ -45,10 +45,9 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.title});
+  const LoginPage({super.key});
 
   static const String routeName = '/';
-  final String title;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -59,10 +58,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text("Welcome!"),
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: Center(
 
@@ -75,8 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               tag: "btnSecond",
               child: ElevatedButton(
                   onPressed: () async {
-
-                    var obj = await Navigator.pushNamed(
+                    await Navigator.pushNamed(
                         context, ListScreen.routeName
                     );
                   },
