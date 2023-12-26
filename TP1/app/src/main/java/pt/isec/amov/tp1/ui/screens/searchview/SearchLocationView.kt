@@ -40,14 +40,11 @@ fun SearchLocationView(
 ) {
     val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val locations = viewModel.locations.observeAsState()
-    var isAlphabetiOrderByExpanded by remember {mutableStateOf(false)}
-    var alphabeticOrderBy by remember { mutableStateOf("") }
-    var isDistanceOrderByExpanded by remember {mutableStateOf(false)}
-    var distanceOrderBy by remember { mutableStateOf("") }
-    var orderByOptions = listOf(
-        stringResource(R.string.ascendent),
-        stringResource(R.string.descendent)
-    )
+
+    var alphabeticOrderByAsc by remember { mutableStateOf(true) }
+    var distanceOrderByAsc by remember { mutableStateOf(true) }
+
+
     Column(
         modifier = modifier
             .padding(8.dp)
@@ -57,31 +54,22 @@ fun SearchLocationView(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            Button(onClick = { viewModel.locationsOrderByAlphabetically(true) }) {
-                Text("A")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("Z")
+            Button(onClick = {
+                alphabeticOrderByAsc = !alphabeticOrderByAsc
+                viewModel.locationsOrderByAlphabetically(alphabeticOrderByAsc)
+            }) {
+                Text(if (alphabeticOrderByAsc) "Name: Ascending" else "Name: Descending")
             }
-            Button(onClick = { viewModel.locationsOrderByAlphabetically(false) }) {
-                Text("Z")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("A")
-            }
-            Button(onClick = { viewModel.locationsOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                true
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Remove, contentDescription = null)
-            }
-            Button(onClick = { viewModel.locationsOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                false
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+
+            Button(onClick = {
+                distanceOrderByAsc = !distanceOrderByAsc
+                viewModel.locationsOrderByDistance(
+                    currentCoordinates.value!!.latitude,
+                    currentCoordinates.value!!.longitude,
+                    distanceOrderByAsc
+                )
+            }) {
+                Text(if (distanceOrderByAsc) "Distance: Ascending" else "Distance: Descending")
             }
         }
         if(locations.value!=null)
