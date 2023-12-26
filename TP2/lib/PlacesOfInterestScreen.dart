@@ -30,7 +30,23 @@ class PlacesService {
     } else if (orderBy == 'Alphabetical Desc (Z -> A)') {
       collection = await db.collection('PlacesOfInterest').orderBy('name', descending: true).get();
     } else if (orderBy == 'Distance') {
+      collection.docs.sort((a, b) {
+        double distanceA = Locations.distanceCalculater(
+          location.latitude!,
+          location.longitude!,
+          a['latitude'],
+          a['longitude'],
+        );
 
+        double distanceB = Locations.distanceCalculater(
+          location.latitude!,
+          location.longitude!,
+          b['latitude'],
+          b['longitude'],
+        );
+
+        return distanceA.compareTo(distanceB);
+      });
     }
 
     List<PlaceOfInterest> locations = [];
@@ -38,6 +54,7 @@ class PlacesService {
       Map<String, dynamic> data = doc.data();
       if(data['locationId'] == locationId ){
         if(data['categoryId'] == category || category == null) {
+
           locations.add(PlaceOfInterest(
               id: doc.id,
               name: data['name'],
@@ -100,7 +117,7 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
       }
     }
     _locationData = await currentLocation.getLocation();
-    setState(() { });
+    setState(() {});
   }
 
   // end Location

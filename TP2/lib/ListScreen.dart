@@ -18,7 +18,7 @@ class LocationService {
     } else if (orderBy == 'Alphabetical Desc (Z -> A)') {
       collection = await db.collection('Locations').orderBy('name', descending: true).get();
     } else if (orderBy == 'Distance') {
-      // Lógica para ordenar por distância, se aplicável
+      // IMPLEMENTAR
     }
 
     List<Locations> locations = [];
