@@ -54,16 +54,13 @@ fun SearchPlaceOfInterestView(
     val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val placesOfInterest = viewModel.placesOfInterest.observeAsState()
     val categories = viewModel.categories.observeAsState()
+
+    var alphabeticOrderByAsc by remember { mutableStateOf(true) }
+    var distanceOrderByAsc by remember { mutableStateOf(true) }
+
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
-    var isAlphabetiOrderByExpanded by remember { mutableStateOf(false) }
-    var alphabeticOrderBy by remember { mutableStateOf("") }
-    var isDistanceOrderByExpanded by remember { mutableStateOf(false) }
-    var distanceOrderBy by remember { mutableStateOf("") }
-    var orderByOptions =listOf(
-        stringResource(R.string.ascendent),
-        stringResource(R.string.descendent)
-    )
+
     Column(
         modifier = modifier
             .padding(start = 8.dp, end = 8.dp)
@@ -90,37 +87,30 @@ fun SearchPlaceOfInterestView(
                 )
             }
         }
+
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            Button(onClick = { viewModel.placesOfInterestOrderByAlphabetically(true) }) {
-                Text("A")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("Z")
+            Button(onClick = {
+                alphabeticOrderByAsc = !alphabeticOrderByAsc
+                viewModel.placesOfInterestOrderByAlphabetically(alphabeticOrderByAsc)
+            }) {
+                Text(if (alphabeticOrderByAsc) "Name: Ascending" else "Name: Descending")
             }
-            Button(onClick = { viewModel.placesOfInterestOrderByAlphabetically(false) }) {
-                Text("Z")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("A")
-            }
-            Button(onClick = { viewModel.placesOfInterestOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                true
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Remove, contentDescription = null)
-            }
-            Button(onClick = { viewModel.placesOfInterestOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                false
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+
+            Button(onClick = {
+                distanceOrderByAsc = !distanceOrderByAsc
+                viewModel.placesOfInterestOrderByDistance(
+                    currentCoordinates.value!!.latitude,
+                    currentCoordinates.value!!.longitude,
+                    distanceOrderByAsc
+                )
+            }) {
+                Text(if (distanceOrderByAsc) "Distance: Ascending" else "Distance: Descending")
             }
         }
+
         MyExposedDropDownMenu(
             isExpanded = isExpandedCategories,
             options = categories.value!!.map { it.name },
