@@ -6,6 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,44 +57,32 @@ fun SearchLocationView(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            MyExposedDropDownMenu(
-                isExpanded = isAlphabetiOrderByExpanded,
-                options =orderByOptions,
-                selectedOption = alphabeticOrderBy,
-                placeholder = stringResource(R.string.orderBy),
-                label = stringResource(R.string.alphabetic),
-                onExpandChange = { isAlphabetiOrderByExpanded= !isAlphabetiOrderByExpanded },
-                onDismissRequest = { isAlphabetiOrderByExpanded = false },
-                onClick = {
-                    isAlphabetiOrderByExpanded = false
-                    alphabeticOrderBy=orderByOptions[it]
-                    viewModel.locationsOrderByAlphabetically(it==0)
-                },
-                modifier = modifier
-                    .weight(1f)
-                    .padding(start = 3.dp, end = 3.dp)
-            )
-            MyExposedDropDownMenu(
-                isExpanded = isDistanceOrderByExpanded,
-                options = orderByOptions,
-                selectedOption = distanceOrderBy,
-                placeholder = stringResource(R.string.orderBy),
-                label = stringResource(R.string.distance),
-                onExpandChange = { isDistanceOrderByExpanded=!isDistanceOrderByExpanded },
-                onDismissRequest = { isDistanceOrderByExpanded=false },
-                onClick = {
-                    isDistanceOrderByExpanded = false
-                    distanceOrderBy= orderByOptions[it]
-                    viewModel.locationsOrderByDistance(
-                        currentCoordinates.value!!.latitude,
-                        currentCoordinates.value!!.longitude,
-                        it==0
-                    )
-                },
-                modifier = modifier
-                    .weight(1f)
-                    .padding(start = 3.dp, end = 3.dp)
-            )
+            Button(onClick = { viewModel.locationsOrderByAlphabetically(true) }) {
+                Text("A")
+                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
+                Text("Z")
+            }
+            Button(onClick = { viewModel.locationsOrderByAlphabetically(false) }) {
+                Text("Z")
+                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
+                Text("A")
+            }
+            Button(onClick = { viewModel.locationsOrderByDistance(
+                currentCoordinates.value!!.latitude,
+                currentCoordinates.value!!.longitude,
+                true
+            ) }) {
+                Text("KM")
+                Icon(imageVector = Icons.Default.Remove, contentDescription = null)
+            }
+            Button(onClick = { viewModel.locationsOrderByDistance(
+                currentCoordinates.value!!.latitude,
+                currentCoordinates.value!!.longitude,
+                false
+            ) }) {
+                Text("KM")
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
         }
         if(locations.value!=null)
             ListLocals(

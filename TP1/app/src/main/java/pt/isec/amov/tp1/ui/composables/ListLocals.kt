@@ -3,8 +3,10 @@ package pt.isec.amov.tp1.ui.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -119,8 +123,24 @@ fun ListLocals(
                                     modifier = modifier.fillMaxSize()
                                 )
                             }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                   
+                        Box(modifier = modifier.fillMaxWidth()) {
+                            Text(it.description)
+
+                            Column(modifier=modifier.align(Alignment.TopEnd)) {
+                                IconButton(onClick = { /*TODO*/ },) {
+                                    Icon(imageVector = Icons.Default.Comment, contentDescription = null)
+                                }
+                                IconButton(onClick = { /*TODO*/ },) {
+                                    Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                                }
+
+                            }
 
                         }
+
                     }
                 }
 
