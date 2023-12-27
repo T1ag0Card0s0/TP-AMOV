@@ -92,6 +92,4 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
 
     implementation("androidx.navigation:navigation-compose:2.7.5")
-
-    implementation("androidx.emoji2:emoji2-emojipicker:1.4.0")
 }
