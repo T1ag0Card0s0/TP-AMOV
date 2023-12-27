@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -68,6 +69,12 @@ fun ListLocals(
                     .padding(8.dp),
                 onClick = { onSelected(it) }
             ) {
+                if(!it.approved){
+                    Row(modifier = modifier.fillMaxSize()){
+                        Icon(imageVector = Icons.Filled.WarningAmber, contentDescription = "Danger")
+                        Text(text = "Item not yet approved, information may be incorrect")
+                    }
+                }
                 Box(modifier = modifier.fillMaxSize()) {
                     Column(modifier = modifier.align(Alignment.TopEnd)) {
                         IconButton(

@@ -7,7 +7,8 @@ import pt.isec.amov.tp1.ui.viewmodels.toUser
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 
 open class Contribution(
-    open val authorEmail: String
+    open val authorEmail: String,
+    open val approved: Boolean = false
 )
 
 open class Local(
