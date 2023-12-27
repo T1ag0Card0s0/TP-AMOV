@@ -1,13 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart';
 import 'package:tp2/DetailsScreen.dart';
 import 'PlacesOfInterestScreen.dart';
 import 'RecentPlacesScreen.dart';
 import 'data/Locations.dart';
 
 class LocationService {
-  Future<List<Locations>> getLocations(String ?orderBy, String ?searchTerm) async {
+  Future<List<Locations>> getLocations(String ?orderBy, String ?searchTerm, LocationData location) async {
     var db = FirebaseFirestore.instance;
 
     QuerySnapshot<Map<String, dynamic>> collection = await db.collection('Locations').get();
@@ -18,7 +19,23 @@ class LocationService {
     } else if (orderBy == 'Alphabetical Desc (Z -> A)') {
       collection = await db.collection('Locations').orderBy('name', descending: true).get();
     } else if (orderBy == 'Distance') {
-      // IMPLEMENTAR
+      collection.docs.sort((a, b) {
+        double distanceA = Locations.distanceCalculator(
+          location.latitude!,
+          location.longitude!,
+          a['latitude'],
+          a['longitude'],
+        );
+
+        double distanceB = Locations.distanceCalculator(
+          location.latitude!,
+          location.longitude!,
+          b['latitude'],
+          b['longitude'],
+        );
+
+        return distanceA.compareTo(distanceB);
+      });
     }
 
     List<Locations> locations = [];
@@ -61,6 +78,37 @@ class _ListScreenState extends State<ListScreen> {
   String? orderByValue;
   String? searchTerm;
 
+  // Location
+  Location currentLocation = Location();
+
+  bool _serviceEnabled = false;
+  PermissionStatus _permissionGranted = PermissionStatus.denied;
+  LocationData _locationData = LocationData.fromMap({
+    "latitude": 40.192639,
+    "longitude": -8.411899,
+  });
+
+  void getLocation() async {
+    _serviceEnabled = await currentLocation.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await currentLocation.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await currentLocation.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await currentLocation.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    _locationData = await currentLocation.getLocation();
+    setState(() {});
+  }
+
+  // end Location
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +184,7 @@ class _ListScreenState extends State<ListScreen> {
           // Lista de Localizações
           Expanded(
             child: FutureBuilder<List<Locations>>(
-              future: _locationService.getLocations(orderByValue, searchTerm),
+              future: _locationService.getLocations(orderByValue, searchTerm, _locationData),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -218,7 +266,7 @@ class _ListScreenState extends State<ListScreen> {
 
   // Função para atualizar a lista de localizações com base no Dropdown e na pesquisa
   void _updateLocations() {
-    _locationService.getLocations(orderByValue, searchTerm);
+    _locationService.getLocations(orderByValue, searchTerm, _locationData);
   }
 }
 
