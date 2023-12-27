@@ -323,6 +323,9 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
+    fun getClassificationsFrom(id: String): List<Classification> {
+        return classifications.value!!.filter { it.placeOfInterestId == id }
+    }
 
 
 }

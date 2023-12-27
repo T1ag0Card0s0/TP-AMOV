@@ -1,16 +1,26 @@
 package pt.isec.amov.tp1.ui.screens.detailview
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,9 +36,11 @@ import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun PlaceOfInterestDetailsView(
+    viewModel: AppViewModel,
     placeOfInterest: PlaceOfInterest,
     locationName: String,
     categoryName: String,
@@ -53,7 +65,7 @@ fun PlaceOfInterestDetailsView(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-            Card (modifier = modifier.fillMaxWidth()){
+            Card(modifier = modifier.fillMaxWidth()) {
                 AsyncImage(
                     model = placeOfInterest.imageUri,
                     contentDescription = "Location Image",
@@ -63,8 +75,8 @@ fun PlaceOfInterestDetailsView(
             }
 
             CreditCard(credit = stringResource(R.string.description) + ": " + placeOfInterest.description)
-            CreditCard(credit = stringResource(R.string.current_location)+": "+locationName)
-            CreditCard(credit = stringResource(R.string.categories)+": "+categoryName)
+            CreditCard(credit = stringResource(R.string.current_location) + ": " + locationName)
+            CreditCard(credit = stringResource(R.string.categories) + ": " + categoryName)
             Card(
                 modifier = Modifier
                     .height(300.dp)
@@ -104,7 +116,58 @@ fun PlaceOfInterestDetailsView(
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
             }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.comments),
+                    modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
+                )
+            }
 
+        }
+        items(
+            viewModel.getClassificationsFrom(placeOfInterest.id),
+            key = { it.id }
+        ) {
+            Card(modifier = modifier.fillMaxSize()) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier.padding(8.dp).fillMaxSize()
+                ) {
+                    Text(text = it.authorEmail)
+                    (1..3).forEach { index ->
+                        if (index <= it.value) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                tint = Color.Yellow
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.StarBorder,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
+                    }
+                }
+                Text(text = it.comment,modifier = modifier.padding(8.dp))
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (it.imageUri != null) {
+                        AsyncImage(
+                            model = it.imageUri!!,
+                            contentDescription = "Local image",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = modifier.fillMaxSize()
+                        )
+                    }
+                }
+            }
         }
 
     }

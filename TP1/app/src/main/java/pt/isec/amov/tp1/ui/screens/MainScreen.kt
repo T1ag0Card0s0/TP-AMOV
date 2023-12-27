@@ -172,6 +172,7 @@ fun MainScreen(
             }
             composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {
                 PlaceOfInterestDetailsView(
+                    viewModel = viewModel,
                     placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
                     locationName = viewModel.selectedLocation.value!!.name,
                     categoryName = viewModel.getCategoryById(viewModel.selecedPlaceOfInterest.value!!.categoryId)!!.name

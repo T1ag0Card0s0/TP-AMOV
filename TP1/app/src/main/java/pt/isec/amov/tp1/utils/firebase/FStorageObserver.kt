@@ -127,7 +127,7 @@ class FStorageObserver {
                             Classification(
                                 document.getString("id")?: "",
                                 document.getString("authorEmail")?:"",
-                                document.getString("placeOfInterestId")?:"",
+                                document.getString("placeOfInterest")?:"",
                                 document.getField<Int>("value")?:0,
                                 document.getString("comment")?:"",
                                 document.getString("imageUri")?:"",
