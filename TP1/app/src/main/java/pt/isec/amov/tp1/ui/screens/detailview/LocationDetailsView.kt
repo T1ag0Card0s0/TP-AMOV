@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -26,13 +32,16 @@ import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
+import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun LocationDetailsView(
-    location: Location,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
-    val geoPoint = GeoPoint(location.latitude, location.longitude)
+    val locations = viewModel.locations.observeAsState()
+    val location = locations.value!!.find { it.id == viewModel.selectedLocation.value!!.id }
+    val geoPoint = GeoPoint(location!!.latitude, location.longitude)
 
     LazyColumn(
         modifier = modifier
@@ -92,6 +101,20 @@ fun LocationDetailsView(
                 )
 
             }
+            if(!location.approved) {
+                Card(modifier = modifier.fillMaxSize()) {
+                    Text(text = stringResource(R.string.validate))
+                    Row {
+                        LinearProgressIndicator(location.numberOfValidations().toFloat()/2)
+                        IconButton(onClick = {
+                            location.assignValidation(viewModel.user.value!!.email)
+                            viewModel.updateLocation(location)
+                        }) {
+                            Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                        }
+                    }
+                }
+            }
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = modifier.fillMaxWidth()
@@ -102,8 +125,6 @@ fun LocationDetailsView(
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
             }
-
         }
-
     }
 }

@@ -140,10 +140,6 @@ fun ListLocals(
                                 IconButton(onClick = { /*TODO*/ },) {
                                     Icon(imageVector = Icons.Default.Comment, contentDescription = null)
                                 }
-                                IconButton(onClick = { /*TODO*/ },) {
-                                    Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                                }
-
                             }
 
                         }

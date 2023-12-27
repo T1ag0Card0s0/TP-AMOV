@@ -19,6 +19,7 @@ import pt.isec.amov.tp1.utils.firebase.FStorageAdd
 import pt.isec.amov.tp1.utils.firebase.FStorageObserver
 import pt.isec.amov.tp1.utils.firebase.FStorageOrder
 import pt.isec.amov.tp1.utils.firebase.FStorageRemove
+import pt.isec.amov.tp1.utils.firebase.FStorageUpdate
 import java.util.UUID
 
 class AppViewModelFactory(
@@ -114,7 +115,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     imageName = addLocalForm!!.imagePath.value,
                     imageUri = null,
                     latitude = addLocalForm!!.latitude.value!!,
-                    longitude = addLocalForm!!.longitude.value!!
+                    longitude = addLocalForm!!.longitude.value!!,
+                    null,null
                 )
             ){exception->
                 _error.value = exception?.message
@@ -142,15 +144,20 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     locationId = selectedLocation.value!!.id,
                     imageUri = null,
                     latitude = addLocalForm!!.latitude.value!!,
-                    longitude = addLocalForm!!.longitude.value!!
+                    longitude = addLocalForm!!.longitude.value!!,
+                    null,null
                 )
             ){exception->
                 _error.value = exception?.message
             }
         }
     }
-    fun updateLocation(){
-
+    fun updateLocation(l: Location){
+        viewModelScope.launch {
+            FStorageUpdate.location(l){exp->
+                _error.value = exp?.message
+            }
+        }
     }
     fun updatePlaceOfInterest(){
 

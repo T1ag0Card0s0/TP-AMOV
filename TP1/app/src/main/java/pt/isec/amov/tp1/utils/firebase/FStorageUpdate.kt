@@ -26,6 +26,8 @@ class FStorageUpdate {
                     transaction.update(dataToUpdate, "imageUri", location.imageUri)
                     transaction.update(dataToUpdate, "latitude", location.latitude)
                     transaction.update(dataToUpdate, "longitude", location.longitude)
+                    transaction.update(dataToUpdate, "user1", location.user1)
+                    transaction.update(dataToUpdate, "user2", location.user2)
 
                     null
                 } else
@@ -54,6 +56,8 @@ class FStorageUpdate {
                     transaction.update(dataToUpdate, "imageUri", placeOfInterest.imageUri)
                     transaction.update(dataToUpdate, "latitude", placeOfInterest.latitude)
                     transaction.update(dataToUpdate, "longitude", placeOfInterest.longitude)
+                    transaction.update(dataToUpdate, "user1", placeOfInterest.user1)
+                    transaction.update(dataToUpdate, "user2", placeOfInterest.user2)
                     null
                 } else
                     throw FirebaseFirestoreException(

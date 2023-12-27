@@ -163,7 +163,7 @@ fun MainScreen(
             }
             composable(Screens.LOCATION_DETAILS.route) {
                 LocationDetailsView(
-                    location = viewModel.selectedLocation.value!!,
+                    viewModel = viewModel ,
                 )
             }
             composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {

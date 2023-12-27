@@ -49,7 +49,9 @@ class FStorageOrder {
                             document.getString("imageName") ?: "",
                             document.getString("imageUri"),
                             document.getDouble("latitude") ?: 0.0,
-                            document.getDouble("longitude") ?: 0.0
+                            document.getDouble("longitude") ?: 0.0,
+                            document.getString("user1"),
+                            document.getString("user2")
                         )
                     }
                 }
@@ -73,7 +75,9 @@ class FStorageOrder {
                             document.getString("locationId") ?: "",
                             document.getString("imageUri"),
                             document.getDouble("latitude") ?: 0.0,
-                            document.getDouble("longitude") ?: 0.0
+                            document.getDouble("longitude") ?: 0.0,
+                            document.getString("user1"),
+                            document.getString("user2")
                         )
                     }
                 }
@@ -149,7 +153,9 @@ class FStorageOrder {
                                 document.getString("imageName") ?: "",
                                 document.getString("imageUri"),
                                 document.getDouble("latitude") ?: 0.0,
-                                document.getDouble("longitude") ?: 0.0
+                                document.getDouble("longitude") ?: 0.0,
+                                document.getString("user1"),
+                                document.getString("user2")
                             )
                         }
                         .sortedBy { location ->
@@ -186,7 +192,9 @@ class FStorageOrder {
                                 document.getString("locationId") ?: "",
                                 document.getString("imageUri"),
                                 document.getDouble("latitude") ?: 0.0,
-                                document.getDouble("longitude") ?: 0.0
+                                document.getDouble("longitude") ?: 0.0,
+                                document.getString("user1"),
+                                document.getString("user2")
                             )
                         }
                         .sortedBy { placeOfInterest ->

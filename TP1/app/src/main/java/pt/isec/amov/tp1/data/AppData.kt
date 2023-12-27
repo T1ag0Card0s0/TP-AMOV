@@ -7,8 +7,7 @@ import pt.isec.amov.tp1.ui.viewmodels.toUser
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 
 open class Contribution(
-    open val authorEmail: String,
-    open val approved: Boolean = false
+    open val authorEmail: String
 )
 
 open class Local(
@@ -19,8 +18,25 @@ open class Local(
     open val imageName: String?,
     open val imageUri: String?,
     open val latitude: Double,
-    open val longitude: Double
-):Contribution(authorEmail)
+    open val longitude: Double,
+    open var approved: Boolean = false,
+    open var user1: String?,
+    open var user2: String?
+):Contribution(authorEmail){
+    fun numberOfValidations():Int{
+        var retValue = 0
+        if(user1!=null) retValue++
+        if(user2!=null) retValue++
+        return retValue
+    }
+
+    fun assignValidation(email: String) {
+        if(user1!=null&&user2!=null) return
+        if(email == user1||email == user2) return
+        if(user1.isNullOrBlank()) user1 = email
+        else if(user2.isNullOrBlank()) user2 = email
+    }
+}
 
 
 data class Location(
@@ -31,8 +47,10 @@ data class Location(
     override var imageName: String?,
     override var imageUri: String?,
     override val latitude: Double,
-    override val longitude: Double
-):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude)
+    override val longitude: Double,
+    override var user1: String?,
+    override var user2: String?
+):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude,false,user1,user2)
 
 data class PlaceOfInterest(
     override val id: String,
@@ -44,8 +62,10 @@ data class PlaceOfInterest(
     val locationId: String,
     override var imageUri: String?,
     override val latitude: Double,
-    override val longitude: Double
-):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude)
+    override val longitude: Double,
+    override var user1: String?,
+    override var user2: String?
+):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude,false,user1,user2)
 
 data class User(
     val userName: String,
