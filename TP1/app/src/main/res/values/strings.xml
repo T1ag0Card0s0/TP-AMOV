@@ -50,6 +50,4 @@
     <string name="remove">Remove</string>
     <string name="validate">Validate</string>
     <string name="select_an_icon_for_the_category">Select an icon for the category</string>
-    <string name="enter_comment">Enter Comment</string>
-    <string name="comment">Comment</string>
 </resources>
