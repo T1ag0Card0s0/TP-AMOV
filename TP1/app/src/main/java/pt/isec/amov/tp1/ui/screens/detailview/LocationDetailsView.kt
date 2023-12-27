@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.detailview
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,9 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -101,11 +104,27 @@ fun LocationDetailsView(
                 )
 
             }
+
             if(!location.approved) {
-                Card(modifier = modifier.fillMaxSize()) {
-                    Text(text = stringResource(R.string.validate))
-                    Row {
-                        LinearProgressIndicator(location.numberOfValidations().toFloat()/2)
+                Card(modifier = modifier.fillMaxSize().padding(8.dp)) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.validate))
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        LinearProgressIndicator(
+                            location.numberOfValidations().toFloat()/2,
+                            modifier = modifier
+                                .border(1.dp, Color.Gray)
+                                .height(10.dp)
+                            )
                         IconButton(onClick = {
                             location.assignValidation(viewModel.user.value!!.email)
                             viewModel.updateLocation(location)
