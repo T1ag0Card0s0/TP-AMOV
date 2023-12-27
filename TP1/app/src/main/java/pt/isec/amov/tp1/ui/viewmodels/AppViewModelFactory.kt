@@ -83,14 +83,15 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         _error.value = null
     }
 
-    fun addCategory(name: String, description:String){
+    fun addCategory(name: String, description:String, emoji: String){
         viewModelScope.launch {
             FStorageAdd.category(
                 Category(
                     UUID.randomUUID().toString(),
                     user.value!!.email,
                     name,
-                    description
+                    description,
+                    emoji
                 )
             ){exception->
                 _error.value = exception?.message

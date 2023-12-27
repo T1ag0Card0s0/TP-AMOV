@@ -78,6 +78,7 @@ data class Category(
     override val authorEmail: String,
     val name: String,
     val description: String,
+    val emoji: String
 ):Contribution(authorEmail)
 
 class AppData{

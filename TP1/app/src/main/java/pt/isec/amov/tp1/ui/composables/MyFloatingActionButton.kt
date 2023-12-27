@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
@@ -17,13 +18,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-
 
 @Composable
 fun MyFloatingActionButton(
@@ -35,6 +36,9 @@ fun MyFloatingActionButton(
     var showDialog by remember { mutableStateOf(false) }
     var nameInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
+    var tempSelectedEmoji by remember { mutableStateOf("") }
+    var showDialogEmojiSelector by remember { mutableStateOf(false) }
+
     Column(
         verticalArrangement = Arrangement.SpaceAround
     ) {
@@ -75,7 +79,7 @@ fun MyFloatingActionButton(
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }
-// Dialog
+        // Dialog
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -96,13 +100,21 @@ fun MyFloatingActionButton(
                             onValueChange = { descriptionInput = it },
                             label = { Text("Other Input") }
                         )
+                        TextField(
+                            value = tempSelectedEmoji,
+                            onValueChange = { tempSelectedEmoji = it },
+                            label = { Text("Selected Emoji") },
+                            readOnly = true, // Altere para true para impedir a edição direta
+                            modifier = Modifier.clickable {
+                                showDialogEmojiSelector = true
+                            }
+                        )
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            // Handle the input data as needed
-                            viewModel.addCategory(nameInput,descriptionInput)
+                            viewModel.addCategory(nameInput, descriptionInput, tempSelectedEmoji)
                             showDialog = false
                         }
                     ) {
@@ -120,6 +132,9 @@ fun MyFloatingActionButton(
                 }
             )
         }
-    }
 
+        if (showDialogEmojiSelector) {
+            EmojiPickerView()
+        }
+    }
 }

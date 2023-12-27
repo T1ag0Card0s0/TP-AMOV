@@ -98,8 +98,9 @@ class FStorageObserver {
                         val name = document.getString("name") ?: ""
                         val description = document.getString("description") ?: ""
                         val authorEmail = document.getString("authorEmail") ?: ""
+                        val emoji = document.getString("emoji") ?: ""
 
-                        val category = Category(id, authorEmail, name, description)
+                        val category = Category(id, authorEmail, name, description, emoji)
                         categories.add(category)
                     }
 
