@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Classification
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 
@@ -15,6 +16,7 @@ class FStorageUpdate {
         private val locationsColletion = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
+        private val classificationCollection = db.collection("Classification")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
             val dataToUpdate = locationsColletion.document(location.id)
             db.runTransaction { transaction ->
@@ -76,6 +78,25 @@ class FStorageUpdate {
                 if (doc.exists()) {
                     transaction.update(dataToUpdate, "name", category.name)
                     transaction.update(dataToUpdate, "description", category.description)
+                    null
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
+                    )
+            }.addOnCompleteListener { result ->
+                onResult(result.exception)
+            }
+        }
+        fun classification(classification: Classification, onResult: (Throwable?) -> Unit){
+            val dataToUpdate = classificationCollection.document(classification.id)
+            db.runTransaction { transaction ->
+                val doc = transaction.get(dataToUpdate)
+                if (doc.exists()) {
+                    transaction.update(dataToUpdate, "value", classification.value)
+                    transaction.update(dataToUpdate, "comment", classification.comment)
+                    transaction.update(dataToUpdate, "imageUri", classification.imageUri)
+                    transaction.update(dataToUpdate, "imageName", classification.imageName)
                     null
                 } else
                     throw FirebaseFirestoreException(

@@ -157,6 +157,24 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
+    fun addClassification(){
+        if(evaluateForm==null) return
+        viewModelScope.launch {
+            FStorageAdd.classification(
+                Classification(
+                    id = UUID.randomUUID().toString(),
+                    authorEmail = user.value!!.email,
+                    placeOfInterestId = selecedPlaceOfInterest.value!!.id,
+                    value = evaluateForm!!.value.value,
+                    comment = evaluateForm!!.comment.value,
+                    imageUri = null,
+                    imageName = evaluateForm!!.imagePath.value
+                )
+            ){ exp->
+                _error.value = exp?.message
+            }
+        }
+    }
     fun updateLocation(l: Location){
         viewModelScope.launch {
             FStorageUpdate.location(l){exp->

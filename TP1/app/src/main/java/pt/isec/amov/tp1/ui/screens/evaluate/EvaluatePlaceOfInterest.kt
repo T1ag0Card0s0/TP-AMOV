@@ -42,41 +42,32 @@ fun EvaluatePlaceOfInterest(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
-    viewModel.evaluateForm = EvaluateForm()
-    var text by remember { mutableStateOf(TextFieldValue()) }
-    val maxLength = 200
-
-    // This ensures that we always have the latest value of maxLength
-    val updatedMaxLength by rememberUpdatedState(maxLength)
-
-    // State to keep track of the selected star rating
     var selectedRating by remember { mutableStateOf(0) }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(8.dp).fillMaxSize()
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxSize()
     ) {
-        TextField(
-            value = text,
-            onValueChange = {
-                if (it.text.length <= updatedMaxLength) {
-                    text = it
-                }
-            },
+        MyTextField(
+            value = viewModel.evaluateForm!!.comment.value,
+            onChange = { viewModel.evaluateForm!!.comment.value = it } ,
+            placeholder = stringResource(R.string.enter_comment),
+            label = stringResource(R.string.comment) ,
+            icon = Icons.Default.Abc
         )
         Row {
             // Star rating system
             (1..3).forEach { index ->
                 IconButton(
                     onClick = {
-                        // Toggle the selected state on each click
                         selectedRating = if (selectedRating == index) {
                             0
                         } else {
                             index
                         }
-                        // Update the value in your view model
                         viewModel.evaluateForm?.value?.value = index
                     }
                 ) {

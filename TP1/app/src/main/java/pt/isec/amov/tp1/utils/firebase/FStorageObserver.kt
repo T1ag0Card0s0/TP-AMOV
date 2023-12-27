@@ -2,6 +2,7 @@ package pt.isec.amov.tp1.utils.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.getField
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import pt.isec.amov.tp1.data.Category
@@ -127,7 +128,7 @@ class FStorageObserver {
                                 document.getString("id")?: "",
                                 document.getString("authorEmail")?:"",
                                 document.getString("placeOfInterestId")?:"",
-                                (document.get("value") as Int?)?:0,
+                                document.getField<Int>("value")?:0,
                                 document.getString("comment")?:"",
                                 document.getString("imageUri")?:"",
                                 document.getString("imageName")?:""

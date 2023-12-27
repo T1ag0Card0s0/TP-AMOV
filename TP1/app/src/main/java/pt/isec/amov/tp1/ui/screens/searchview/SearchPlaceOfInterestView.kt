@@ -32,6 +32,7 @@ import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -156,6 +157,8 @@ fun SearchPlaceOfInterestView(
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
                 },
                 onEvaluate =  {
+                    viewModel.evaluateForm = EvaluateForm()
+                    viewModel.selecedPlaceOfInterest.value = it as PlaceOfInterest
                     navController.navigate(Screens.EVALUATE_PLACE_OF_INTEREST.route)
                 }
             )

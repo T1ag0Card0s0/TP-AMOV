@@ -145,6 +145,21 @@ class FStorageAdd {
                 if (v || exp != null) {
                     onResult(exp)
                 }else{
+                    if (classification.imageName!!.isNotBlank()) {
+                        val file = File(classification.imageName!!)
+                        val inputStream = FileInputStream(file)
+                        uploadFile(
+                            inputStream,
+                            classification.id + "." + file.extension,
+                            onSuccess = {
+                                classification.imageUri = it
+                                FStorageUpdate.classification(classification) {
+
+                                }
+                            }
+                        )
+                        classification.imageName = classification.id + "." + file.extension
+                    }
                     val dataToAdd = hashMapOf(
                         "id" to classification.id,
                         "authorEmail" to classification.authorEmail,
