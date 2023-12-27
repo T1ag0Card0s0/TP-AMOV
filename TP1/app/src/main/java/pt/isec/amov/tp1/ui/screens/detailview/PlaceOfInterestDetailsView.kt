@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -134,7 +136,9 @@ fun PlaceOfInterestDetailsView(
             Card(modifier = modifier.fillMaxSize()) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = modifier.padding(8.dp).fillMaxSize()
+                    modifier = modifier
+                        .padding(8.dp)
+                        .fillMaxSize()
                 ) {
                     Text(text = it.authorEmail)
                     (1..3).forEach { index ->
@@ -150,6 +154,11 @@ fun PlaceOfInterestDetailsView(
                                 contentDescription = null,
                                 tint = Color.Gray
                             )
+                        }
+                    }
+                    if(it.authorEmail == viewModel.user.value!!.email){
+                        IconButton(onClick = { viewModel.removeClassification(it) }) {
+                            Icon(imageVector = Icons.Default.RestoreFromTrash, contentDescription = null)
                         }
                     }
                 }
