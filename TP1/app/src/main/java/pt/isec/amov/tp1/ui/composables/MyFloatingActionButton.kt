@@ -9,8 +9,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cottage
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -25,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -111,6 +115,7 @@ fun MyFloatingActionButton(
                         Text(text = stringResource(R.string.select_an_icon_for_the_category))
                         IconGrid { selectedIcon ->
                             selectedImageVector = selectedIcon
+
                         }
                     }
                 },
@@ -140,7 +145,10 @@ fun MyFloatingActionButton(
 
 @Composable
 fun IconGrid(onIconSelected: (ImageVector) -> Unit) {
-    val imageVectors = listOf(Icons.Default.Add, Icons.Default.Person, Icons.Default.Home)
+    val imageVectors = listOf(Icons.Default.Cottage,
+        Icons.Default.Museum,
+        Icons.Default.School
+    )
 
     LazyVerticalGrid(columns = GridCells.Fixed(3)) {
         items(imageVectors) { icon ->
