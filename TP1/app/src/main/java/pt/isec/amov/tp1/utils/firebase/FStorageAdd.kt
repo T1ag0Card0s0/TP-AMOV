@@ -7,6 +7,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Classification
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import java.io.File
@@ -20,6 +21,7 @@ class FStorageAdd {
         private val locationsColletion = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
+        private val classificationsCollection = db.collection("Classifications")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
             verifyIfExist(
                 locationsColletion,
@@ -132,6 +134,32 @@ class FStorageAdd {
                             onResult(result.exception)
                         }
                 }
+            }
+        }
+        fun classification(classification: Classification, onResult:(Throwable?)->Unit){
+            verifyIfExist(
+                classificationsCollection,
+                "authorEmail",
+                classification.authorEmail
+            ){v, exp->
+                if (v || exp != null) {
+                    onResult(exp)
+                }else{
+                    val dataToAdd = hashMapOf(
+                        "id" to classification.id,
+                        "authorEmail" to classification.authorEmail,
+                        "value" to classification.value,
+                        "comment" to classification.comment,
+                        "imageName" to classification.imageName,
+                        "imageUri" to classification.imageUri,
+                        "placeOfInterest" to classification.placeOfInterestId
+                    )
+                    classificationsCollection.document(classification.id).set(dataToAdd)
+                        .addOnCompleteListener { result->
+                            onResult(result.exception)
+                        }
+                }
+
             }
         }
         private fun verifyIfExist(

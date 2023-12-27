@@ -12,7 +12,8 @@ enum class Screens(val display: String, val showAppBar: Boolean) {
     PLACE_OF_INTEREST_DETAILS("Place of Interest Details", true),
     CHOOSE_LOCATION_COORDINATES("Choose Location Coordinates", true),
     CHOOSE_PLACE_OF_INTEREST_COORDINATES("Choose Place Of Interest Coordinates", true),
-    PLACES_OF_INTEREST_MAP("Places of interest Map",true);
+    PLACES_OF_INTEREST_MAP("Places of interest Map",true),
+    EVALUATE_PLACE_OF_INTEREST("Evaluate Place Of Interest", true);
 
     val route: String
         get() = this.toString()

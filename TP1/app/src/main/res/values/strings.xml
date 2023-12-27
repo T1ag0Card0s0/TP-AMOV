@@ -49,4 +49,6 @@
     <string name="submited_by">Submited By</string>
     <string name="remove">Remove</string>
     <string name="validate">Validate</string>
+    <string name="enter_comment">Enter Comment</string>
+    <string name="comment">Comment</string>
 </resources>

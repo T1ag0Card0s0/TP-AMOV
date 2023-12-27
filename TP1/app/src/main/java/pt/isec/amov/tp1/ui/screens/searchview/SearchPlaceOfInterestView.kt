@@ -8,15 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -97,7 +89,8 @@ fun SearchPlaceOfInterestView(
                 alphabeticOrderByAsc = !alphabeticOrderByAsc
                 viewModel.placesOfInterestOrderByAlphabetically(alphabeticOrderByAsc)
             }) {
-                Text(if (alphabeticOrderByAsc) "Name: Ascending" else "Name: Descending")
+                Text(if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
+                else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}")
             }
 
             Button(onClick = {
@@ -108,7 +101,8 @@ fun SearchPlaceOfInterestView(
                     distanceOrderByAsc
                 )
             }) {
-                Text(if (distanceOrderByAsc) "Distance: Ascending" else "Distance: Descending")
+                Text(if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${stringResource(R.string.ascendent)}"
+                else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}")
             }
         }
 
@@ -157,8 +151,12 @@ fun SearchPlaceOfInterestView(
                 onDetails = {
                     onDetails(it as PlaceOfInterest)
                 },
+                ableToEvaluate = true,
                 onRemove = {
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
+                },
+                onEvaluate =  {
+                    navController.navigate(Screens.EVALUATE_PLACE_OF_INTEREST.route)
                 }
             )
         }

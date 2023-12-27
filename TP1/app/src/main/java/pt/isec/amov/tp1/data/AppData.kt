@@ -80,17 +80,30 @@ data class Category(
     val description: String,
 ):Contribution(authorEmail)
 
+data class Classification(
+    val id: String,
+    override val authorEmail: String,
+    val placeOfInterestId: String,
+    var value: Int,
+    var comment: String,
+    var imageUri:String?,
+    var imageName: String?
+):Contribution(authorEmail)
+
 class AppData{
     val user = mutableStateOf(FAuthUtil.currentUser?.toUser())
     private val _locations = MutableLiveData<List<Location>?>()
     private val _placesOfInterest = MutableLiveData<List<PlaceOfInterest>?>()
     private val _categories = MutableLiveData<List<Category>?>()
+    private val _classifications = MutableLiveData<List<Classification>?>()
     val categories: LiveData<List<Category>?>
         get() = _categories
     val locations: LiveData<List<Location>?>
         get() = _locations
     val placesOfInterest: LiveData<List<PlaceOfInterest>?>
         get() = _placesOfInterest
+    val classifications: LiveData<List<Classification>?>
+        get() = _classifications
 
     fun setCategories(c: List<Category>){
         _categories.value = c
@@ -100,6 +113,10 @@ class AppData{
     }
     fun setPlacesOfInterest(p: List<PlaceOfInterest>){
         _placesOfInterest.value = p
+    }
+
+    fun setClassifications(c: List<Classification>?) {
+        _classifications.value = c
     }
 
 }

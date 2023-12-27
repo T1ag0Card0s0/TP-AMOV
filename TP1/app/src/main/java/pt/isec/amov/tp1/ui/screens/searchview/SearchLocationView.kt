@@ -6,15 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListLocals
-import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
@@ -58,7 +51,8 @@ fun SearchLocationView(
                 alphabeticOrderByAsc = !alphabeticOrderByAsc
                 viewModel.locationsOrderByAlphabetically(alphabeticOrderByAsc)
             }) {
-                Text(if (alphabeticOrderByAsc) "Name: Ascending" else "Name: Descending")
+                Text(if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
+                        else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}")
             }
 
             Button(onClick = {
@@ -69,7 +63,8 @@ fun SearchLocationView(
                     distanceOrderByAsc
                 )
             }) {
-                Text(if (distanceOrderByAsc) "Distance: Ascending" else "Distance: Descending")
+                Text(if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${stringResource(R.string.ascendent)}"
+                else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}")
             }
         }
         if(locations.value!=null)
@@ -86,9 +81,11 @@ fun SearchLocationView(
                 onDetails = {
                     onDetails(it as Location)
                 },
+                ableToEvaluate = false,
                 onRemove={
                     viewModel.removeLocation(it as Location)
-                }
+                },
+                onEvaluate = {}
             )
 
     }

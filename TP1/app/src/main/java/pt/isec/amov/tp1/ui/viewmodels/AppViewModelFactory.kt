@@ -1,6 +1,7 @@
 package pt.isec.amov.tp1.ui.viewmodels
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Classification
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.data.User
@@ -33,6 +35,7 @@ class AppViewModelFactory(
 
 class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
+    var evaluateForm: EvaluateForm? = null
     val selectedLocation: MutableState<Location?> = mutableStateOf(null)
     val selecedPlaceOfInterest: MutableState<PlaceOfInterest?> = mutableStateOf(null)
     val isMyContributions = mutableStateOf(false)
@@ -45,6 +48,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = appData.locations
     val placesOfInterest : LiveData<List<PlaceOfInterest>?>
         get() = appData.placesOfInterest
+    val classifications: LiveData<List<Classification>?>
+        get() = appData.classifications
     val error : MutableState<String?>
         get() = _error
     val selecetLocationGeoPoint: GeoPoint?
@@ -53,8 +58,6 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     selectedLocation.value!!.latitude,
                     selectedLocation.value!!.longitude
                 )
-
-
     fun createUserWithEmail(email:String, password:String){
         if(email.isBlank() || password.isBlank()) return
         viewModelScope.launch {
@@ -187,11 +190,19 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
+    fun removeClassification(c: Classification){
+        viewModelScope.launch {
+            FStorageRemove.classification(c){ exp ->
+                _error.value = exp?.message
+            }
+        }
+    }
     fun startAllObservers(){
         stopAllObservers()
         startCategoriesObserver()
         startLocationsObserver()
         startPlacesOfInterestObserver()
+        startClassificationsObserver()
     }
     fun startCategoriesObserver(){
         viewModelScope.launch {
@@ -211,6 +222,13 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         viewModelScope.launch {
             FStorageObserver.observePlaceOfInterest { placesOfInterest->
                 appData.setPlacesOfInterest(placesOfInterest!!)
+            }
+        }
+    }
+    fun startClassificationsObserver(){
+        viewModelScope.launch {
+            FStorageObserver.observeClassifications { classifications ->
+                appData.setClassifications(classifications)
             }
         }
     }
@@ -297,7 +315,11 @@ class AddLocalForm {
     var latitude : MutableState<Double?> = mutableStateOf(null)
     var longitude : MutableState<Double?> = mutableStateOf(null)
 }
-
+class EvaluateForm{
+    val comment: MutableState<String> = mutableStateOf("")
+    val imagePath: MutableState<String> = mutableStateOf("")
+    val value: MutableState<Int> = mutableIntStateOf(0)
+}
 fun FirebaseUser.toUser(): User {
     val username = this.displayName?:""
     val strEmail = this.email?:""

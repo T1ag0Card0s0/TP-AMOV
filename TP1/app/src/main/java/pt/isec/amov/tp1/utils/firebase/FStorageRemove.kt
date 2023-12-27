@@ -4,6 +4,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Category
+import pt.isec.amov.tp1.data.Classification
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 
@@ -14,6 +15,7 @@ class FStorageRemove {
         private val locationsColletion = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
+        private val classificationsCollection = db.collection("Classifications")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
             val dataToRemove = locationsColletion.document(location.id)
             removeFile(location.imageName!!)
@@ -37,6 +39,13 @@ class FStorageRemove {
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
+        fun classification(c: Classification, onResult: (Throwable?) -> Unit) {
+            val dataToRemove = classificationsCollection.document(c.id)
+            dataToRemove.delete()
+                .addOnCompleteListener{
+                    onResult(it.exception)
+                }
+        }
         private fun removeFile(
             imgFile: String
         ) {
@@ -45,5 +54,7 @@ class FStorageRemove {
             val ref3 = ref2.child(imgFile)
             ref3.delete()
         }
+
+
     }
 }

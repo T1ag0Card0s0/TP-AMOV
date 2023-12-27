@@ -23,6 +23,7 @@ import pt.isec.amov.tp1.ui.screens.addview.AddLocationView
 import pt.isec.amov.tp1.ui.screens.addview.AddPlaceOfInterestView
 import pt.isec.amov.tp1.ui.screens.detailview.LocationDetailsView
 import pt.isec.amov.tp1.ui.screens.detailview.PlaceOfInterestDetailsView
+import pt.isec.amov.tp1.ui.screens.evaluate.EvaluatePlaceOfInterest
 import pt.isec.amov.tp1.ui.screens.login_register.Credits
 import pt.isec.amov.tp1.ui.screens.login_register.LoginForm
 import pt.isec.amov.tp1.ui.screens.login_register.RegisterForm
@@ -31,6 +32,7 @@ import pt.isec.amov.tp1.ui.screens.mapviews.LocalMapView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -54,7 +56,8 @@ fun MainScreen(
             Screens.ADD_LOCATIONS.route,
             Screens.ADD_PLACE_OF_INTEREST.route,
             Screens.CHOOSE_LOCATION_COORDINATES.route,
-            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route
+            Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route,
+            Screens.EVALUATE_PLACE_OF_INTEREST.route
         )
         showArrowBack = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
@@ -65,7 +68,8 @@ fun MainScreen(
             Screens.CREDITS.route,
             Screens.CHOOSE_LOCATION_COORDINATES.route,
             Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route,
-            Screens.PLACES_OF_INTEREST_MAP.route
+            Screens.PLACES_OF_INTEREST_MAP.route,
+            Screens.EVALUATE_PLACE_OF_INTEREST.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -193,6 +197,9 @@ fun MainScreen(
                         poi.locationId == viewModel.selectedLocation.value!!.id
                     }
                 )
+            }
+            composable(Screens.EVALUATE_PLACE_OF_INTEREST.route){
+                EvaluatePlaceOfInterest(viewModel = viewModel)
             }
             composable(Screens.CREDITS.route) {
                 Credits()

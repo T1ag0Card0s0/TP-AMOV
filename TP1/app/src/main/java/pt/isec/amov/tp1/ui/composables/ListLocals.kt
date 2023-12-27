@@ -47,9 +47,11 @@ fun ListLocals(
     locals: List<Local>,
     userEmail: String?,
     modifier: Modifier = Modifier,
+    ableToEvaluate: Boolean,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
-    onRemove: (Local) -> Unit
+    onRemove: (Local) -> Unit,
+    onEvaluate: (Local) -> Unit
 ) {
 
     LazyColumn(
@@ -69,8 +71,8 @@ fun ListLocals(
                     .padding(8.dp),
                 onClick = { onSelected(it) }
             ) {
-                if(!it.approved){
-                    Row(modifier = modifier.fillMaxSize()){
+                if (!it.approved) {
+                    Row(modifier = modifier.fillMaxSize()) {
                         Icon(imageVector = Icons.Filled.WarningAmber, contentDescription = "Danger")
                         Text(text = "Item not yet approved, information may be incorrect")
                     }
@@ -120,7 +122,10 @@ fun ListLocals(
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Box(modifier = modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             CircularProgressIndicator()
                             if (it.imageUri != null) {
                                 AsyncImage(
@@ -132,15 +137,19 @@ fun ListLocals(
                             }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                   
-                        Box(modifier = modifier.fillMaxWidth()) {
-                            Text(it.description)
 
-                            Column(modifier=modifier.align(Alignment.TopEnd)) {
-                                IconButton(onClick = { /*TODO*/ },) {
-                                    Icon(imageVector = Icons.Default.Comment, contentDescription = null)
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = modifier.fillMaxWidth()
+                        ) {
+                            Text(it.description)
+                            if (ableToEvaluate)
+                                IconButton(onClick = { onEvaluate(it) }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Comment,
+                                        contentDescription = null
+                                    )
                                 }
-                            }
 
                         }
 
