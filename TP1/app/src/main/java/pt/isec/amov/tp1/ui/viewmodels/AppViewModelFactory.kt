@@ -3,6 +3,7 @@ package pt.isec.amov.tp1.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -86,14 +87,15 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         _error.value = null
     }
 
-    fun addCategory(name: String, description:String){
+    fun addCategory(name: String, description:String, imageVector: ImageVector){
         viewModelScope.launch {
             FStorageAdd.category(
                 Category(
                     UUID.randomUUID().toString(),
                     user.value!!.email,
                     name,
-                    description
+                    description,
+                    imageVector
                 )
             ){exception->
                 _error.value = exception?.message

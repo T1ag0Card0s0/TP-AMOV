@@ -1,6 +1,7 @@
 package pt.isec.amov.tp1.data
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import pt.isec.amov.tp1.ui.viewmodels.toUser
@@ -78,6 +79,7 @@ data class Category(
     override val authorEmail: String,
     val name: String,
     val description: String,
+    val imageVector: ImageVector?
 ):Contribution(authorEmail)
 
 data class Classification(
