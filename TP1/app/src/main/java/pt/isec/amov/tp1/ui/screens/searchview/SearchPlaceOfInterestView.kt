@@ -54,16 +54,14 @@ fun SearchPlaceOfInterestView(
     val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val placesOfInterest = viewModel.placesOfInterest.observeAsState()
     val categories = viewModel.categories.observeAsState()
+
+    var alphabeticOrderByAsc by remember { mutableStateOf(true) }
+    var distanceOrderByAsc by remember { mutableStateOf(true) }
+
     var isExpandedCategories by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("") }
-    var isAlphabetiOrderByExpanded by remember { mutableStateOf(false) }
-    var alphabeticOrderBy by remember { mutableStateOf("") }
-    var isDistanceOrderByExpanded by remember { mutableStateOf(false) }
-    var distanceOrderBy by remember { mutableStateOf("") }
-    var orderByOptions =listOf(
-        stringResource(R.string.ascendent),
-        stringResource(R.string.descendent)
-    )
+    var selectedCategoryId by remember { mutableStateOf("") }
+
     Column(
         modifier = modifier
             .padding(start = 8.dp, end = 8.dp)
@@ -90,37 +88,30 @@ fun SearchPlaceOfInterestView(
                 )
             }
         }
+
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = modifier.fillMaxWidth()
         ) {
-            Button(onClick = { viewModel.placesOfInterestOrderByAlphabetically(true) }) {
-                Text("A")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("Z")
+            Button(onClick = {
+                alphabeticOrderByAsc = !alphabeticOrderByAsc
+                viewModel.placesOfInterestOrderByAlphabetically(alphabeticOrderByAsc)
+            }) {
+                Text(if (alphabeticOrderByAsc) "Name: Ascending" else "Name: Descending")
             }
-            Button(onClick = { viewModel.placesOfInterestOrderByAlphabetically(false) }) {
-                Text("Z")
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
-                Text("A")
-            }
-            Button(onClick = { viewModel.placesOfInterestOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                true
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Remove, contentDescription = null)
-            }
-            Button(onClick = { viewModel.placesOfInterestOrderByDistance(
-                currentCoordinates.value!!.latitude,
-                currentCoordinates.value!!.longitude,
-                false
-            ) }) {
-                Text("KM")
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+
+            Button(onClick = {
+                distanceOrderByAsc = !distanceOrderByAsc
+                viewModel.placesOfInterestOrderByDistance(
+                    currentCoordinates.value!!.latitude,
+                    currentCoordinates.value!!.longitude,
+                    distanceOrderByAsc
+                )
+            }) {
+                Text(if (distanceOrderByAsc) "Distance: Ascending" else "Distance: Descending")
             }
         }
+
         MyExposedDropDownMenu(
             isExpanded = isExpandedCategories,
             options = categories.value!!.map { it.name },
@@ -132,22 +123,35 @@ fun SearchPlaceOfInterestView(
             onClick = {
                 isExpandedCategories = false
                 selectedCategory = categories.value!![it].name
+                selectedCategoryId = categories.value!![it].id
             },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 6.dp, start = 3.dp, end = 3.dp)
         )
 
-        if (placesOfInterest.value != null)
-            ListLocals(
-                locals =
-                if (!viewModel.isMyContributions.value)
+        if (placesOfInterest.value != null) {
+            val filteredPlacesOfInterest = if (selectedCategory.isNotEmpty()) {
+                // Filtra os locais de interesse com base na categoria selecionada
+                placesOfInterest.value!!.filter {
+                    it.categoryId == selectedCategoryId &&
+                            (it.locationId == viewModel.selectedLocation.value!!.id) &&
+                            (!viewModel.isMyContributions.value || it.authorEmail == viewModel.user.value!!.email)
+                }
+            } else {
+                // Caso nenhuma categoria seja selecionada, exibe todos os locais de interesse
+                if (!viewModel.isMyContributions.value) {
                     placesOfInterest.value!!.filter { it.locationId == viewModel.selectedLocation.value!!.id }
-                else
+                } else {
                     placesOfInterest.value!!.filter {
                         it.locationId == viewModel.selectedLocation.value!!.id &&
                                 it.authorEmail == viewModel.user.value!!.email
-                    },
+                    }
+                }
+            }
+
+            ListLocals(
+                locals = filteredPlacesOfInterest,
                 userEmail = viewModel.user.value!!.email,
                 onSelected = {},
                 onDetails = {
@@ -157,5 +161,6 @@ fun SearchPlaceOfInterestView(
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
                 }
             )
+        }
     }
 }
