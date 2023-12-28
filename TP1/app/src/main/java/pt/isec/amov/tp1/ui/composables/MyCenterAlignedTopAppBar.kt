@@ -3,6 +3,7 @@ package pt.isec.amov.tp1.ui.composables
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -34,7 +35,8 @@ fun MyCenterAlignedTopAppBarr(
     viewModel: AppViewModel,
     showArrowBack:Boolean,
     showDoneIcon: Boolean,
-    showMoreVert: Boolean
+    showMoreVert: Boolean,
+    showEdit:Boolean
 ){
     var isExpanded by remember { mutableStateOf(false) }
     CenterAlignedTopAppBar(
@@ -131,6 +133,10 @@ fun MyCenterAlignedTopAppBarr(
                     )
                 }
             }
+            if(showEdit)
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,

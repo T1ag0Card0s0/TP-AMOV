@@ -48,6 +48,7 @@ fun MainScreen(
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember { mutableStateOf(false) }
     var showMoreVert by remember { mutableStateOf(false) }
+    var showEdit by remember { mutableStateOf(false) }
     var showFloatingActionButton by remember { mutableStateOf(false)}
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -79,6 +80,10 @@ fun MainScreen(
             Screens.SEARCH_LOCATIONS.route,
             Screens.SEARCH_PLACES_OF_INTEREST.route
         )
+        showEdit = destination.route in listOf(
+            Screens.PLACE_OF_INTEREST_DETAILS.route,
+            Screens.LOCATION_DETAILS.route
+        )
     }
     Scaffold(
         snackbarHost = {
@@ -93,7 +98,8 @@ fun MainScreen(
                     viewModel,
                     showArrowBack,
                     showDoneIcon,
-                    showMoreVert
+                    showMoreVert,
+                    showEdit
                 )
         },
         floatingActionButton = {
