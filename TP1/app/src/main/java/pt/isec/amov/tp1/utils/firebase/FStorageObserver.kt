@@ -76,8 +76,7 @@ class FStorageObserver {
                             document.getDouble("latitude") ?: 0.0,
                             document.getDouble("longitude") ?: 0.0,
                             document.getString("user1"),
-                            document.getString("user2"),
-
+                            document.getString("user2")
                             )
                         if (placeOfInterest.user1 != null && placeOfInterest.user2 != null) placeOfInterest.approved =
                             true

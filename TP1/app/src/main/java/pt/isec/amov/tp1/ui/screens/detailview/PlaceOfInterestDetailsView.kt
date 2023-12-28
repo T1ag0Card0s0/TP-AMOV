@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
@@ -20,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -37,17 +41,22 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.PlaceOfInterest
+import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 
 @Composable
 fun PlaceOfInterestDetailsView(
     viewModel: AppViewModel,
+    navController: NavHostController,
     placeOfInterest: PlaceOfInterest,
     locationName: String,
     categoryName: String,
     modifier: Modifier = Modifier
 ) {
+    val classifications = viewModel.classifications.observeAsState()
+    val myClassifications = classifications.value!!.filter{ it.placeOfInterestId == placeOfInterest.id }
     val geoPoint = GeoPoint(placeOfInterest.latitude, placeOfInterest.longitude)
     LazyColumn(
         modifier = modifier
@@ -119,21 +128,34 @@ fun PlaceOfInterestDetailsView(
                 )
             }
             Row(
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Start,
                 modifier = modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(R.string.comments),
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
+                if (viewModel.canEvaluate()) {
+                    IconButton(onClick = {
+                        viewModel.evaluateForm = EvaluateForm()
+                        navController.navigate(Screens.EVALUATE_PLACE_OF_INTEREST.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null
+                        )
+                    }
+                }
             }
 
         }
         items(
-            viewModel.getClassificationsFrom(placeOfInterest.id),
+            myClassifications,
             key = { it.id }
         ) {
-            Card(modifier = modifier.fillMaxSize()) {
+            Card(modifier = modifier
+                .padding(8.dp)
+                .fillMaxSize()) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier

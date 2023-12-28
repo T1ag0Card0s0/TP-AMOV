@@ -138,7 +138,7 @@ class FStorageAdd {
         }
         fun classification(classification: Classification, onResult:(Throwable?)->Unit){
             val existsWith = hashMapOf(
-                "placeOfInterestId" to classification.placeOfInterestId,
+                "placeOfInterest" to classification.placeOfInterestId,
                 "authorEmail" to classification.authorEmail
             )
             verifyIfExist(
@@ -177,7 +177,6 @@ class FStorageAdd {
                             onResult(result.exception)
                         }
                 }
-
             }
         }
         private fun verifyIfExist(

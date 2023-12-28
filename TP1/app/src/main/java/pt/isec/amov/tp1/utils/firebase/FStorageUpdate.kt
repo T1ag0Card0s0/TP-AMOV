@@ -1,6 +1,8 @@
 package pt.isec.amov.tp1.utils.firebase
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.getField
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage

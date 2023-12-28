@@ -155,11 +155,6 @@ fun SearchPlaceOfInterestView(
                 ableToEvaluate = true,
                 onRemove = {
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
-                },
-                onEvaluate =  {
-                    viewModel.evaluateForm = EvaluateForm()
-                    viewModel.selecedPlaceOfInterest.value = it as PlaceOfInterest
-                    navController.navigate(Screens.EVALUATE_PLACE_OF_INTEREST.route)
                 }
             )
         }

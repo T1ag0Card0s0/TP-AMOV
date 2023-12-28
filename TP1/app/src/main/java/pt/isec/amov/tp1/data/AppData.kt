@@ -65,7 +65,7 @@ data class PlaceOfInterest(
     override val latitude: Double,
     override val longitude: Double,
     override var user1: String?,
-    override var user2: String?
+    override var user2: String?,
 ):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude,false,user1,user2)
 
 data class User(

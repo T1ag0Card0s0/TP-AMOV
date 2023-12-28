@@ -85,7 +85,6 @@ fun SearchLocationView(
                 onRemove={
                     viewModel.removeLocation(it as Location)
                 },
-                onEvaluate = {}
             )
 
     }

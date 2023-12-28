@@ -53,7 +53,6 @@ fun ListLocals(
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
     onRemove: (Local) -> Unit,
-    onEvaluate: (Local) -> Unit
 ) {
 
     LazyColumn(
@@ -147,20 +146,12 @@ fun ListLocals(
                                 text = it.description,
                                 modifier = Modifier.weight(1f)
                             )
-                            if (ableToEvaluate) {
-                                IconButton(onClick = { onEvaluate(it) }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Comment,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
                         }
                     }
                 }
             }
         }
-        item{
+        item {
             Spacer(modifier = modifier.padding(50.dp))
         }
     }

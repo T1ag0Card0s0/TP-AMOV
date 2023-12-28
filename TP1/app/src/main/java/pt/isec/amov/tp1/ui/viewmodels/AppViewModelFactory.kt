@@ -182,8 +182,12 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun updatePlaceOfInterest(){
-
+    fun updatePlaceOfInterest(p:PlaceOfInterest){
+        viewModelScope.launch {
+            FStorageUpdate.placeOfInterest(p){exp->
+                _error.value = exp?.message
+            }
+        }
     }
     fun updateCategory(){
 
@@ -325,6 +329,10 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
     fun getClassificationsFrom(id: String): List<Classification> {
         return classifications.value!!.filter { it.placeOfInterestId == id }
+    }
+
+    fun canEvaluate(): Boolean {
+        return getClassificationsFrom(selecedPlaceOfInterest.value!!.id).find { it.authorEmail == user.value!!.email } == null
     }
 
 
