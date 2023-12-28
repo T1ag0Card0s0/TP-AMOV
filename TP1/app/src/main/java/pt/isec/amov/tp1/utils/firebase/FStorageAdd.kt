@@ -127,7 +127,8 @@ class FStorageAdd {
                         "id" to category.id,
                         "name" to category.name,
                         "description" to category.description,
-                        "authorEmail" to category.authorEmail
+                        "authorEmail" to category.authorEmail,
+                        "iconUri" to category.iconUri
                     )
                     categoriesCollection.document(category.id).set(dataToAdd)
                         .addOnCompleteListener { result ->

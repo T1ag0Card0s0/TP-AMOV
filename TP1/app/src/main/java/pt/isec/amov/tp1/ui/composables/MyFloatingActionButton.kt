@@ -1,5 +1,10 @@
 package pt.isec.amov.tp1.ui.composables
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cottage
@@ -20,6 +26,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,13 +37,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.ImagePainter
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay.backgroundColor
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun MyFloatingActionButton(
@@ -49,6 +60,16 @@ fun MyFloatingActionButton(
     var nameInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
     var selectedImageVector by remember { mutableStateOf<ImageVector?>(null) }
+    var selectedIconUri by remember { mutableStateOf("") }
+
+    val categoryIcons = listOf(
+        Icons.Default.Cottage,
+        Icons.Default.Museum,
+        Icons.Default.School,
+        // Adicione mais ícones conforme necessário
+        Icons.Default.Home, // Exemplo adicional de um ícone
+        Icons.Default.Person // Exemplo adicional de um ícone
+    )
 
     Column(
         verticalArrangement = Arrangement.SpaceAround
@@ -113,16 +134,16 @@ fun MyFloatingActionButton(
                         )
                         // Select icon using IconGrid
                         Text(text = stringResource(R.string.select_an_icon_for_the_category))
-                        IconGrid { selectedIcon ->
+                        IconGrid(categoryIcons) { selectedIcon ->
                             selectedImageVector = selectedIcon
-
+                            selectedIconUri = "" // TODO gerar uri para selectedImageVector
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.addCategory(nameInput, descriptionInput, selectedImageVector!!)
+                            viewModel.addCategory(nameInput, descriptionInput, selectedIconUri)
                             showDialog = false
                         }
                     ) {
@@ -144,24 +165,30 @@ fun MyFloatingActionButton(
 }
 
 @Composable
-fun IconGrid(onIconSelected: (ImageVector) -> Unit) {
-    val imageVectors = listOf(Icons.Default.Cottage,
-        Icons.Default.Museum,
-        Icons.Default.School
-    )
+fun IconGrid(
+    icons: List<ImageVector>,
+    onIconSelected: (ImageVector) -> Unit
+) {
+    val selectedIcon = remember { mutableStateOf<ImageVector?>(null) }
 
     LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-        items(imageVectors) { icon ->
+        items(icons) { icon ->
+            val isSelected = icon == selectedIcon.value
+
+            val tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier
                     .clickable {
+                        selectedIcon.value = icon
                         onIconSelected(icon)
                     }
                     .padding(8.dp)
+                    .padding(4.dp),
+                tint = tint
             )
         }
     }
 }
-

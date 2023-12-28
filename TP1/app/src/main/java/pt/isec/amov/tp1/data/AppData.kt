@@ -82,7 +82,7 @@ data class Category(
     override val authorEmail: String,
     val name: String,
     val description: String,
-    val imageVector: ImageVector?
+    val iconUri: String?
 ):Contribution(authorEmail)
 
 data class Classification(
