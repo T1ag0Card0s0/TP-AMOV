@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tp2/details_screen.dart';
 import 'package:tp2/list_screen.dart';
 import 'package:tp2/places_of_interest_screen.dart';
-import 'package:tp2/recente_places_screen.dart';
+import 'package:tp2/recent_places_screen.dart';
 import 'details_place_screen.dart';
 import 'firebase_options.dart';
 

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:tp2/details_screen.dart';
 import 'places_of_interest_screen.dart';
-import 'recente_places_screen.dart';
+import 'recent_places_screen.dart';
 import 'data/Locations.dart';
 
 class LocationOrderService {
