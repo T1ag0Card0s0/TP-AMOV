@@ -1,5 +1,9 @@
 package pt.isec.amov.tp1.ui.composables
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,14 +37,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.ImagePainter
 import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay.backgroundColor
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun MyFloatingActionButton(
@@ -53,6 +60,7 @@ fun MyFloatingActionButton(
     var nameInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
     var selectedImageVector by remember { mutableStateOf<ImageVector?>(null) }
+    var selectedIconUri by remember { mutableStateOf("") }
 
     val categoryIcons = listOf(
         Icons.Default.Cottage,
@@ -128,13 +136,14 @@ fun MyFloatingActionButton(
                         Text(text = stringResource(R.string.select_an_icon_for_the_category))
                         IconGrid(categoryIcons) { selectedIcon ->
                             selectedImageVector = selectedIcon
+                            selectedIconUri = "" // TODO gerar uri para selectedImageVector
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.addCategory(nameInput, descriptionInput, selectedImageVector!!)
+                            viewModel.addCategory(nameInput, descriptionInput, selectedIconUri)
                             showDialog = false
                         }
                     ) {
@@ -168,8 +177,6 @@ fun IconGrid(
 
             val tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
 
-            //val backgroundColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface
-
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -179,7 +186,6 @@ fun IconGrid(
                         onIconSelected(icon)
                     }
                     .padding(8.dp)
-                    //.background(backgroundColor, shape = CircleShape)
                     .padding(4.dp),
                 tint = tint
             )
