@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.detailview
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Star
@@ -20,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -127,6 +130,39 @@ fun PlaceOfInterestDetailsView(
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
             }
+            if(!placeOfInterest.approved) {
+                Card {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.validate))
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        LinearProgressIndicator(
+                            placeOfInterest.numberOfValidations().toFloat() / 2,
+                            modifier = modifier
+                                .border(1.dp, Color.Gray)
+                                .height(10.dp)
+                        )
+                        if (placeOfInterest.canApprove(viewModel.user.value!!.email)) {
+                            IconButton(onClick = {
+                                placeOfInterest.assignValidation(viewModel.user.value!!.email)
+                                viewModel.updatePlaceOfInterest(placeOfInterest)
+                            }) {
+                                Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                            }
+                        }
+                    }
+                }
+            }
+
             Row(
                 horizontalArrangement = Arrangement.Start,
                 modifier = modifier.fillMaxWidth()

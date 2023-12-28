@@ -117,7 +117,7 @@ fun LocationDetailsView(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = modifier.fillMaxWidth()
+                        modifier = modifier.fillMaxWidth().padding(8.dp)
                     ) {
                         LinearProgressIndicator(
                             location.numberOfValidations().toFloat()/2,
@@ -125,11 +125,13 @@ fun LocationDetailsView(
                                 .border(1.dp, Color.Gray)
                                 .height(10.dp)
                             )
-                        IconButton(onClick = {
-                            location.assignValidation(viewModel.user.value!!.email)
-                            viewModel.updateLocation(location)
-                        }) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                        if(location.canApprove(viewModel.user.value!!.email)) {
+                            IconButton(onClick = {
+                                location.assignValidation(viewModel.user.value!!.email)
+                                viewModel.updateLocation(location)
+                            }) {
+                                Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                            }
                         }
                     }
                 }

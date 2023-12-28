@@ -37,6 +37,9 @@ open class Local(
         if(user1.isNullOrBlank()) user1 = email
         else if(user2.isNullOrBlank()) user2 = email
     }
+    fun canApprove(email: String): Boolean {
+        return !(email == user1||email==user2)
+    }
 }
 
 
