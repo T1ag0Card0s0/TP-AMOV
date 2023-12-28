@@ -43,6 +43,8 @@ class FStorageRemove {
             val dataToRemove = classificationsCollection.document(c.id)
             dataToRemove.delete()
                 .addOnCompleteListener{
+                    if(c.imageName!=null)
+                        removeFile(c.imageName!!)
                     onResult(it.exception)
                 }
         }

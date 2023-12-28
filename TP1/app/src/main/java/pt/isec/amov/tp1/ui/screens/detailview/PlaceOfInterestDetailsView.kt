@@ -59,7 +59,8 @@ fun PlaceOfInterestDetailsView(
     modifier: Modifier = Modifier
 ) {
     val classifications = viewModel.classifications.observeAsState()
-    val myClassifications = classifications.value!!.filter{ it.placeOfInterestId == placeOfInterest.id }
+    val myClassifications =
+        classifications.value!!.filter { it.placeOfInterestId == placeOfInterest.id }
     val geoPoint = GeoPoint(placeOfInterest.latitude, placeOfInterest.longitude)
     LazyColumn(
         modifier = modifier
@@ -130,7 +131,7 @@ fun PlaceOfInterestDetailsView(
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
             }
-            if(!placeOfInterest.approved) {
+            if (!placeOfInterest.approved) {
                 Card {
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -189,9 +190,11 @@ fun PlaceOfInterestDetailsView(
             myClassifications,
             key = { it.id }
         ) {
-            Card(modifier = modifier
-                .padding(8.dp)
-                .fillMaxSize()) {
+            Card(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxSize()
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
@@ -214,26 +217,30 @@ fun PlaceOfInterestDetailsView(
                             )
                         }
                     }
-                    if(it.authorEmail == viewModel.user.value!!.email){
+                    if (it.authorEmail == viewModel.user.value!!.email) {
                         IconButton(onClick = { viewModel.removeClassification(it) }) {
-                            Icon(imageVector = Icons.Default.RestoreFromTrash, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.Default.RestoreFromTrash,
+                                contentDescription = null
+                            )
                         }
                     }
                 }
-                Text(text = it.comment,modifier = modifier.padding(8.dp))
-                Box(
-                    modifier = modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (it.imageUri != null) {
+                Text(text = it.comment, modifier = modifier.padding(8.dp))
+                if (it.imageName != null)
+                    Box(
+                        modifier = modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                         AsyncImage(
                             model = it.imageUri!!,
                             contentDescription = "Local image",
                             contentScale = ContentScale.FillWidth,
                             modifier = modifier.fillMaxSize()
                         )
+
                     }
-                }
             }
         }
 

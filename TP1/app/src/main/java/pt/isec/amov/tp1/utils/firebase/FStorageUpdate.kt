@@ -18,7 +18,7 @@ class FStorageUpdate {
         private val locationsColletion = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
-        private val classificationCollection = db.collection("Classification")
+        private val classificationCollection = db.collection("Classifications")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
             val dataToUpdate = locationsColletion.document(location.id)
             db.runTransaction { transaction ->
