@@ -125,6 +125,25 @@ class _DetailsPlaceScreenState extends State<DetailsPlaceScreen> {
                       ),
                     ),
                   ),
+                  mapIsLoading: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  onMapIsReady: (isReady) async {
+                    if (isReady) {
+                      await mapController.addMarker(
+                          GeoPoint(
+                              latitude: location.latitude,
+                              longitude: location.longitude),
+                          markerIcon: const MarkerIcon(
+                            icon: Icon(
+                              Icons.location_on,
+                              color: Colors.blue,
+                              size: 56, // Ajuste o tamanho conforme necessário
+                            ),
+                          )
+                      );
+                    }
+                  }
                 ),
                 // Zoom buttons
                 Positioned(

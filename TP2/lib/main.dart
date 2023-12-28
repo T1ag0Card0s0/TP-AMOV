@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tp2/DetailsScreen.dart';
-import 'package:tp2/ListScreen.dart';
-import 'package:tp2/PlacesOfInterestScreen.dart';
-import 'package:tp2/RecentPlacesScreen.dart';
-import 'DetailsPlaceScreen.dart';
+import 'package:tp2/details_screen.dart';
+import 'package:tp2/list_screen.dart';
+import 'package:tp2/places_of_interest_screen.dart';
+import 'package:tp2/recente_places_screen.dart';
+import 'details_place_screen.dart';
 import 'firebase_options.dart';
 
 void initFirebase() async {
@@ -53,6 +53,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 class _LoginPageState extends State<LoginPage> {
+
   @override
   Widget build(BuildContext context) {
 

@@ -1,13 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
-import 'package:tp2/DetailsScreen.dart';
-import 'PlacesOfInterestScreen.dart';
-import 'RecentPlacesScreen.dart';
+import 'package:tp2/details_screen.dart';
+import 'places_of_interest_screen.dart';
+import 'recente_places_screen.dart';
 import 'data/Locations.dart';
 
-class LocationService {
+class LocationOrderService {
   Future<List<Locations>> getLocations(String ?orderBy, String ?searchTerm, LocationData location) async {
     var db = FirebaseFirestore.instance;
 
@@ -67,25 +66,31 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
+
   static const List<String> orderOptions = [
     'Alphabetical Asc (A -> Z)',
     'Alphabetical Desc (Z -> A)',
     'Distance',
   ];
 
-  final LocationService _locationService = LocationService();
+  final LocationOrderService _locationService = LocationOrderService();
   final TextEditingController _searchController = TextEditingController();
   String? orderByValue;
   String? searchTerm;
-
+  @override
+  void initState(){
+    super.initState();
+    getLocation();
+  }
   // Location
   Location currentLocation = Location();
 
   bool _serviceEnabled = false;
   PermissionStatus _permissionGranted = PermissionStatus.denied;
+
   LocationData _locationData = LocationData.fromMap({
-    "latitude": 40.192639,
-    "longitude": -8.411899,
+    "latitude": 40.639855,
+    "longitude": -8.654125,
   });
 
   void getLocation() async {
@@ -107,8 +112,8 @@ class _ListScreenState extends State<ListScreen> {
     _locationData = await currentLocation.getLocation();
     setState(() {});
   }
-
   // end Location
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,7 +201,6 @@ class _ListScreenState extends State<ListScreen> {
                     children: locations.map((location) => Card(
                       child: GestureDetector(
                         onTap: () {
-                          // Navegar para uma tela ao tocar em qualquer lugar da Card, exceto nos três pontinhos
                           Navigator.pushNamed(
                             context,
                             PlacesOfInterestScreen.routeName,
@@ -206,7 +210,6 @@ class _ListScreenState extends State<ListScreen> {
                         child: ListTile(
                           title: Column(
                             children: [
-                              // Image widget placed above the Text
                               Image.network(
                                 location.imageUri,
                                 width: double.infinity,

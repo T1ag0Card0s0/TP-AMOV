@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tp2/RecentLocationManager.dart';
+import 'package:tp2/recent_places_manager.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
-import 'DetailsPlaceScreen.dart';
-import 'PlacesOfInterestScreen.dart';
+import 'details_place_screen.dart';
+import 'places_of_interest_screen.dart';
 
 
 class RecentPlacesScreen extends StatefulWidget {
@@ -19,9 +19,6 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Recupera os argumentos passados
-    //final Locations location = ModalRoute.of(context)!.settings.arguments as Locations;
-    //locationId = location.id;
 
     return Scaffold(
       appBar: AppBar(
@@ -81,10 +78,8 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
                                 future: PreferenceManager.getLikeStatus(location.id),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
-                                    // Lidar com erro, se houver
                                     return Text('Erro: ${snapshot.error}');
                                   } else {
-                                    // Usar o valor retornado
                                     bool? liked = snapshot.data;
                                     if (liked == null) {
                                       return IconButton(
@@ -123,10 +118,8 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
                                 future: PreferenceManager.getLikeStatus(location.id),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
-                                    // Lidar com erro, se houver
                                     return Text('Erro: ${snapshot.error}');
                                   } else {
-                                    // Usar o valor retornado
                                     bool? liked = snapshot.data;
                                     if (liked == null) {
                                       return IconButton(
