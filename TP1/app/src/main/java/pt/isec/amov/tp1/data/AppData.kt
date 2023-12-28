@@ -82,7 +82,8 @@ data class Category(
     override val authorEmail: String,
     val name: String,
     val description: String,
-    val iconUri: String?
+    var iconUri: String?,
+    var iconName: String?
 ):Contribution(authorEmail)
 
 data class Classification(

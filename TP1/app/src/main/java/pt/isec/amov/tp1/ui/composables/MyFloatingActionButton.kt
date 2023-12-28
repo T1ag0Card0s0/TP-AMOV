@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,6 +62,7 @@ fun MyFloatingActionButton(
     var descriptionInput by remember { mutableStateOf("") }
     var selectedImageVector by remember { mutableStateOf<ImageVector?>(null) }
     var selectedIconUri by remember { mutableStateOf("") }
+    var selectedIconName by remember { mutableStateOf("") }
 
     val categoryIcons = listOf(
         Icons.Default.Cottage,
@@ -137,13 +139,15 @@ fun MyFloatingActionButton(
                         IconGrid(categoryIcons) { selectedIcon ->
                             selectedImageVector = selectedIcon
                             selectedIconUri = "" // TODO gerar uri para selectedImageVector
+                            selectedIconName = selectedImageVector!!.name
+                            Log.i("AA",selectedIconName)
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.addCategory(nameInput, descriptionInput, selectedIconUri)
+                            viewModel.addCategory(nameInput, descriptionInput, selectedIconUri, selectedIconName)
                             showDialog = false
                         }
                     ) {

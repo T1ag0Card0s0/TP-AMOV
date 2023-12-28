@@ -123,11 +123,27 @@ class FStorageAdd {
                 if (v || exp != null) {
                     onResult(exp)
                 } else {
+                    if (category.iconName!!.isNotEmpty()) {
+                        val file = File(category.iconName!!)
+                        val inputStream = FileInputStream(file)
+                        uploadFile(
+                            inputStream,
+                            category.id + "." + file.extension,
+                            onSuccess = {
+                                Log.i("Image inserted", "Success $it")
+                                category.iconUri = it
+                                FStorageUpdate.category(category) {
+                                }
+                            }
+                        )
+                        category.iconName = category.id + "." + file.extension
+                    }
                     val dataToAdd = hashMapOf(
                         "id" to category.id,
                         "name" to category.name,
                         "description" to category.description,
                         "authorEmail" to category.authorEmail,
+                        "iconName" to category.iconName,
                         "iconUri" to category.iconUri
                     )
                     categoriesCollection.document(category.id).set(dataToAdd)
