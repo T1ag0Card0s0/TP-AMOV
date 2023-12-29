@@ -245,9 +245,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun updateCategory(){
 
-    }
     fun removeLocation(l: Location){
         if(placesOfInterest.value!!.find { it.locationId==l.id }!=null) return
         viewModelScope.launch {

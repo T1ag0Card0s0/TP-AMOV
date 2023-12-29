@@ -1,6 +1,7 @@
 package pt.isec.amov.tp1.ui.composables
 
 import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,9 +75,24 @@ fun ListLocals(
                 onClick = { onSelected(it) }
             ) {
                 if (!it.approved) {
-                    Row(modifier = modifier.fillMaxSize()) {
-                        Icon(imageVector = Icons.Filled.WarningAmber, contentDescription = "Danger")
-                        Text(text = "Item not yet approved, information may be incorrect")
+                    Row(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.WarningAmber,
+                            contentDescription = "Danger",
+                            tint = Color.Red
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "To approve, " +
+                                    "information may not be correct",
+                            color = Color.Red
+                        )
                     }
                 }
                 Box(modifier = modifier.fillMaxSize()) {
