@@ -129,16 +129,16 @@ fun SearchPlaceOfInterestView(
                 // Filtra os locais de interesse com base na categoria selecionada
                 placesOfInterest.value!!.filter {
                     it.categoryId == selectedCategoryId &&
-                            (it.locationId == viewModel.selectedLocation.value!!.id) &&
+                            (it.locationId == viewModel.selectedLocationId.value) &&
                             (!viewModel.isMyContributions.value || it.authorEmail == viewModel.user.value!!.email)
                 }
             } else {
                 // Caso nenhuma categoria seja selecionada, exibe todos os locais de interesse
                 if (!viewModel.isMyContributions.value) {
-                    placesOfInterest.value!!.filter { it.locationId == viewModel.selectedLocation.value!!.id }
+                    placesOfInterest.value!!.filter { it.locationId == viewModel.selectedLocationId.value }
                 } else {
                     placesOfInterest.value!!.filter {
-                        it.locationId == viewModel.selectedLocation.value!!.id &&
+                        it.locationId == viewModel.selectedLocationId.value &&
                                 it.authorEmail == viewModel.user.value!!.email
                     }
                 }

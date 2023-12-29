@@ -134,11 +134,11 @@ fun MainScreen(
                     viewModel = viewModel,
                     locationViewModel = locationViewModel,
                     onSelect = { location ->
-                        viewModel.selectedLocation.value = location
+                        viewModel.selectedLocationId.value = location.id
                         navController.navigate(Screens.SEARCH_PLACES_OF_INTEREST.route)
                     },
                     onDetails = { location ->
-                        viewModel.selectedLocation.value = location
+                        viewModel.selectedLocationId.value = location.id
                         navController.navigate(Screens.LOCATION_DETAILS.route)
                     }
                 )
@@ -147,7 +147,7 @@ fun MainScreen(
                 SearchPlaceOfInterestView(
                     viewModel = viewModel,
                     locationViewModel = locationViewModel,
-                    location = viewModel.selectedLocation.value!!,
+                    location = viewModel.selectedLocation!!,
                     navController = navController,
                     onDetails = { placeOfInterest ->
                         viewModel.selecedPlaceOfInterest.value = placeOfInterest
@@ -157,21 +157,28 @@ fun MainScreen(
             }
             composable(Screens.ADD_LOCATIONS.route) {
                 AddLocationView(
-                    appViewModel = viewModel,
+                    addLocalForm = viewModel.addLocalForm!!,
                     navController = navController,
                     locationViewModel = locationViewModel
                 )
             }
             composable(Screens.ADD_PLACE_OF_INTEREST.route) {
                 AddPlaceOfInterestView(
-                    appViewModel = viewModel,
+                    addLocalForm = viewModel.addLocalForm!!,
                     navController = navController,
-                    locationViewModel = locationViewModel
+                    currLocation = locationViewModel.currentLocation,
+                    categoriesLiveData = viewModel.categories
                 )
             }
             composable(Screens.LOCATION_DETAILS.route) {
+                val locations = viewModel.locations.observeAsState().value!!
                 LocationDetailsView(
-                    viewModel = viewModel ,
+                    location =  locations.find { it.id==viewModel.selectedLocationId.value }!!,
+                    currentUserEmail = viewModel.user.value!!.email,
+                    onValidate = {location->
+                        viewModel.updateLocation(location)
+                        navController.navigate(Screens.SEARCH_LOCATIONS.route)
+                    }
                 )
             }
             composable(Screens.PLACE_OF_INTEREST_DETAILS.route) {
@@ -179,7 +186,7 @@ fun MainScreen(
                     viewModel = viewModel,
                     navController = navController,
                     placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
-                    locationName = viewModel.selectedLocation.value!!.name,
+                    locationName = viewModel.selectedLocation!!.name,
                     categoryName = viewModel.getCategoryById(viewModel.selecedPlaceOfInterest.value!!.categoryId)!!.name
                 )
             }
@@ -200,7 +207,7 @@ fun MainScreen(
                 LocalMapView(
                     initCenteredGeoPoint=viewModel.selecetLocationGeoPoint,
                     locals = placesOfInterest.value!!.filter {poi->
-                        poi.locationId == viewModel.selectedLocation.value!!.id
+                        poi.locationId == viewModel.selectedLocationId.value
                     }
                 )
             }

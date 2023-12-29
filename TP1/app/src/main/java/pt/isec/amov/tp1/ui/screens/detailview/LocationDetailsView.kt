@@ -33,16 +33,19 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun LocationDetailsView(
-    viewModel: AppViewModel,
-    modifier: Modifier = Modifier
+   location: Location,
+    currentUserEmail:String,
+    modifier: Modifier = Modifier,
+    onValidate: (Location)->Unit
 ) {
-    val location = viewModel.locations.observeAsState().value!!.find { it.id == viewModel.selectedLocation.value!!.id  }
-    val geoPoint = GeoPoint(location!!.latitude, location.longitude)
+
+    val geoPoint = GeoPoint(location.latitude, location.longitude)
 
     LazyColumn(
         modifier = modifier
@@ -122,15 +125,15 @@ fun LocationDetailsView(
                             .padding(8.dp)
                     ) {
                         LinearProgressIndicator(
-                            location.numberOfValidations().toFloat()/2,
+                            location.getProgress(),
                             modifier = modifier
                                 .border(1.dp, Color.Gray)
                                 .height(10.dp)
                             )
-                        if(location.canApprove(viewModel.user.value!!.email)) {
+                        if(location.canApprove(currentUserEmail)) {
                             IconButton(onClick = {
-                                location.assignValidation(viewModel.user.value!!.email)
-                                viewModel.updateLocation(location)
+                                location.assignValidation(currentUserEmail)
+                                onValidate(location)
                             }) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null)
                             }
