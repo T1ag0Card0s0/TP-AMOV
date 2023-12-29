@@ -179,7 +179,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name",
+        text = stringResource(R.string.hello_name) + name,
         modifier = modifier
     )
 }
