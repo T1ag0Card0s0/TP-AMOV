@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.addview
 
+import CategoryDropDown
 import android.location.Location
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
+import pt.isec.amov.tp1.ui.screens.searchview.getIconByName
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 
 @Composable
@@ -76,9 +78,10 @@ fun AddPlaceOfInterestView(
                 icon = Icons.Default.Abc
             )
             Spacer(modifier = modifier.height(24.dp))
-            MyExposedDropDownMenu(
+            CategoryDropDown(
                 isExpanded = isExpandedCategories,
                 options = categories.value!!.map { it.name },
+                icons = categories.value?.map { getIconByName(it.iconName ?: "") } ?: emptyList(),
                 selectedOption = optCategory,
                 placeholder = stringResource(R.string.select_categories),
                 label = stringResource(R.string.categories),
