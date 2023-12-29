@@ -26,8 +26,8 @@ open class Local(
 ):Contribution(authorEmail){
     fun numberOfValidations():Int{
         var retValue = 0
-        if(user1!=null) retValue++
-        if(user2!=null) retValue++
+        if(user1!=null) ++retValue
+        if(user2!=null) ++retValue
         return retValue
     }
     fun isAproved():Boolean{

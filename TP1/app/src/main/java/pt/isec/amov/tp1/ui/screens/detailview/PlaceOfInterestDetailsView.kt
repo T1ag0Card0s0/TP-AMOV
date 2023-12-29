@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.detailview
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +24,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -143,20 +148,28 @@ fun PlaceOfInterestDetailsView(
                             .fillMaxWidth()
                             .padding(8.dp)
                     ) {
+                        val progress = remember {
+                            mutableStateOf(placeOfInterest.numberOfValidations().toFloat() / 2)
+                        }
+
                         LinearProgressIndicator(
-                            placeOfInterest.numberOfValidations().toFloat() / 2,
+                            progress.value,
                             modifier = modifier
                                 .border(1.dp, Color.Gray)
                                 .height(10.dp)
                         )
+
                         if (placeOfInterest.canApprove(viewModel.user.value!!.email)) {
                             IconButton(onClick = {
                                 placeOfInterest.assignValidation(viewModel.user.value!!.email)
                                 viewModel.updatePlaceOfInterest(placeOfInterest)
+                                progress.value = placeOfInterest.numberOfValidations().toFloat() / 2;
+
                             }) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null)
                             }
                         }
+
                     }
                 }
             }
@@ -242,4 +255,12 @@ fun PlaceOfInterestDetailsView(
         }
 
     }
+    @Composable
+    fun updateNumbers() {
+
+
+    }
 }
+
+
+

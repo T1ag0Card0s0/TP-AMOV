@@ -17,6 +17,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -121,8 +123,12 @@ fun LocationDetailsView(
                             .fillMaxWidth()
                             .padding(8.dp)
                     ) {
+                        val progress = remember {
+                            mutableStateOf(location.numberOfValidations().toFloat() / 2)
+                        }
+
                         LinearProgressIndicator(
-                            location.numberOfValidations().toFloat()/2,
+                            progress.value,
                             modifier = modifier
                                 .border(1.dp, Color.Gray)
                                 .height(10.dp)
@@ -131,6 +137,7 @@ fun LocationDetailsView(
                             IconButton(onClick = {
                                 location.assignValidation(viewModel.user.value!!.email)
                                 viewModel.updateLocation(location)
+                                progress.value = location.numberOfValidations().toFloat() / 2
                             }) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null)
                             }
