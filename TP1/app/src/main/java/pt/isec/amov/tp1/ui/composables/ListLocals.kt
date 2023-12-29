@@ -49,10 +49,10 @@ fun ListLocals(
     locals: List<Local>,
     userEmail: String?,
     modifier: Modifier = Modifier,
-    ableToEvaluate: Boolean,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
     onRemove: (Local) -> Unit,
+    onEdit: (Local)->Unit
 ) {
 
     LazyColumn(
@@ -93,6 +93,13 @@ fun ListLocals(
                             onDismissRequest = { isExpanded = false }) {
                             if (userEmail != null) {
                                 if (it.authorEmail == userEmail) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.edit)) },
+                                        onClick = {
+                                            isExpanded = false
+                                            onEdit(it)
+                                        }
+                                    )
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.remove)) },
                                         onClick = {

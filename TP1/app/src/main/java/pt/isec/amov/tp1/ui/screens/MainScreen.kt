@@ -150,7 +150,7 @@ fun MainScreen(
                     location = viewModel.selectedLocation!!,
                     navController = navController,
                     onDetails = { placeOfInterest ->
-                        viewModel.selecedPlaceOfInterest.value = placeOfInterest
+                        viewModel.selecedPlaceOfInterestId.value = placeOfInterest.id
                         navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
                     },
                 )
@@ -185,9 +185,9 @@ fun MainScreen(
                 PlaceOfInterestDetailsView(
                     viewModel = viewModel,
                     navController = navController,
-                    placeOfInterest = viewModel.selecedPlaceOfInterest.value!!,
+                    placeOfInterest = viewModel.selecedPlaceOfInterest!!,
                     locationName = viewModel.selectedLocation!!.name,
-                    categoryName = viewModel.getCategoryById(viewModel.selecedPlaceOfInterest.value!!.categoryId)!!.name
+                    categoryName = viewModel.getCategoryById(viewModel.selecedPlaceOfInterest!!.categoryId)!!.name
                 )
             }
             composable(Screens.CHOOSE_LOCATION_COORDINATES.route) {

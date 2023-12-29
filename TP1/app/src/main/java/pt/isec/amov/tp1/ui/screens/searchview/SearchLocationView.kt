@@ -81,10 +81,12 @@ fun SearchLocationView(
                 onDetails = {
                     onDetails(it as Location)
                 },
-                ableToEvaluate = false,
                 onRemove={
                     viewModel.removeLocation(it as Location)
                 },
+                onEdit = {
+
+                }
             )
 
     }

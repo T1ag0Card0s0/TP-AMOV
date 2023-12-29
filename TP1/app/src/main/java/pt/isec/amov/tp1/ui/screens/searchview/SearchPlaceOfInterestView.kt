@@ -152,9 +152,11 @@ fun SearchPlaceOfInterestView(
                 onDetails = {
                     onDetails(it as PlaceOfInterest)
                 },
-                ableToEvaluate = true,
                 onRemove = {
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
+                },
+                onEdit = {
+                    viewModel.selecedPlaceOfInterest
                 }
             )
         }

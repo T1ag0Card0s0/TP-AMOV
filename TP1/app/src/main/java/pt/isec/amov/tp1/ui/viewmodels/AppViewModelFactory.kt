@@ -39,7 +39,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     var evaluateForm: EvaluateForm? = null
     val selectedLocationId: MutableState<String?> = mutableStateOf(null)
-    val selecedPlaceOfInterest: MutableState<PlaceOfInterest?> = mutableStateOf(null)
+    val selecedPlaceOfInterestId: MutableState<String?> = mutableStateOf(null)
     val isMyContributions = mutableStateOf(false)
     private val _error = mutableStateOf<String?>(null)
     val user : MutableState<User?>
@@ -56,6 +56,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = _error
     val selectedLocation : Location?
         get() = locations.value?.find { it.id == selectedLocationId.value }
+    val selecedPlaceOfInterest : PlaceOfInterest?
+        get() = placesOfInterest.value?.find { it.id == selecedPlaceOfInterestId.value }
     val selecetLocationGeoPoint: GeoPoint?
         get() = if(selectedLocation==null) null
                 else GeoPoint(
@@ -169,7 +171,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                 Classification(
                     id = UUID.randomUUID().toString(),
                     authorEmail = user.value!!.email,
-                    placeOfInterestId = selecedPlaceOfInterest.value!!.id,
+                    placeOfInterestId = selecedPlaceOfInterestId.value!!,
                     value = evaluateForm!!.value.value,
                     comment = evaluateForm!!.comment.value,
                     imageUri = null,
@@ -337,7 +339,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
 
     fun canEvaluate(): Boolean {
-        return getClassificationsFrom(selecedPlaceOfInterest.value!!.id).find { it.authorEmail == user.value!!.email } == null
+        return getClassificationsFrom(selecedPlaceOfInterestId.value!!).find { it.authorEmail == user.value!!.email } == null
     }
 
 
