@@ -16,11 +16,18 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BeachAccess
 import androidx.compose.material.icons.filled.Cottage
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Hotel
+import androidx.compose.material.icons.filled.Landscape
+import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.Museum
+import androidx.compose.material.icons.filled.Nature
+import androidx.compose.material.icons.filled.Panorama
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -36,19 +43,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.ImagePainter
-import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay.backgroundColor
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import java.io.ByteArrayOutputStream
+
 
 @Composable
 fun MyFloatingActionButton(
@@ -65,12 +68,17 @@ fun MyFloatingActionButton(
     var selectedIconName by remember { mutableStateOf("") }
 
     val categoryIcons = listOf(
+        Icons.Default.BeachAccess,
         Icons.Default.Cottage,
         Icons.Default.Museum,
         Icons.Default.School,
-        // Adicione mais ícones conforme necessário
-        Icons.Default.Home, // Exemplo adicional de um ícone
-        Icons.Default.Person // Exemplo adicional de um ícone
+        Icons.Default.Home,
+        Icons.Default.Person,
+        Icons.Default.Hotel,
+        Icons.Default.Nature,
+        Icons.Default.LocalHospital,
+        Icons.Default.Sports,
+        Icons.Default.Landscape
     )
 
     Column(
@@ -139,15 +147,15 @@ fun MyFloatingActionButton(
                         IconGrid(categoryIcons) { selectedIcon ->
                             selectedImageVector = selectedIcon
                             selectedIconUri = "" // TODO gerar uri para selectedImageVector
-                            selectedIconName = selectedImageVector!!.name
-                            Log.i("AA",selectedIconName)
+                            selectedIconName = selectedIcon.name
+                            Log.d("Category name", selectedIconName)
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.addCategory(nameInput, descriptionInput, selectedIconUri, selectedIconName)
+                            viewModel.addCategory(nameInput, descriptionInput, selectedIconName)
                             showDialog = false
                         }
                     ) {

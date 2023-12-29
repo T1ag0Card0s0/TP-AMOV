@@ -1,17 +1,38 @@
 package pt.isec.amov.tp1.ui.screens.searchview
 
+import CategoryDropDown
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.BeachAccess
+import androidx.compose.material.icons.filled.Cottage
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Hotel
+import androidx.compose.material.icons.filled.Landscape
+import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Museum
+import androidx.compose.material.icons.filled.Nature
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +42,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.composables.ListLocals
@@ -90,8 +116,10 @@ fun SearchPlaceOfInterestView(
                 alphabeticOrderByAsc = !alphabeticOrderByAsc
                 viewModel.placesOfInterestOrderByAlphabetically(alphabeticOrderByAsc)
             }) {
-                Text(if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
-                else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}")
+                Text(
+                    if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
+                    else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}"
+                )
             }
 
             Button(onClick = {
@@ -102,15 +130,23 @@ fun SearchPlaceOfInterestView(
                     distanceOrderByAsc
                 )
             }) {
-                Text(if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${stringResource(R.string.ascendent)}"
-                else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}")
+                Text(
+                    if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${
+                        stringResource(
+                            R.string.ascendent
+                        )
+                    }"
+                    else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}"
+                )
             }
         }
 
-        MyExposedDropDownMenu(
+        // Exemplo de uso
+        CategoryDropDown(
             isExpanded = isExpandedCategories,
-            options = categories.value!!.map { it.name },
+            options = categories.value?.map { it.name } ?: emptyList(),
             selectedOption = selectedCategory,
+            icons = categories.value?.map { getIconByName(it.iconName ?: "") } ?: emptyList(),
             placeholder = stringResource(R.string.select_categories),
             label = stringResource(R.string.categories),
             onExpandChange = { isExpandedCategories = !isExpandedCategories },
@@ -124,6 +160,7 @@ fun SearchPlaceOfInterestView(
                 .fillMaxWidth()
                 .padding(top = 6.dp, start = 3.dp, end = 3.dp)
         )
+
 
         if (placesOfInterest.value != null) {
             val filteredPlacesOfInterest = if (selectedCategory.isNotEmpty()) {
@@ -160,5 +197,25 @@ fun SearchPlaceOfInterestView(
                 }
             )
         }
+    }
+
+
+
+}
+
+fun getIconByName(iconName: String): ImageVector {
+    return when (iconName) {
+        "Filled.BeachAccess"-> Icons.Default.BeachAccess
+        "Filled.Cottage" -> Icons.Default.Cottage
+        "Filled.Museum" -> Icons.Default.Museum
+        "Filled.School" -> Icons.Default.School
+        "Filled.Home" -> Icons.Default.Home
+        "Filled.Person" -> Icons.Default.Person
+        "Filled.Hotel" -> Icons.Default.Hotel
+        "Filled.Nature" -> Icons.Default.Nature
+        "Filled.LocalHospital" -> Icons.Default.LocalHospital
+        "Filled.Sports" -> Icons.Default.Sports
+        "Filled.Landscape" -> Icons.Default.Landscape
+        else -> Icons.Default.Error // Ícone de erro padrão ou ícone alternativo
     }
 }
