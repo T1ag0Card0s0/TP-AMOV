@@ -13,7 +13,7 @@ import pt.isec.amov.tp1.data.PlaceOfInterest
 class FStorageObserver {
     companion object {
         private val db by lazy { Firebase.firestore }
-        private val locationsColletion = db.collection("Locations")
+        private val locationsCollection = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationsCollection = db.collection("Classifications")
@@ -22,7 +22,7 @@ class FStorageObserver {
         private var locationListenerRegistration: ListenerRegistration? = null
         private var classificationsListenerRegistration: ListenerRegistration? = null
         fun observeLocation(onNewValue: (List<Location>?) -> Unit) {
-            locationListenerRegistration = locationsColletion
+            locationListenerRegistration = locationsCollection
                 .addSnapshotListener { querySnapshot, e ->
                     if (e != null) {
                         Log.e("Firestore", "Error listening for locations", e)

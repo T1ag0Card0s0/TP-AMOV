@@ -15,12 +15,12 @@ class FStorageUpdate {
     companion object {
         private val db by lazy { Firebase.firestore }
         private val storage = Firebase.storage
-        private val locationsColletion = db.collection("Locations")
+        private val locationsCollection = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationCollection = db.collection("Classifications")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
-            val dataToUpdate = locationsColletion.document(location.id)
+            val dataToUpdate = locationsCollection.document(location.id)
             db.runTransaction { transaction ->
                 val doc = transaction.get(dataToUpdate)
                 if (doc.exists()) {

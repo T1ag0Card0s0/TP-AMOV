@@ -38,7 +38,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     var evaluateForm: EvaluateForm? = null
     val selectedLocationId: MutableState<String?> = mutableStateOf(null)
-    val selecedPlaceOfInterestId: MutableState<String?> = mutableStateOf(null)
+    val selectedPlaceOfInterestId: MutableState<String?> = mutableStateOf(null)
     val isMyContributions = mutableStateOf(false)
     private val _error = mutableStateOf<String?>(null)
     val user : MutableState<User?>
@@ -55,9 +55,9 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = _error
     val selectedLocation : Location?
         get() = locations.value?.find { it.id == selectedLocationId.value }
-    val selecedPlaceOfInterest : PlaceOfInterest?
-        get() = placesOfInterest.value?.find { it.id == selecedPlaceOfInterestId.value }
-    val selecetLocationGeoPoint: GeoPoint?
+    val selectedPlaceOfInterest : PlaceOfInterest?
+        get() = placesOfInterest.value?.find { it.id == selectedPlaceOfInterestId.value }
+    val selectedLocationGeoPoint: GeoPoint?
         get() = if(selectedLocation==null) null
                 else GeoPoint(
                     selectedLocation!!.latitude,
@@ -111,7 +111,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     fun addLocation(){
         if (addLocalForm == null) return
         if (addLocalForm!!.name.value.isEmpty() ||
-            addLocalForm!!.descrition.value.isEmpty() ||
+            addLocalForm!!.description.value.isEmpty() ||
             addLocalForm!!.imagePath.value.isEmpty()||
             addLocalForm!!.latitude.value == null||
             addLocalForm!!.longitude.value == null
@@ -122,7 +122,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     id = UUID.randomUUID().toString(),
                     authorEmail = appData.user.value!!.email,
                     name = addLocalForm!!.name.value,
-                    description = addLocalForm!!.descrition.value,
+                    description = addLocalForm!!.description.value,
                     imageName = addLocalForm!!.imagePath.value,
                     imageUri = null,
                     latitude = addLocalForm!!.latitude.value!!,
@@ -137,7 +137,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     fun addPlaceOfInterest(){
         if (addLocalForm == null) return
         if (addLocalForm!!.name.value.isEmpty() ||
-            addLocalForm!!.descrition.value.isEmpty() ||
+            addLocalForm!!.description.value.isEmpty() ||
             addLocalForm!!.imagePath.value.isEmpty()
         ) return
         if (addLocalForm!!.category.value == null||
@@ -150,7 +150,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     id = UUID.randomUUID().toString(),
                     authorEmail = appData.user.value!!.email,
                     name = addLocalForm!!.name.value,
-                    description = addLocalForm!!.descrition.value,
+                    description = addLocalForm!!.description.value,
                     imageName =  addLocalForm!!.imagePath.value,
                     categoryId = addLocalForm!!.category.value,
                     locationId = selectedLocationId.value!!,
@@ -171,7 +171,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                 Classification(
                     id = UUID.randomUUID().toString(),
                     authorEmail = user.value!!.email,
-                    placeOfInterestId = selecedPlaceOfInterestId.value!!,
+                    placeOfInterestId = selectedPlaceOfInterestId.value!!,
                     value = evaluateForm!!.value.value,
                     comment = evaluateForm!!.comment.value,
                     imageUri = null,
@@ -206,7 +206,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     selectedLocationId.value!!,
                     selectedLocation!!.authorEmail,
                     addLocalForm!!.name.value,
-                    addLocalForm!!.descrition.value,
+                    addLocalForm!!.description.value,
                     addLocalForm!!.imagePath.value,
                     addLocalForm!!.imageUri.value,
                     addLocalForm!!.latitude.value!!,
@@ -222,15 +222,15 @@ class AppViewModel(val appData: AppData) : ViewModel() {
 
     fun editPlaceOfInterest() {
         viewModelScope.launch {
-            val updateImage = addLocalForm!!.imagePath.value != selecedPlaceOfInterest!!.imageName!!
+            val updateImage = addLocalForm!!.imagePath.value != selectedPlaceOfInterest!!.imageName!!
             if(!updateImage)
-                addLocalForm!!.imagePath.value = selecedPlaceOfInterest!!.imageName!!
+                addLocalForm!!.imagePath.value = selectedPlaceOfInterest!!.imageName!!
             FStorageEdit.placeOfInterest(
                 PlaceOfInterest(
-                    selecedPlaceOfInterest!!.id,
-                    selecedPlaceOfInterest!!.authorEmail,
+                    selectedPlaceOfInterest!!.id,
+                    selectedPlaceOfInterest!!.authorEmail,
                     addLocalForm!!.name.value,
-                    addLocalForm!!.descrition.value,
+                    addLocalForm!!.description.value,
                     addLocalForm!!.imagePath.value,
                     addLocalForm!!.category.value,
                     selectedLocationId.value!!,
@@ -320,8 +320,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         return appData.categories.value!!.find { it.id == categoryId }
     }
 
-    fun locationsOrderByAlphabetically(ascendent: Boolean) {
-        if(ascendent) {
+    fun locationsOrderByAlphabetically(ascendant: Boolean) {
+        if(ascendant) {
             viewModelScope.launch {
                 FStorageOrder.locationByNameAscending { locations ->
                     appData.setLocations(locations!!)
@@ -336,8 +336,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         }
 
     }
-    fun placesOfInterestOrderByAlphabetically(ascendent: Boolean){
-        if(ascendent) {
+    fun placesOfInterestOrderByAlphabetically(ascendant: Boolean){
+        if(ascendant) {
             viewModelScope.launch {
                 FStorageOrder.placeOfInterestByNameAscending { placesOfInterest ->
                     appData.setPlacesOfInterest(placesOfInterest!!)
@@ -351,8 +351,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun locationsOrderByDistance(latitude:Double,longitude:Double ,ascendent: Boolean){
-        if(ascendent) {
+    fun locationsOrderByDistance(latitude:Double,longitude:Double ,ascendant: Boolean){
+        if(ascendant) {
             viewModelScope.launch {
                 FStorageOrder.locationsByDistanceAscending(latitude,longitude) { locations ->
                     appData.setLocations(locations!!)
@@ -366,8 +366,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun placesOfInterestOrderByDistance(latitude:Double,longitude:Double ,ascendent: Boolean){
-        if(ascendent) {
+    fun placesOfInterestOrderByDistance(latitude:Double,longitude:Double ,ascendant: Boolean){
+        if(ascendant) {
             viewModelScope.launch {
                 FStorageOrder.placesOfInterestByDistanceAscending(latitude,longitude) { placesOfInterest ->
                     appData.setPlacesOfInterest(placesOfInterest!!)
@@ -386,7 +386,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
 
     fun canEvaluate(): Boolean {
-        return getClassificationsFrom(selecedPlaceOfInterestId.value!!).find { it.authorEmail == user.value!!.email } == null
+        return getClassificationsFrom(selectedPlaceOfInterestId.value!!).find { it.authorEmail == user.value!!.email } == null
     }
 
 
@@ -395,7 +395,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
 
 class AddLocalForm {
     val name: MutableState<String> = mutableStateOf("")
-    val descrition: MutableState<String> = mutableStateOf("")
+    val description: MutableState<String> = mutableStateOf("")
     val imagePath: MutableState<String> = mutableStateOf("")
     var imageUri: MutableState<String?> = mutableStateOf(null)
     val category: MutableState<String> = mutableStateOf("")
@@ -403,7 +403,7 @@ class AddLocalForm {
     var longitude : MutableState<Double?> = mutableStateOf(null)
     fun setFormWithLocalData(local: Local){
         name.value = local.name
-        descrition.value = local.description
+        description.value = local.description
         imageUri.value = local.imageUri!!
         imagePath.value = local.imageName!!
         latitude.value = local.latitude

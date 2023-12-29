@@ -89,8 +89,7 @@ fun ListLocals(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "To approve, " +
-                                    "information may not be correct",
+                            text = stringResource(R.string.to_approve_information_may_not_be_correct),
                             color = Color.Red
                         )
                     }

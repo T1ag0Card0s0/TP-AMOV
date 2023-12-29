@@ -12,13 +12,13 @@ import java.io.FileInputStream
 class FStorageEdit {
     companion object {
         private val db by lazy { Firebase.firestore }
-        private val locationsColletion = db.collection("Locations")
+        private val locationsCollection = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationsCollection = db.collection("Classifications")
 
         fun location(l: Location,updateImage:Boolean, onResult:(Throwable?)->Unit){
-            FStorageAdd.verifyIfExist(locationsColletion,"id",l.id){
+            FStorageAdd.verifyIfExist(locationsCollection,"id",l.id){
                 v,exp->
                 if(v||exp!=null){
                     if (updateImage) {

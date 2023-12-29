@@ -14,7 +14,7 @@ import kotlin.math.*;
 class FStorageOrder {
     companion object {
         private val db by lazy { Firebase.firestore }
-        private val locationsColletion = db.collection("Locations")
+        private val locationsCollection = db.collection("Locations")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
 
         fun locationByNameAscending(onNewValue: (List<Location>?) -> Unit) {
@@ -38,7 +38,7 @@ class FStorageOrder {
             direction: Query.Direction,
             onNewValue: (List<Location>?) -> Unit
         ) {
-            locationsColletion.orderBy(field, direction)
+            locationsCollection.orderBy(field, direction)
                 .addSnapshotListener { querySnapshot, e ->
                     handleSnapshot(querySnapshot, e, onNewValue) { document ->
                         Location(
@@ -140,7 +140,7 @@ class FStorageOrder {
             direction: Query.Direction,
             onNewValue: (List<Location>?) -> Unit
         ) {
-            locationsColletion
+            locationsCollection
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     val sortedLocations = querySnapshot.documents
