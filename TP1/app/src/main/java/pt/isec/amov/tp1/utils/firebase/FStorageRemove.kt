@@ -12,12 +12,12 @@ class FStorageRemove {
     companion object {
         private val db by lazy { Firebase.firestore }
         private val storage = Firebase.storage
-        private val locationsColletion = db.collection("Locations")
+        private val locationsCollection = db.collection("Locations")
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationsCollection = db.collection("Classifications")
         fun location(location: Location, onResult: (Throwable?) -> Unit){
-            val dataToRemove = locationsColletion.document(location.id)
+            val dataToRemove = locationsCollection.document(location.id)
             removeFile(location.imageName!!)
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }

@@ -156,13 +156,13 @@ fun MainScreen(
                     location = viewModel.selectedLocation!!,
                     navController = navController,
                     onDetails = { placeOfInterest ->
-                        viewModel.selecedPlaceOfInterestId.value = placeOfInterest.id
+                        viewModel.selectedPlaceOfInterestId.value = placeOfInterest.id
                         navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
                     },
                     onEdit={placeOfInterest ->
                         viewModel.addLocalForm = AddLocalForm()
                         viewModel.addLocalForm!!.setFormWithPlaceOfInterestData(placeOfInterest)
-                        viewModel.selecedPlaceOfInterestId.value = placeOfInterest.id
+                        viewModel.selectedPlaceOfInterestId.value = placeOfInterest.id
                         navController.navigate(Screens.PLACE_OF_INTEREST_EDIT.route)
                     }
                 )
@@ -197,9 +197,9 @@ fun MainScreen(
                 PlaceOfInterestDetailsView(
                     viewModel = viewModel,
                     navController = navController,
-                    placeOfInterest = viewModel.selecedPlaceOfInterest!!,
+                    placeOfInterest = viewModel.selectedPlaceOfInterest!!,
                     locationName = viewModel.selectedLocation!!.name,
-                    categoryName = viewModel.getCategoryById(viewModel.selecedPlaceOfInterest!!.categoryId)!!.name
+                    categoryName = viewModel.getCategoryById(viewModel.selectedPlaceOfInterest!!.categoryId)!!.name
                 )
             }
             composable(Screens.CHOOSE_LOCATION_COORDINATES.route) {
@@ -217,7 +217,7 @@ fun MainScreen(
             composable(Screens.PLACES_OF_INTEREST_MAP.route){
                 val placesOfInterest = viewModel.placesOfInterest.observeAsState()
                 LocalMapView(
-                    initCenteredGeoPoint=viewModel.selecetLocationGeoPoint,
+                    initCenteredGeoPoint=viewModel.selectedLocationGeoPoint,
                     locals = placesOfInterest.value!!.filter {poi->
                         poi.locationId == viewModel.selectedLocationId.value
                     }

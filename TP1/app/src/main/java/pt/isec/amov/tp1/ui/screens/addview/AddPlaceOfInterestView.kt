@@ -69,8 +69,8 @@ fun AddPlaceOfInterestView(
 
             Spacer(modifier = modifier.height(24.dp))
             MyTextField(
-                value = addLocalForm.descrition.value,
-                onChange = { addLocalForm.descrition.value = it },
+                value = addLocalForm.description.value,
+                onChange = { addLocalForm.description.value = it },
                 placeholder = stringResource(R.string.enter_description),
                 label = stringResource(R.string.description),
                 icon = Icons.Default.Abc
