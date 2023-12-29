@@ -28,12 +28,12 @@ import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
 fun AddLocationView(
-    appViewModel: AppViewModel,
+    addLocalForm: AddLocalForm,
     locationViewModel: LocalViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
@@ -49,8 +49,8 @@ fun AddLocationView(
                 .align(Alignment.Center)
         ) {
             MyTextField(
-                value = appViewModel.addLocalForm!!.name.value,
-                onChange = { appViewModel.addLocalForm!!.name.value = it },
+                value = addLocalForm.name.value,
+                onChange = { addLocalForm.name.value = it },
                 placeholder = stringResource(R.string.enter_name),
                 label = stringResource(R.string.name),
                 icon = Icons.Default.Abc
@@ -58,8 +58,8 @@ fun AddLocationView(
 
             Spacer(modifier = modifier.height(24.dp))
             MyTextField(
-                value = appViewModel.addLocalForm!!.descrition.value,
-                onChange = { appViewModel.addLocalForm!!.descrition.value = it },
+                value = addLocalForm.descrition.value,
+                onChange = { addLocalForm.descrition.value = it },
                 placeholder = stringResource(R.string.enter_description),
                 label = stringResource(R.string.description),
                 icon = Icons.Default.Abc
@@ -67,8 +67,8 @@ fun AddLocationView(
             Spacer(modifier = modifier.height(24.dp))
             Row {
                 Button(onClick = {
-                    appViewModel.addLocalForm!!.latitude.value=location.value!!.latitude
-                    appViewModel.addLocalForm!!.longitude.value=location.value!!.longitude
+                    addLocalForm.latitude.value=location.value!!.latitude
+                    addLocalForm.longitude.value=location.value!!.longitude
                 }) {
                     Text(text = stringResource(R.string.current_location))
                 }
@@ -90,7 +90,7 @@ fun AddLocationView(
                     .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .padding(8.dp)
             ) {
-                TakePhoto(imagePath = appViewModel.addLocalForm!!.imagePath)
+                TakePhoto(imagePath = addLocalForm.imagePath)
             }
         }
     }

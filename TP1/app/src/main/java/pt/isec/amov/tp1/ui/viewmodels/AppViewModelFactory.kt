@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -37,7 +38,7 @@ class AppViewModelFactory(
 class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     var evaluateForm: EvaluateForm? = null
-    val selectedLocation: MutableState<Location?> = mutableStateOf(null)
+    val selectedLocationId: MutableState<String?> = mutableStateOf(null)
     val selecedPlaceOfInterest: MutableState<PlaceOfInterest?> = mutableStateOf(null)
     val isMyContributions = mutableStateOf(false)
     private val _error = mutableStateOf<String?>(null)
@@ -53,11 +54,13 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         get() = appData.classifications
     val error : MutableState<String?>
         get() = _error
+    val selectedLocation : Location?
+        get() = locations.value?.find { it.id == selectedLocationId.value }
     val selecetLocationGeoPoint: GeoPoint?
-        get() = if(selectedLocation.value==null) null
+        get() = if(selectedLocation==null) null
                 else GeoPoint(
-                    selectedLocation.value!!.latitude,
-                    selectedLocation.value!!.longitude
+                    selectedLocation!!.latitude,
+                    selectedLocation!!.longitude
                 )
     fun createUserWithEmail(email:String, password:String){
         if(email.isBlank() || password.isBlank()) return
@@ -136,7 +139,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         ) return
         if (addLocalForm!!.category.value == null||
             addLocalForm!!.latitude.value==null||
-            addLocalForm!!.longitude.value==null) return
+            addLocalForm!!.longitude.value==null||
+            selectedLocationId.value==null) return
         viewModelScope.launch {
             FStorageAdd.placeOfInterest(
                 PlaceOfInterest(
@@ -146,7 +150,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     description = addLocalForm!!.descrition.value,
                     imageName =  addLocalForm!!.imagePath.value,
                     categoryId = addLocalForm!!.category.value!!.id,
-                    locationId = selectedLocation.value!!.id,
+                    locationId = selectedLocationId.value!!,
                     imageUri = null,
                     latitude = addLocalForm!!.latitude.value!!,
                     longitude = addLocalForm!!.longitude.value!!,

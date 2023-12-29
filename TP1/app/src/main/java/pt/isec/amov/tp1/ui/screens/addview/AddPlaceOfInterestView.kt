@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.addview
 
+import android.location.Location
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,24 +28,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
+import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
+import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 
 @Composable
 fun AddPlaceOfInterestView(
-    appViewModel: AppViewModel,
-    locationViewModel: LocalViewModel,
+    addLocalForm: AddLocalForm,
+    currLocation: LiveData<Location>,
+    categoriesLiveData: LiveData<List<Category>?>,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val location = locationViewModel.currentLocation.observeAsState()
-    val categories = appViewModel.appData.categories.observeAsState()
+    val location = currLocation.observeAsState()
+    val categories = categoriesLiveData.observeAsState()
     var optCategory by remember { mutableStateOf("") }
     var isExpandedCategories by remember { mutableStateOf(false) }
     Box(
@@ -57,8 +60,8 @@ fun AddPlaceOfInterestView(
                 .align(Alignment.Center)
         ) {
             MyTextField(
-                value = appViewModel.addLocalForm!!.name.value,
-                onChange = { appViewModel.addLocalForm!!.name.value = it },
+                value = addLocalForm.name.value,
+                onChange = { addLocalForm.name.value = it },
                 placeholder = stringResource(R.string.enter_name),
                 label = stringResource(R.string.name),
                 icon = Icons.Default.Abc
@@ -66,8 +69,8 @@ fun AddPlaceOfInterestView(
 
             Spacer(modifier = modifier.height(24.dp))
             MyTextField(
-                value = appViewModel.addLocalForm!!.descrition.value,
-                onChange = { appViewModel.addLocalForm!!.descrition.value = it },
+                value = addLocalForm.descrition.value,
+                onChange = { addLocalForm.descrition.value = it },
                 placeholder = stringResource(R.string.enter_description),
                 label = stringResource(R.string.description),
                 icon = Icons.Default.Abc
@@ -86,7 +89,7 @@ fun AddPlaceOfInterestView(
                 onClick = {
                     optCategory = categories.value!![it].name
                     isExpandedCategories = false
-                    appViewModel.addLocalForm!!.category.value =
+                    addLocalForm.category.value =
                         categories.value!!.find { c -> c.name == optCategory }
                 },
                 modifier = modifier.padding(start = 6.dp, end = 6.dp)
@@ -94,8 +97,8 @@ fun AddPlaceOfInterestView(
             Spacer(modifier = modifier.height(24.dp))
             Row {
                 Button(onClick = {
-                    appViewModel.addLocalForm!!.latitude.value = location.value!!.latitude
-                    appViewModel.addLocalForm!!.longitude.value = location.value!!.longitude
+                    addLocalForm.latitude.value = location.value!!.latitude
+                    addLocalForm.longitude.value = location.value!!.longitude
                 }) {
                     Text(text = stringResource(R.string.current_location))
                 }
@@ -117,7 +120,7 @@ fun AddPlaceOfInterestView(
                     .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .padding(8.dp)
             ) {
-                TakePhoto(imagePath = appViewModel.addLocalForm!!.imagePath)
+                TakePhoto(imagePath = addLocalForm.imagePath)
             }
         }
     }
