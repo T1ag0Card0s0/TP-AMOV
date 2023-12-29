@@ -49,6 +49,7 @@ fun ListLocals(
     locals: List<Local>,
     userEmail: String?,
     modifier: Modifier = Modifier,
+    ableToEvaluate: Boolean,
     onSelected: (Local) -> Unit,
     onDetails: (Local) -> Unit,
     onRemove: (Local) -> Unit,
@@ -71,7 +72,7 @@ fun ListLocals(
                     .padding(8.dp),
                 onClick = { onSelected(it) }
             ) {
-                if (!it.isAproved()) {
+                if (!it.approved) {
                     Row(modifier = modifier.fillMaxSize()) {
                         Icon(imageVector = Icons.Filled.WarningAmber, contentDescription = "Danger")
                         Text(text = "Item not yet approved, information may be incorrect")

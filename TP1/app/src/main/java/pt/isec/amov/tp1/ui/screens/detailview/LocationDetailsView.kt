@@ -46,8 +46,7 @@ fun LocationDetailsView(
     modifier: Modifier = Modifier,
     onValidate: (Location)->Unit
 ) {
-
-    val geoPoint = GeoPoint(location.latitude, location.longitude)
+     val geoPoint = GeoPoint(location.latitude, location.longitude)
 
     LazyColumn(
         modifier = modifier
@@ -108,10 +107,8 @@ fun LocationDetailsView(
 
             }
 
-            if(!location.isAproved()) {
-                Card(modifier = modifier
-                    .fillMaxSize()
-                    .padding(8.dp)) {
+            if(!location.approved) {
+                Card(modifier = modifier.fillMaxSize().padding(8.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = modifier.fillMaxWidth()
@@ -122,9 +119,7 @@ fun LocationDetailsView(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
+                        modifier = modifier.fillMaxWidth().padding(8.dp)
                     ) {
                         val progress = remember {
                             mutableStateOf(location.numberOfValidations().toFloat() / 2)
@@ -138,9 +133,9 @@ fun LocationDetailsView(
                             )
                         if(location.canApprove(currentUserEmail)) {
                             IconButton(onClick = {
-                                location.assignValidation(viewModel.user.value!!.email)
-                                viewModel.updateLocation(location)
+                                location.assignValidation(currentUserEmail)
                                 progress.value = location.numberOfValidations().toFloat() / 2
+                                onValidate(location)
                             }) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null)
                             }

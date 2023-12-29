@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
@@ -122,6 +124,7 @@ fun PlaceOfInterestDetailsView(
                         view.controller.setCenter(geoPoint)
                     }
                 )
+
             }
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -133,7 +136,7 @@ fun PlaceOfInterestDetailsView(
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
             }
-            if (!placeOfInterest.isAproved()) {
+            if (!placeOfInterest.approved) {
                 Card {
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -253,11 +256,6 @@ fun PlaceOfInterestDetailsView(
                     }
             }
         }
-
-    }
-    @Composable
-    fun updateNumbers() {
-
 
     }
 }

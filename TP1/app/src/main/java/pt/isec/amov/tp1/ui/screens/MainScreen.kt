@@ -32,6 +32,7 @@ import pt.isec.amov.tp1.ui.screens.mapviews.LocalMapView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
+import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -41,6 +42,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    //viewModel.startObserver()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDoneIcon by remember { mutableStateOf(false) }
     var showTopBar by remember { mutableStateOf(false) }
