@@ -1,19 +1,14 @@
 package pt.isec.amov.tp1.ui.screens.searchview
 
 import CategoryDropDown
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.BeachAccess
 import androidx.compose.material.icons.filled.Cottage
 import androidx.compose.material.icons.filled.Error
@@ -28,11 +23,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,23 +34,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.ui.composables.ListLocals
-import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -118,8 +104,8 @@ fun SearchPlaceOfInterestView(
                 viewModel.placesOfInterestOrderByAlphabetically(alphabeticOrderByAsc)
             }) {
                 Text(
-                    if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
-                    else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}"
+                    if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendant)} "
+                    else "${stringResource(R.string.name)}: ${stringResource(R.string.descendant)}"
                 )
             }
 
@@ -134,10 +120,10 @@ fun SearchPlaceOfInterestView(
                 Text(
                     if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${
                         stringResource(
-                            R.string.ascendent
+                            R.string.ascendant
                         )
                     }"
-                    else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}"
+                    else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendant)}"
                 )
             }
         }

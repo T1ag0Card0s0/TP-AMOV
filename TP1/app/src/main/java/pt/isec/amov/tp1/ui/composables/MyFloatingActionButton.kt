@@ -121,7 +121,7 @@ fun MyFloatingActionButton(
                 else->{}
             }
         }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add))
         }
         // Dialog
         if (showDialog) {
@@ -130,19 +130,19 @@ fun MyFloatingActionButton(
                     showDialog = false
                 },
                 title = {
-                    Text(text = "Enter Category Details")
+                    Text(text = stringResource(R.string.enter_category_details))
                 },
                 text = {
                     Column {
                         TextField(
                             value = nameInput,
                             onValueChange = { nameInput = it },
-                            label = { Text("Category Name") }
+                            label = { Text(stringResource(R.string.category_name)) }
                         )
                         TextField(
                             value = descriptionInput,
                             onValueChange = { descriptionInput = it },
-                            label = { Text("Other Input") }
+                            label = { Text(stringResource(R.string.other_input)) }
                         )
                         // Select icon using IconGrid
                         Text(text = stringResource(R.string.select_an_icon_for_the_category))
@@ -164,11 +164,11 @@ fun MyFloatingActionButton(
                             }
                         }
                     ) {
-                        Text("Add Category")
+                        Text(stringResource(R.string.add_category))
                     }
                     if (showErrorSnackbar) {
                         Text(
-                            text = "Por favor, preencha todos os campos",
+                            text = stringResource(R.string.please_complete_every_field),
                             color = Color.Red,
                             modifier = Modifier
                                 .padding(8.dp)
@@ -182,7 +182,7 @@ fun MyFloatingActionButton(
                             showDialog = false
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )

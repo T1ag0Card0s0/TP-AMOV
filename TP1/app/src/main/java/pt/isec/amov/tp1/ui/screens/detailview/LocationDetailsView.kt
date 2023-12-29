@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,7 +36,6 @@ import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
-import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
 @Composable
 fun LocationDetailsView(
@@ -148,7 +146,7 @@ fun LocationDetailsView(
                 modifier = modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.submited_by) + " " + location.authorEmail,
+                    text = stringResource(R.string.submitted_by) + " " + location.authorEmail,
                     fontWeight = FontWeight.Light,
                     modifier = modifier.padding(top = 8.dp, bottom = 8.dp)
                 )

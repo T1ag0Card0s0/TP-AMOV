@@ -17,8 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListLocals
@@ -54,8 +52,8 @@ fun SearchLocationView(
                 alphabeticOrderByAsc = !alphabeticOrderByAsc
                 viewModel.locationsOrderByAlphabetically(alphabeticOrderByAsc)
             }) {
-                Text(if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendent)} "
-                        else "${stringResource(R.string.name)}: ${stringResource(R.string.descendent)}")
+                Text(if (alphabeticOrderByAsc) "${stringResource(R.string.name)}: ${stringResource(R.string.ascendant)} "
+                        else "${stringResource(R.string.name)}: ${stringResource(R.string.descendant)}")
             }
 
             Button(onClick = {
@@ -66,8 +64,8 @@ fun SearchLocationView(
                     distanceOrderByAsc
                 )
             }) {
-                Text(if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${stringResource(R.string.ascendent)}"
-                else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendent)}")
+                Text(if (distanceOrderByAsc) "${stringResource(R.string.distance)}: ${stringResource(R.string.ascendant)}"
+                else "${stringResource(R.string.distance)}: ${stringResource(R.string.descendant)}")
             }
         }
         if(locations.value!=null)
