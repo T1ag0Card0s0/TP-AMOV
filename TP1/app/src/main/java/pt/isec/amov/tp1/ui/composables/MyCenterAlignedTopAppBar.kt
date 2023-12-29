@@ -35,8 +35,7 @@ fun MyCenterAlignedTopAppBarr(
     viewModel: AppViewModel,
     showArrowBack:Boolean,
     showDoneIcon: Boolean,
-    showMoreVert: Boolean,
-    showEdit:Boolean
+    showMoreVert: Boolean
 ){
     var isExpanded by remember { mutableStateOf(false) }
     CenterAlignedTopAppBar(
@@ -133,10 +132,6 @@ fun MyCenterAlignedTopAppBarr(
                     )
                 }
             }
-            if(showEdit)
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
-                }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,

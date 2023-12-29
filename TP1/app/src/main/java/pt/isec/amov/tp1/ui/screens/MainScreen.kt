@@ -48,7 +48,6 @@ fun MainScreen(
     var showTopBar by remember { mutableStateOf(false) }
     var showArrowBack by remember { mutableStateOf(false) }
     var showMoreVert by remember { mutableStateOf(false) }
-    var showEdit by remember { mutableStateOf(false) }
     var showFloatingActionButton by remember { mutableStateOf(false)}
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -58,7 +57,9 @@ fun MainScreen(
             Screens.ADD_PLACE_OF_INTEREST.route,
             Screens.CHOOSE_LOCATION_COORDINATES.route,
             Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route,
-            Screens.EVALUATE_PLACE_OF_INTEREST.route
+            Screens.EVALUATE_PLACE_OF_INTEREST.route,
+            Screens.LOCATION_EDIT.route,
+            Screens.PLACE_OF_INTEREST_EDIT.route
         )
         showArrowBack = destination.route in listOf(
             Screens.ADD_LOCATIONS.route,
@@ -70,7 +71,9 @@ fun MainScreen(
             Screens.CHOOSE_LOCATION_COORDINATES.route,
             Screens.CHOOSE_PLACE_OF_INTEREST_COORDINATES.route,
             Screens.PLACES_OF_INTEREST_MAP.route,
-            Screens.EVALUATE_PLACE_OF_INTEREST.route
+            Screens.EVALUATE_PLACE_OF_INTEREST.route,
+            Screens.LOCATION_EDIT.route,
+            Screens.PLACE_OF_INTEREST_EDIT.route
         )
         showMoreVert = destination.route in listOf(
             Screens.SEARCH_PLACES_OF_INTEREST.route,
@@ -79,10 +82,6 @@ fun MainScreen(
         showFloatingActionButton = destination.route in listOf(
             Screens.SEARCH_LOCATIONS.route,
             Screens.SEARCH_PLACES_OF_INTEREST.route
-        )
-        showEdit = destination.route in listOf(
-            Screens.PLACE_OF_INTEREST_DETAILS.route,
-            Screens.LOCATION_DETAILS.route
         )
     }
     Scaffold(
@@ -98,8 +97,7 @@ fun MainScreen(
                     viewModel,
                     showArrowBack,
                     showDoneIcon,
-                    showMoreVert,
-                    showEdit
+                    showMoreVert
                 )
         },
         floatingActionButton = {
@@ -215,6 +213,21 @@ fun MainScreen(
             }
             composable(Screens.EVALUATE_PLACE_OF_INTEREST.route){
                 EvaluatePlaceOfInterest(viewModel = viewModel)
+            }
+            composable(Screens.LOCATION_EDIT.route){
+                AddLocationView(
+                    addLocalForm = viewModel.addLocalForm!!,
+                    locationViewModel = locationViewModel,
+                    navController = navController
+                )
+            }
+            composable(Screens.PLACE_OF_INTEREST_EDIT.route){
+                AddPlaceOfInterestView(
+                    addLocalForm = viewModel.addLocalForm!!,
+                    currLocation = locationViewModel.currentLocation,
+                    categoriesLiveData = viewModel.categories,
+                    navController = navController
+                )
             }
             composable(Screens.CREDITS.route) {
                 Credits()

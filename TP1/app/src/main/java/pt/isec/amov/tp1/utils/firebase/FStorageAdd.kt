@@ -196,7 +196,7 @@ class FStorageAdd {
                 }
             }
         }
-        private fun verifyIfExist(
+        fun verifyIfExist(
             collectionReference: CollectionReference,
             field: String,
             value: String,
@@ -215,7 +215,7 @@ class FStorageAdd {
                     }
                 }
         }
-        private fun verifyIfExist(
+        fun verifyIfExist(
             collectionReference: CollectionReference,
             fieldValues: Map<String, String>,
             onResult: (Boolean, Throwable?) -> Unit
@@ -236,7 +236,7 @@ class FStorageAdd {
                     }
                 }
         }
-        private fun uploadFile(
+        fun uploadFile(
             inputStream: InputStream,
             imgFile: String,
             onSuccess: (String) -> Unit
