@@ -33,7 +33,6 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import pt.isec.amov.tp1.R
-import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.screens.login_register.CreditCard
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
 
@@ -42,8 +41,7 @@ fun LocationDetailsView(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
-    val locations = viewModel.locations.observeAsState()
-    val location = locations.value!!.find { it.id == viewModel.selectedLocation.value!!.id }
+    val location = viewModel.locations.observeAsState().value!!.find { it.id == viewModel.selectedLocation.value!!.id  }
     val geoPoint = GeoPoint(location!!.latitude, location.longitude)
 
     LazyColumn(
@@ -105,8 +103,10 @@ fun LocationDetailsView(
 
             }
 
-            if(!location.approved) {
-                Card(modifier = modifier.fillMaxSize().padding(8.dp)) {
+            if(!location.isAproved()) {
+                Card(modifier = modifier
+                    .fillMaxSize()
+                    .padding(8.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = modifier.fillMaxWidth()
@@ -117,7 +117,9 @@ fun LocationDetailsView(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = modifier.fillMaxWidth().padding(8.dp)
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
                     ) {
                         LinearProgressIndicator(
                             location.numberOfValidations().toFloat()/2,

@@ -44,8 +44,6 @@ class FStorageObserver {
                             document.getString("user1"),
                             document.getString("user2"),
                         )
-                        if (location.user1 != null && location.user2 != null) location.approved =
-                            true
                         locations.add(location)
                     }
                     onNewValue(locations)
@@ -78,8 +76,6 @@ class FStorageObserver {
                             document.getString("user1"),
                             document.getString("user2")
                             )
-                        if (placeOfInterest.user1 != null && placeOfInterest.user2 != null) placeOfInterest.approved =
-                            true
                         placesOfInterest.add(placeOfInterest)
                     }
 

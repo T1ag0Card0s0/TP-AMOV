@@ -32,7 +32,6 @@ import pt.isec.amov.tp1.ui.composables.ListLocals
 import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.screens.Screens
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -152,7 +151,6 @@ fun SearchPlaceOfInterestView(
                 onDetails = {
                     onDetails(it as PlaceOfInterest)
                 },
-                ableToEvaluate = true,
                 onRemove = {
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
                 }

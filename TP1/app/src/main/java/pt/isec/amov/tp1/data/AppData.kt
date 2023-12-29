@@ -30,7 +30,9 @@ open class Local(
         if(user2!=null) retValue++
         return retValue
     }
-
+    fun isAproved():Boolean{
+        return user1!=null && user2!=null
+    }
     fun assignValidation(email: String) {
         if(user1!=null&&user2!=null) return
         if(email == user1||email == user2) return
