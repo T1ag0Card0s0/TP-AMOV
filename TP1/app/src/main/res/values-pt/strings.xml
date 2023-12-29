@@ -4,7 +4,7 @@
     <string name="login_form_title">Iniciar Sessão</string>
     <string name="register_form_title">Registar</string>
     <string name="email_label">E-mail</string>
-    <string name="name_label">Inserir o teu nome</string>
+    <string name="name_label">Insira o seu nome</string>
     <string name="password_label">Palavra-passe</string>
     <string name="confirm_password_label">Confirmar Palavra-passe</string>
     <string name="submit">Submeter</string>
