@@ -234,7 +234,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     addLocalForm!!.imagePath.value,
                     addLocalForm!!.category.value,
                     selectedLocationId.value!!,
-                    addLocalForm!!.imageUri.value!!,
+                    addLocalForm!!.imageUri.value,
                     addLocalForm!!.latitude.value!!,
                     addLocalForm!!.longitude.value!!,
                     null,null
