@@ -13,12 +13,14 @@ import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import org.osmdroid.config.Configuration
 import pt.isec.amov.tp1.App
+import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.ui.screens.MainScreen
 import pt.isec.amov.tp1.ui.theme.TP1Theme
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
@@ -177,7 +179,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = "Hello $name",
         modifier = modifier
     )
 }

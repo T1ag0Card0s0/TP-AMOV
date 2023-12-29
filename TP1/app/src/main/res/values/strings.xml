@@ -62,4 +62,6 @@
     <string name="other_input">Other Input</string>
     <string name="enter_category_details">Enter Category Details</string>
     <string name="add">Add</string>
+    <string name="hello_name">Hello %1$s!</string>
+    <string name="to_approve_information_may_not_be_correct">To approve, information may not be correct</string>
 </resources>
