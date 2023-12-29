@@ -17,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.ui.composables.ListLocals
@@ -29,7 +31,8 @@ fun SearchLocationView(
     locationViewModel: LocalViewModel,
     modifier: Modifier = Modifier,
     onSelect: (Location)-> Unit,
-    onDetails: (Location)-> Unit
+    onDetails: (Location)-> Unit,
+    onEdit: (Location)->Unit
 ) {
     val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val locations = viewModel.locations.observeAsState()
@@ -84,8 +87,8 @@ fun SearchLocationView(
                 onRemove={
                     viewModel.removeLocation(it as Location)
                 },
-                onEdit = {
-
+                onEdit = { local->
+                    onEdit(local as Location)
                 }
             )
 

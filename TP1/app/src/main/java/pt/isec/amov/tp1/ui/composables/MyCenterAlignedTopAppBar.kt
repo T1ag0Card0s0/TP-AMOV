@@ -76,6 +76,12 @@ fun MyCenterAlignedTopAppBarr(
                         Screens.EVALUATE_PLACE_OF_INTEREST->{
                             viewModel.addClassification()
                         }
+                        Screens.LOCATION_EDIT->{
+                            viewModel.editLocation()
+                        }
+                        Screens.PLACE_OF_INTEREST_EDIT->{
+                            viewModel.editPlaceOfInterest()
+                        }
                         else -> {}
                     }
                 }) {

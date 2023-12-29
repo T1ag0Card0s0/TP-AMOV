@@ -95,7 +95,9 @@ fun EvaluatePlaceOfInterest(
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                 .padding(8.dp)
         ) {
-            TakePhoto(imagePath = viewModel.evaluateForm!!.imagePath)
+            TakePhoto(
+                imagePath = viewModel.evaluateForm!!.imagePath,
+            )
         }
     }
 }
