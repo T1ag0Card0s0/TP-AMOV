@@ -31,8 +31,8 @@ import pt.isec.amov.tp1.ui.screens.mapviews.ChooseCoordinates
 import pt.isec.amov.tp1.ui.screens.mapviews.LocalMapView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchLocationView
 import pt.isec.amov.tp1.ui.screens.searchview.SearchPlaceOfInterestView
+import pt.isec.amov.tp1.ui.viewmodels.AddLocalForm
 import pt.isec.amov.tp1.ui.viewmodels.AppViewModel
-import pt.isec.amov.tp1.ui.viewmodels.EvaluateForm
 import pt.isec.amov.tp1.ui.viewmodels.location.LocalViewModel
 
 @Composable
@@ -140,6 +140,12 @@ fun MainScreen(
                     onDetails = { location ->
                         viewModel.selectedLocationId.value = location.id
                         navController.navigate(Screens.LOCATION_DETAILS.route)
+                    },
+                    onEdit = { location->
+                        viewModel.addLocalForm = AddLocalForm()
+                        viewModel.addLocalForm!!.setFormWithLocalData(location)
+                        viewModel.selectedLocationId.value = location.id
+                        navController.navigate(Screens.LOCATION_EDIT.route)
                     }
                 )
             }
@@ -153,6 +159,12 @@ fun MainScreen(
                         viewModel.selecedPlaceOfInterestId.value = placeOfInterest.id
                         navController.navigate(Screens.PLACE_OF_INTEREST_DETAILS.route)
                     },
+                    onEdit={placeOfInterest ->
+                        viewModel.addLocalForm = AddLocalForm()
+                        viewModel.addLocalForm!!.setFormWithPlaceOfInterestData(placeOfInterest)
+                        viewModel.selecedPlaceOfInterestId.value = placeOfInterest.id
+                        navController.navigate(Screens.PLACE_OF_INTEREST_EDIT.route)
+                    }
                 )
             }
             composable(Screens.ADD_LOCATIONS.route) {

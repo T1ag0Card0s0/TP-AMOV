@@ -31,6 +31,7 @@ import java.io.File
 @Composable
 fun TakePhoto(
     imagePath: MutableState<String>,
+    initImage: MutableState<String?> = mutableStateOf(null),
     modifier: Modifier = Modifier
 ) {
     val context= LocalContext.current
@@ -42,6 +43,7 @@ fun TakePhoto(
             imagePath.value = ""
             return@rememberLauncherForActivityResult
         }
+        initImage.value = null
         imagePath.value = FileUtils.createFileFromUri(context, uri)
     }
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -79,11 +81,18 @@ fun TakePhoto(
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
-            AsyncImage(
-                model = imagePath.value,
-                contentDescription = "Background image",
-                modifier = Modifier.matchParentSize()
-            )
+            if(initImage.value!=null)
+                AsyncImage(
+                    model = initImage.value,
+                    contentDescription = "Background image",
+                    modifier = Modifier.matchParentSize()
+                )
+            else
+                AsyncImage(
+                    model = imagePath.value,
+                    contentDescription = "Background image",
+                    modifier = Modifier.matchParentSize()
+                )
         }
     }
 }

@@ -42,7 +42,8 @@ fun SearchPlaceOfInterestView(
     location: Location,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    onDetails: (PlaceOfInterest) -> Unit
+    onDetails: (PlaceOfInterest) -> Unit,
+    onEdit: (PlaceOfInterest) -> Unit
 ) {
     val currentCoordinates = locationViewModel.currentLocation.observeAsState()
     val placesOfInterest = viewModel.placesOfInterest.observeAsState()
@@ -155,8 +156,8 @@ fun SearchPlaceOfInterestView(
                 onRemove = {
                     viewModel.removePlaceOfInterest(it as PlaceOfInterest)
                 },
-                onEdit = {
-                    viewModel.selecedPlaceOfInterest
+                onEdit = {local->
+                    onEdit(local as PlaceOfInterest)
                 }
             )
         }

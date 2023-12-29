@@ -90,7 +90,7 @@ fun AddPlaceOfInterestView(
                     optCategory = categories.value!![it].name
                     isExpandedCategories = false
                     addLocalForm.category.value =
-                        categories.value!!.find { c -> c.name == optCategory }
+                        categories.value!!.find { c -> c.name == optCategory }!!.id
                 },
                 modifier = modifier.padding(start = 6.dp, end = 6.dp)
             )
@@ -120,7 +120,10 @@ fun AddPlaceOfInterestView(
                     .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .padding(8.dp)
             ) {
-                TakePhoto(imagePath = addLocalForm.imagePath)
+                TakePhoto(
+                    imagePath = addLocalForm.imagePath,
+                    initImage = addLocalForm.imageUri
+                )
             }
         }
     }

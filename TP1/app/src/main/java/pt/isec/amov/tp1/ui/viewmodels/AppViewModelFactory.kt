@@ -3,9 +3,7 @@ package pt.isec.amov.tp1.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,11 +13,13 @@ import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.data.AppData
 import pt.isec.amov.tp1.data.Category
 import pt.isec.amov.tp1.data.Classification
+import pt.isec.amov.tp1.data.Local
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import pt.isec.amov.tp1.data.User
 import pt.isec.amov.tp1.utils.firebase.FAuthUtil
 import pt.isec.amov.tp1.utils.firebase.FStorageAdd
+import pt.isec.amov.tp1.utils.firebase.FStorageEdit
 import pt.isec.amov.tp1.utils.firebase.FStorageObserver
 import pt.isec.amov.tp1.utils.firebase.FStorageOrder
 import pt.isec.amov.tp1.utils.firebase.FStorageRemove
@@ -152,7 +152,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
                     name = addLocalForm!!.name.value,
                     description = addLocalForm!!.descrition.value,
                     imageName =  addLocalForm!!.imagePath.value,
-                    categoryId = addLocalForm!!.category.value!!.id,
+                    categoryId = addLocalForm!!.category.value,
                     locationId = selectedLocationId.value!!,
                     imageUri = null,
                     latitude = addLocalForm!!.latitude.value!!,
@@ -193,6 +193,55 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         viewModelScope.launch {
             FStorageUpdate.placeOfInterest(p){exp->
                 _error.value = exp?.message
+            }
+        }
+    }
+    fun editLocation() {
+        viewModelScope.launch {
+            val updateImage = addLocalForm!!.imagePath.value != selectedLocation!!.imageName!!
+            if(!updateImage)
+                addLocalForm!!.imagePath.value = selectedLocation!!.imageName!!
+            FStorageEdit.location(
+                Location(
+                    selectedLocationId.value!!,
+                    selectedLocation!!.authorEmail,
+                    addLocalForm!!.name.value,
+                    addLocalForm!!.descrition.value,
+                    addLocalForm!!.imagePath.value,
+                    addLocalForm!!.imageUri.value,
+                    addLocalForm!!.latitude.value!!,
+                    addLocalForm!!.longitude.value!!,
+                    null,null
+                ),
+                updateImage
+            ){e->
+                _error.value=e?.message
+            }
+        }
+    }
+
+    fun editPlaceOfInterest() {
+        viewModelScope.launch {
+            val updateImage = addLocalForm!!.imagePath.value != selecedPlaceOfInterest!!.imageName!!
+            if(!updateImage)
+                addLocalForm!!.imagePath.value = selecedPlaceOfInterest!!.imageName!!
+            FStorageEdit.placeOfInterest(
+                PlaceOfInterest(
+                    selecedPlaceOfInterest!!.id,
+                    selecedPlaceOfInterest!!.authorEmail,
+                    addLocalForm!!.name.value,
+                    addLocalForm!!.descrition.value,
+                    addLocalForm!!.imagePath.value,
+                    addLocalForm!!.category.value,
+                    selectedLocationId.value!!,
+                    addLocalForm!!.imageUri.value!!,
+                    addLocalForm!!.latitude.value!!,
+                    addLocalForm!!.longitude.value!!,
+                    null,null
+                ),
+                updateImage
+            ){e->
+                _error.value=e?.message
             }
         }
     }
@@ -343,15 +392,29 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
 
 
+
 }
 
 class AddLocalForm {
     val name: MutableState<String> = mutableStateOf("")
     val descrition: MutableState<String> = mutableStateOf("")
     val imagePath: MutableState<String> = mutableStateOf("")
-    val category: MutableState<Category?> = mutableStateOf(null)
+    var imageUri: MutableState<String?> = mutableStateOf(null)
+    val category: MutableState<String> = mutableStateOf("")
     var latitude : MutableState<Double?> = mutableStateOf(null)
     var longitude : MutableState<Double?> = mutableStateOf(null)
+    fun setFormWithLocalData(local: Local){
+        name.value = local.name
+        descrition.value = local.description
+        imageUri.value = local.imageUri!!
+        imagePath.value = local.imageName!!
+        latitude.value = local.latitude
+        longitude.value = local.longitude
+    }
+    fun setFormWithPlaceOfInterestData(placeOfInterest: PlaceOfInterest){
+        setFormWithLocalData(placeOfInterest)
+        category.value = placeOfInterest.categoryId
+    }
 }
 class EvaluateForm{
     val comment: MutableState<String> = mutableStateOf("")

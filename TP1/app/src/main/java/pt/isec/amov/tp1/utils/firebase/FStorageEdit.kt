@@ -17,11 +17,11 @@ class FStorageEdit {
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationsCollection = db.collection("Classifications")
 
-        fun location(l: Location, onResult:(Throwable?)->Unit){
+        fun location(l: Location,updateImage:Boolean, onResult:(Throwable?)->Unit){
             FStorageAdd.verifyIfExist(locationsColletion,"id",l.id){
                 v,exp->
-                if(v&&exp!=null){
-                    if (l.imageName!!.isNotEmpty()) {
+                if(v||exp!=null){
+                    if (updateImage) {
                         val file = File(l.imageName!!)
                         val inputStream = FileInputStream(file)
                         FStorageAdd.uploadFile(
@@ -43,11 +43,11 @@ class FStorageEdit {
                 }
             }
         }
-        fun placeOfInterest(p:PlaceOfInterest, onResult: (Throwable?) -> Unit){
+        fun placeOfInterest(p:PlaceOfInterest,updateImage:Boolean, onResult: (Throwable?) -> Unit){
             FStorageAdd.verifyIfExist(placesOfInterestCollection,"id",p.id){
                 v,exp->
-                if(v&&exp!=null){
-                    if (p.imageName!!.isNotEmpty()) {
+                if(v||exp!=null){
+                    if (updateImage) {
                         val file = File(p.imageName!!)
                         val inputStream = FileInputStream(file)
                         FStorageAdd.uploadFile(

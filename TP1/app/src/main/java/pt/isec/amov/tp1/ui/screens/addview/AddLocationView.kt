@@ -90,7 +90,10 @@ fun AddLocationView(
                     .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .padding(8.dp)
             ) {
-                TakePhoto(imagePath = addLocalForm.imagePath)
+                TakePhoto(
+                    imagePath = addLocalForm.imagePath,
+                    initImage = addLocalForm.imageUri
+                )
             }
         }
     }
