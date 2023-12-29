@@ -1,14 +1,13 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:tp2/places_service.dart';
 import 'package:tp2/recent_places_manager.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
 import 'package:tp2/data/Categories.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../preference_manager.dart';
 import 'details_place_screen.dart';
-import 'data/Locations.dart';
+import '../data/Locations.dart';
 
 class PlacesOfInterestScreen extends StatefulWidget {
   const PlacesOfInterestScreen({super.key});
@@ -18,23 +17,6 @@ class PlacesOfInterestScreen extends StatefulWidget {
   State<PlacesOfInterestScreen> createState() => _PlacesOfInterestScreenState();
 }
 
-
-
-class PreferenceManager {
-  static Future<SharedPreferences> _getPrefs() async {
-    return await SharedPreferences.getInstance();
-  }
-
-  static Future<bool?> getLikeStatus(String placeId) async {
-    final SharedPreferences prefs = await _getPrefs();
-    return prefs.getBool('$placeId-liked');
-  }
-
-  static Future<bool> setLikeStatus(String placeId, bool liked) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.setBool('$placeId-liked', liked);
-  }
-}
 
 class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
   // Location
@@ -69,13 +51,19 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
 
   // end Location
 
+  @override
+  void initState(){
+    super.initState();
+    getLocation();
+  }
+
   static const List<String> orderOptions = [
     'Alphabetical Asc (A -> Z)',
     'Alphabetical Desc (Z -> A)',
     'Distance',
   ];
 
-  final PlacesOrderService _placesService = PlacesOrderService();
+  final PlacesService _placesService = PlacesService();
   final CategoryService _categoryService = CategoryService();
   late List<Categories> _categories = [];
   String ?_selectedCategory;

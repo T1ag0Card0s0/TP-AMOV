@@ -1,4 +1,5 @@
 import 'dart:math' as Math;
+import 'dart:math';
 
 class Locations {
   final String id;
@@ -35,17 +36,28 @@ class Locations {
   }
 
   static double distanceCalculator(double lat1, double lon1, double lat2, double lon2) {
-    double dLat = degreesToRadians(lat2 - lat1);
-    double dLon = degreesToRadians(lon2 - lon1);
+    const earthRadius = 6371.0; // Raio da Terra em quilômetros
 
-    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(degreesToRadians(lat1)) *
-            Math.cos(degreesToRadians(lat2)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
+    // Converte as latitudes e longitudes de graus para radianos
+    final lat1Rad = degreesToRadians(lat1);
+    final lon1Rad = degreesToRadians(lon1);
+    final lat2Rad = degreesToRadians(lat2);
+    final lon2Rad = degreesToRadians(lon2);
 
-    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // Calcula as diferenças de latitude e longitude
+    final dLat = lat2Rad - lat1Rad;
+    final dLon = lon2Rad - lon1Rad;
 
-    return earthRadiusKm * c;
+    // Fórmula de Haversine para calcular a distância
+    final a = (sin(dLat / 2) * sin(dLat / 2)) +
+        cos(lat1Rad) * cos(lat2Rad) * (sin(dLon / 2) * sin(dLon / 2));
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final distance = earthRadius * c;
+
+    return distance;
   }
+
+
+
 }
+

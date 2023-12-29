@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tp2/details_screen.dart';
-import 'package:tp2/list_screen.dart';
-import 'package:tp2/places_of_interest_screen.dart';
-import 'package:tp2/recent_places_screen.dart';
-import 'details_place_screen.dart';
+import 'package:tp2/screens/details_screen.dart';
+import 'package:tp2/screens/list_screen.dart';
+import 'package:tp2/screens/places_of_interest_screen.dart';
+import 'package:tp2/screens/recent_places_screen.dart';
+import 'screens/details_place_screen.dart';
 import 'firebase_options.dart';
 
 void initFirebase() async {

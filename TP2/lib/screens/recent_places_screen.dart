@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tp2/recent_places_manager.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
+import '../preference_manager.dart';
 import 'details_place_screen.dart';
-import 'places_of_interest_screen.dart';
-
 
 class RecentPlacesScreen extends StatefulWidget {
   const RecentPlacesScreen({super.key});

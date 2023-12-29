@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
@@ -79,7 +78,7 @@ class _DetailsPlaceScreenState extends State<DetailsPlaceScreen> {
                 // Descrição da localização
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text("Autor: ${location.authorEmail}",
+                  child: Text("Author: ${location.authorEmail}",
                     style: const TextStyle(
                       fontSize: 16.0,
                     ),

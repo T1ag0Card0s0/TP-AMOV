@@ -1,60 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
-import 'package:tp2/details_screen.dart';
+import 'package:tp2/screens/details_screen.dart';
+import '../location_service.dart';
 import 'places_of_interest_screen.dart';
 import 'recent_places_screen.dart';
-import 'data/Locations.dart';
-
-class LocationOrderService {
-  Future<List<Locations>> getLocations(String ?orderBy, String ?searchTerm, LocationData location) async {
-    var db = FirebaseFirestore.instance;
-
-    QuerySnapshot<Map<String, dynamic>> collection = await db.collection('Locations').get();
-
-    // Adiciona a lógica de ordenação
-    if (orderBy == 'Alphabetical Asc (A -> Z)') {
-      collection = await db.collection('Locations').orderBy('name').get();
-    } else if (orderBy == 'Alphabetical Desc (Z -> A)') {
-      collection = await db.collection('Locations').orderBy('name', descending: true).get();
-    } else if (orderBy == 'Distance') {
-      collection.docs.sort((a, b) {
-        double distanceA = Locations.distanceCalculator(
-          location.latitude!,
-          location.longitude!,
-          a['latitude'],
-          a['longitude'],
-        );
-
-        double distanceB = Locations.distanceCalculator(
-          location.latitude!,
-          location.longitude!,
-          b['latitude'],
-          b['longitude'],
-        );
-
-        return distanceA.compareTo(distanceB);
-      });
-    }
-
-    List<Locations> locations = [];
-    for (var doc in collection.docs) {
-      Map<String, dynamic> data = doc.data();
-      // Adiciona a lógica de pesquisa
-      if (searchTerm == null || searchTerm.isEmpty || data['name'].toString().toLowerCase() == searchTerm.toLowerCase()) {
-        locations.add(Locations(
-            id: doc.id,
-            name: data['name'],
-            description: data['description'],
-            imageUri: data['imageUri'],
-            latitude: data['latitude'],
-            longitude: data['longitude']
-        ));
-      }
-    }
-    return locations;
-  }
-}
+import '../data/Locations.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -66,31 +16,14 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-
-  static const List<String> orderOptions = [
-    'Alphabetical Asc (A -> Z)',
-    'Alphabetical Desc (Z -> A)',
-    'Distance',
-  ];
-
-  final LocationOrderService _locationService = LocationOrderService();
-  final TextEditingController _searchController = TextEditingController();
-  String? orderByValue;
-  String? searchTerm;
-  @override
-  void initState(){
-    super.initState();
-    getLocation();
-  }
-  // Location
+// Location
   Location currentLocation = Location();
 
   bool _serviceEnabled = false;
   PermissionStatus _permissionGranted = PermissionStatus.denied;
-
   LocationData _locationData = LocationData.fromMap({
-    "latitude": 40.639855,
-    "longitude": -8.654125,
+    "latitude": 40.192639,
+    "longitude": -8.411899,
   });
 
   void getLocation() async {
@@ -112,7 +45,25 @@ class _ListScreenState extends State<ListScreen> {
     _locationData = await currentLocation.getLocation();
     setState(() {});
   }
+
   // end Location
+
+  @override
+  void initState(){
+    super.initState();
+    getLocation();
+  }
+  static const List<String> orderOptions = [
+    'Alphabetical Asc (A -> Z)',
+    'Alphabetical Desc (Z -> A)',
+    'Distance',
+  ];
+
+  final TextEditingController _searchController = TextEditingController();
+  final LocationService _locationService = LocationService();
+  String? orderByValue;
+  String? searchTerm;
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +111,7 @@ class _ListScreenState extends State<ListScreen> {
                     onChanged: (String? value) {
                       // Atualiza o valor do Dropdown e chama a função de atualização
                       setState(() {
+                        getLocation();
                         orderByValue = value!;
                         _updateLocations();
                       });
