@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:tp2/places_service.dart';
-import 'data/Locations.dart';
-import 'data/PlacesOfInterest.dart';
+import '../data/Locations.dart';
+import '../data/PlacesOfInterest.dart';
 import 'details_place_screen.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -144,7 +144,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                              )
                            );
 
-                          places = await PlacesOrderService().getPlacesWithoutOrder(location.id);
+                          places = await PlacesService().getPlacesWithoutOrder(location.id);
 
                           for( PlaceOfInterest poi in places){
                             await mapController.addMarker(
