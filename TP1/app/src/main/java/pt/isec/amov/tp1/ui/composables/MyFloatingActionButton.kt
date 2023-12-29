@@ -35,14 +35,18 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -63,10 +67,8 @@ fun MyFloatingActionButton(
     var showDialog by remember { mutableStateOf(false) }
     var nameInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
-    var selectedImageVector by remember { mutableStateOf<ImageVector?>(null) }
-    var selectedIconUri by remember { mutableStateOf("") }
     var selectedIconName by remember { mutableStateOf("") }
-
+    var showErrorSnackbar by remember { mutableStateOf(false) }
     val categoryIcons = listOf(
         Icons.Default.BeachAccess,
         Icons.Default.Cottage,
@@ -145,21 +147,33 @@ fun MyFloatingActionButton(
                         // Select icon using IconGrid
                         Text(text = stringResource(R.string.select_an_icon_for_the_category))
                         IconGrid(categoryIcons) { selectedIcon ->
-                            selectedImageVector = selectedIcon
-                            selectedIconUri = "" // TODO gerar uri para selectedImageVector
                             selectedIconName = selectedIcon.name
-                            Log.d("Category name", selectedIconName)
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.addCategory(nameInput, descriptionInput, selectedIconName)
-                            showDialog = false
+                            if (nameInput.isNotBlank() && descriptionInput.isNotBlank() && selectedIconName.isNotBlank()) {
+                                // Todos os dados estão preenchidos, adicione a categoria
+                                viewModel.addCategory(nameInput, descriptionInput, selectedIconName)
+                                showDialog = false
+                            } else {
+                                // Mostrar Snackbar com mensagem de erro
+                                showErrorSnackbar = true
+                            }
                         }
                     ) {
                         Text("Add Category")
+                    }
+                    if (showErrorSnackbar) {
+                        Text(
+                            text = "Por favor, preencha todos os campos",
+                            color = Color.Red,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
                     }
                 },
                 dismissButton = {

@@ -142,7 +142,6 @@ fun SearchPlaceOfInterestView(
             }
         }
 
-        // Exemplo de uso
         CategoryDropDown(
             isExpanded = isExpandedCategories,
             options = categories.value?.map { it.name } ?: emptyList(),
@@ -199,9 +198,6 @@ fun SearchPlaceOfInterestView(
             )
         }
     }
-
-
-
 }
 
 fun getIconByName(iconName: String): ImageVector {
@@ -217,6 +213,6 @@ fun getIconByName(iconName: String): ImageVector {
         "Filled.LocalHospital" -> Icons.Default.LocalHospital
         "Filled.Sports" -> Icons.Default.Sports
         "Filled.Landscape" -> Icons.Default.Landscape
-        else -> Icons.Default.Error // Ícone de erro padrão ou ícone alternativo
+        else -> Icons.Default.Error
     }
 }

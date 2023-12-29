@@ -34,7 +34,6 @@ class AppViewModelFactory(
     }
 }
 
-
 class AppViewModel(val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     var evaluateForm: EvaluateForm? = null
@@ -93,6 +92,8 @@ class AppViewModel(val appData: AppData) : ViewModel() {
     }
 
     fun addCategory(name: String, description:String, iconName: String){
+            if (name.isEmpty() || description.isEmpty() || iconName.isEmpty()
+            ) return
         viewModelScope.launch {
             FStorageAdd.category(
                 Category(
