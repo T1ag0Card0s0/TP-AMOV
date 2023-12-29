@@ -162,6 +162,24 @@ class _ListScreenState extends State<ListScreen> {
                         child: ListTile(
                           title: Column(
                             children: [
+                              if (!Locations.isApproved(location))
+                                  const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.warning_amber,
+                                        color: Colors.red,
+                                      ),
+                                      SizedBox(width: 8.0),
+                                      Text(
+                                        "To approve, information may not be correct",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              const SizedBox(height: 8.0),
                               Image.network(
                                 location.imageUri,
                                 width: double.infinity,

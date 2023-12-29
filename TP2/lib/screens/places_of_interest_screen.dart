@@ -148,7 +148,13 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                           items: _categories.map((category) {
                             return DropdownMenuItem<String>(
                               value: category.id,
-                              child: Text(category.name),
+                              child: Row(
+                                children: [
+                                  Icon(getIconByName(category.iconName), color: Colors.black), // Use a função getIconByName
+                                  SizedBox(width: 8.0),
+                                  Text(category.name),
+                                ],
+                              ),
                             );
                           }).toList(),
                         );
@@ -176,6 +182,24 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                         child: ListTile(
                           title: Column(
                             children: [
+                              if(!PlaceOfInterest.isApproved(location))
+                                const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    Text(
+                                      "To approve, information may not be correct",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              const SizedBox(height: 8.0),
                               // Image widget placed above the Text
                               Image.network(
                                 location.imageUri,
@@ -324,6 +348,35 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
   // Função para atualizar a lista de localizações com base no Dropdown
   void _updatePlaces() {
     _placesService.getPlaces(orderByValue, _selectedCategory, locationId, _locationData);
+  }
+
+  IconData getIconByName(String iconName) {
+    switch (iconName) {
+      case "Filled.BeachAccess":
+        return Icons.beach_access;
+      case "Filled.Cottage":
+        return Icons.cottage;
+      case "Filled.Museum":
+        return Icons.museum;
+      case "Filled.School":
+        return Icons.school;
+      case "Filled.Home":
+        return Icons.home;
+      case "Filled.Person":
+        return Icons.person;
+      case "Filled.Hotel":
+        return Icons.hotel;
+      case "Filled.Nature":
+        return Icons.nature;
+      case "Filled.LocalHospital":
+        return Icons.local_hospital;
+      case "Filled.Sports":
+        return Icons.sports;
+      case "Filled.Landscape":
+        return Icons.landscape;
+      default:
+        return Icons.error;
+    }
   }
 }
 

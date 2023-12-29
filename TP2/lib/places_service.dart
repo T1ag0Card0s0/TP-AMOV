@@ -27,7 +27,9 @@ class PlacesService {
             latitude: data['latitude'],
             longitude: data['longitude'],
             categoryId: data['categoryId'],
-            locationId: data['locationId']
+            locationId: data['locationId'],
+            user1: data['user1'],
+            user2: data['user2']
         ));
       }
     }
@@ -52,6 +54,8 @@ class PlacesService {
         longitude: data['longitude'],
         categoryId: data['categoryId'],
         locationId: data['locationId'],
+        user1: data['user1'],
+        user2: data['user2']
       );
     }).toList();
 

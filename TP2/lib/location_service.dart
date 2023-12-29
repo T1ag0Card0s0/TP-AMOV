@@ -17,6 +17,8 @@ class LocationService {
         imageUri: data['imageUri'],
         latitude: data['latitude'],
         longitude: data['longitude'],
+        user1: data['user1'],
+        user2: data['user2']
       );
     }).toList();
 

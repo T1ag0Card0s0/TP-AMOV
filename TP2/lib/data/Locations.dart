@@ -8,6 +8,8 @@ class Locations {
   final String imageUri;
   final double latitude;
   final double longitude;
+  final String? user1;
+  final String? user2;
 
   Locations({
     required this.id,
@@ -16,6 +18,8 @@ class Locations {
     required this.imageUri,
     required this.latitude,
     required this.longitude,
+    required this.user1,
+    required this.user2
   });
 
   factory Locations.fromMap(Map<String, dynamic> data, String documentId) {
@@ -26,7 +30,13 @@ class Locations {
       imageUri: data['image'] ?? '',
       latitude: (data['latitude'] ?? 0.0) is double ? data['latitude'] : double.parse(data['latitude'] ?? '0'),
       longitude: (data['longitude'] ?? 0.0) is double ? data['longitude'] : double.parse(data['longitude'] ?? '0'),
+      user1: data['user1'],
+      user2: data['user2']
     );
+  }
+
+  static bool isApproved(Locations location){
+    return (location.user1 != null  && location.user2 != null);
   }
 
   static const double earthRadiusKm = 6371.0;

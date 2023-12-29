@@ -8,6 +8,8 @@ class PlaceOfInterest {
   final String imageUri;
   final double latitude;
   final double longitude;
+  final String? user1;
+  final String? user2;
 
   PlaceOfInterest({
     required this.id,
@@ -19,6 +21,8 @@ class PlaceOfInterest {
     required this.imageUri,
     required this.latitude,
     required this.longitude,
+    required this.user1,
+    required this.user2
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +36,8 @@ class PlaceOfInterest {
       'longitude': longitude,
       'categoryId': categoryId,
       'locationId': locationId,
+      'user1' : user1,
+      'user2' : user2
     };
   }
 
@@ -46,6 +52,12 @@ class PlaceOfInterest {
       longitude: (json['longitude'] ?? 0.0) is double ? json['longitude'] : double.parse(json['longitude'] ?? '0'),
       categoryId: json['categoryId'],
       locationId: json['locationId'],
+      user1: json['user1'],
+      user2: json['user2']
     );
+  }
+
+  static bool isApproved(PlaceOfInterest location){
+    return (location.user1 != null  && location.user2 != null);
   }
 }
