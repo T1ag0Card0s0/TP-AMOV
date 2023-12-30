@@ -5,6 +5,7 @@ import 'package:tp2/places_service.dart';
 import 'package:tp2/recent_places_manager.dart';
 import 'package:tp2/data/PlacesOfInterest.dart';
 import 'package:tp2/data/Categories.dart';
+import '../categories_service.dart';
 import '../preference_manager.dart';
 import 'details_place_screen.dart';
 import '../data/Locations.dart';
