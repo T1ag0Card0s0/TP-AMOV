@@ -185,7 +185,7 @@ fun MainScreen(
             composable(Screens.LOCATION_DETAILS.route) {
                 val locations = viewModel.locations.observeAsState().value!!
                 LocationDetailsView(
-                    location =  locations.find { it.id==viewModel.selectedLocationId.value }!!,
+                    location =  locations.find {l->l.id==viewModel.selectedLocationId.value }!!,
                     currentUserEmail = viewModel.user.value!!.email,
                     onValidate = {location->
                         viewModel.updateLocation(location)

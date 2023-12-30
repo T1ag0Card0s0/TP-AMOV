@@ -1,6 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.searchview
 
-import CategoryDropDown
+import pt.isec.amov.tp1.ui.composables.CategoryDropDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

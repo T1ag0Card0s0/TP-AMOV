@@ -1,5 +1,6 @@
 package pt.isec.amov.tp1.utils.firebase
 
+import com.google.firebase.firestore.getField
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -16,38 +17,64 @@ class FStorageRemove {
         private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
         private val classificationsCollection = db.collection("Classifications")
-        fun location(location: Location, onResult: (Throwable?) -> Unit){
+        fun location(location: Location, onResult: (Throwable?) -> Unit) {
             val dataToRemove = locationsCollection.document(location.id)
             removeFile(location.imageName!!)
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
+
         fun placeOfInterest(
             placeOfInterest: PlaceOfInterest,
             onResult: (Throwable?) -> Unit
-        ){
+        ) {
             val dataToRemove = placesOfInterestCollection.document(placeOfInterest.id)
             removeFile(placeOfInterest.imageName!!)
+            classifications("placeOfInterest", placeOfInterest.id, onResult)
             dataToRemove.delete()
                 .addOnCompleteListener {
-
                     onResult(it.exception)
                 }
         }
-        fun category(category: Category, onResult: (Throwable?) -> Unit){
+
+        fun category(category: Category, onResult: (Throwable?) -> Unit) {
             val dataToRemove = categoriesCollection.document(category.id)
             dataToRemove.delete()
                 .addOnCompleteListener { onResult(it.exception) }
         }
+
         fun classification(c: Classification, onResult: (Throwable?) -> Unit) {
             val dataToRemove = classificationsCollection.document(c.id)
             dataToRemove.delete()
-                .addOnCompleteListener{
-                    if(c.imageName!=null)
+                .addOnCompleteListener {
+                    if (!c.imageName.isNullOrEmpty())
                         removeFile(c.imageName!!)
                     onResult(it.exception)
                 }
         }
+
+        private fun classifications(field: String, value: String, onResult: (Throwable?) -> Unit) {
+            classificationsCollection.whereEqualTo(field, value)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot.documents) {
+                        val classification = Classification(
+                            document.getString("id")?:"",
+                            document.getString("authorEmail")?:"",
+                            document.getString("placeOfInterest")?:"",
+                            document.getField<Int>("value")?:0,
+                            document.getString("comment")?:"",
+                            document.getString("imageUri"),
+                            document.getString("imageName")?:""
+                        )
+                        classification(classification, onResult)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    onResult(exception)
+                }
+        }
+
         private fun removeFile(
             imgFile: String
         ) {

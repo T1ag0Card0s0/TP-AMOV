@@ -199,7 +199,7 @@ class FStorageAdd {
                     }
                 }
         }
-        fun verifyIfExist(
+        private fun verifyIfExist(
             collectionReference: CollectionReference,
             fieldValues: Map<String, String>,
             onResult: (Boolean, Throwable?) -> Unit

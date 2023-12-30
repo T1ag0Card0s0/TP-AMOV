@@ -5,11 +5,9 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp1.utils.location.LocationHandler
 
 class LocalViewModel(private val locationHandler: LocationHandler) : ViewModel() {
-    val POIs : MutableList<Coordinates>? = null
     // Permissions
     var coarseLocationPermission = false
     var fineLocationPermission = false
@@ -18,10 +16,6 @@ class LocalViewModel(private val locationHandler: LocationHandler) : ViewModel()
     private val _currentLocation = MutableLiveData(Location(null))
     val currentLocation : LiveData<Location>
         get() = _currentLocation
-
-
-    private val locationEnabled : Boolean
-        get() = locationHandler.locationEnabled
 
     init {
         locationHandler.onLocation = {location->
@@ -36,7 +30,7 @@ class LocalViewModel(private val locationHandler: LocationHandler) : ViewModel()
 
     }
 
-    fun stopLocationUpdates() {
+    private fun stopLocationUpdates() {
         locationHandler.stopLocationUpdates()
     }
 

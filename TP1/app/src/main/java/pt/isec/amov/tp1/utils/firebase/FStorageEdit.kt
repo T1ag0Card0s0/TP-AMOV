@@ -3,7 +3,6 @@ package pt.isec.amov.tp1.utils.firebase
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
 import java.io.File
@@ -13,9 +12,7 @@ class FStorageEdit {
     companion object {
         private val db by lazy { Firebase.firestore }
         private val locationsCollection = db.collection("Locations")
-        private val categoriesCollection = db.collection("Categories")
         private val placesOfInterestCollection = db.collection("PlacesOfInterest")
-        private val classificationsCollection = db.collection("Classifications")
 
         fun location(l: Location,updateImage:Boolean, onResult:(Throwable?)->Unit){
             FStorageAdd.verifyIfExist(locationsCollection,"id",l.id){

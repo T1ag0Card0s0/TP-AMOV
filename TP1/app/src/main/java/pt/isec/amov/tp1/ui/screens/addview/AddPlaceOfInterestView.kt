@@ -1,6 +1,6 @@
 package pt.isec.amov.tp1.ui.screens.addview
 
-import CategoryDropDown
+import pt.isec.amov.tp1.ui.composables.CategoryDropDown
 import android.location.Location
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,7 +33,6 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
 import pt.isec.amov.tp1.R
 import pt.isec.amov.tp1.data.Category
-import pt.isec.amov.tp1.ui.composables.MyExposedDropDownMenu
 import pt.isec.amov.tp1.ui.composables.MyTextField
 import pt.isec.amov.tp1.ui.composables.TakePhoto
 import pt.isec.amov.tp1.ui.screens.Screens

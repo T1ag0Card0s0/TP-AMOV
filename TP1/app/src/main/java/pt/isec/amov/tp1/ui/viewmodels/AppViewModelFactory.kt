@@ -34,7 +34,7 @@ class AppViewModelFactory(
     }
 }
 
-class AppViewModel(val appData: AppData) : ViewModel() {
+class AppViewModel(private val appData: AppData) : ViewModel() {
     var addLocalForm: AddLocalForm? = null
     var evaluateForm: EvaluateForm? = null
     val selectedLocationId: MutableState<String?> = mutableStateOf(null)
@@ -140,10 +140,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             addLocalForm!!.description.value.isEmpty() ||
             addLocalForm!!.imagePath.value.isEmpty()
         ) return
-        if (addLocalForm!!.category.value == null||
-            addLocalForm!!.latitude.value==null||
-            addLocalForm!!.longitude.value==null||
-            selectedLocationId.value==null) return
+        if (addLocalForm!!.latitude.value==null || addLocalForm!!.longitude.value==null || selectedLocationId.value==null) return
         viewModelScope.launch {
             FStorageAdd.placeOfInterest(
                 PlaceOfInterest(
@@ -282,28 +279,28 @@ class AppViewModel(val appData: AppData) : ViewModel() {
         startPlacesOfInterestObserver()
         startClassificationsObserver()
     }
-    fun startCategoriesObserver(){
+    private fun startCategoriesObserver(){
         viewModelScope.launch {
             FStorageObserver.observeCategory {categories->
                 appData.setCategories(categories!!)
             }
         }
     }
-    fun startLocationsObserver(){
+    private fun startLocationsObserver(){
         viewModelScope.launch {
             FStorageObserver.observeLocation {locations->
                 appData.setLocations(locations!!)
             }
         }
     }
-    fun startPlacesOfInterestObserver(){
+    private fun startPlacesOfInterestObserver(){
         viewModelScope.launch {
             FStorageObserver.observePlaceOfInterest { placesOfInterest->
                 appData.setPlacesOfInterest(placesOfInterest!!)
             }
         }
     }
-    fun startClassificationsObserver(){
+    private fun startClassificationsObserver(){
         viewModelScope.launch {
             FStorageObserver.observeClassifications { classifications ->
                 appData.setClassifications(classifications)
@@ -381,7 +378,7 @@ class AppViewModel(val appData: AppData) : ViewModel() {
             }
         }
     }
-    fun getClassificationsFrom(id: String): List<Classification> {
+    private fun getClassificationsFrom(id: String): List<Classification> {
         return classifications.value!!.filter { it.placeOfInterestId == id }
     }
 
