@@ -171,10 +171,10 @@ class _ListScreenState extends State<ListScreen> {
                                       ),
                                       SizedBox(width: 8.0),
                                       Text(
-                                        "To approve, information may not be correct",
+                                        "To approve\nInformation may not be correct",
                                         style: TextStyle(
                                           color: Colors.red,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.bold
                                         ),
                                       ),
                                     ],

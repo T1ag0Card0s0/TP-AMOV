@@ -41,7 +41,7 @@ class _DetailsPlaceScreenState extends State<DetailsPlaceScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
             Card(
-            elevation: 8, // Set the elevation as desired
+            elevation: 8,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -137,7 +137,7 @@ class _DetailsPlaceScreenState extends State<DetailsPlaceScreen> {
                             icon: Icon(
                               Icons.location_on,
                               color: Colors.blue,
-                              size: 56, // Ajuste o tamanho conforme necessário
+                              size: 56,
                             ),
                           )
                       );

@@ -150,8 +150,8 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                               value: category.id,
                               child: Row(
                                 children: [
-                                  Icon(getIconByName(category.iconName), color: Colors.black), // Use a função getIconByName
-                                  SizedBox(width: 8.0),
+                                  Icon(getIconByName(category.iconName), color: Colors.black),
+                                  const SizedBox(width: 8.0),
                                   Text(category.name),
                                 ],
                               ),
@@ -190,8 +190,7 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                                       color: Colors.red,
                                     ),
                                     SizedBox(width: 8.0),
-                                    Text(
-                                      "To approve, information may not be correct",
+                                    Text("To approve\nInformation may not be correct",
                                       style: TextStyle(
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold,
@@ -222,15 +221,17 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                             ],
                           ),
                           subtitle: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   location.name,
                                   style: const TextStyle(
-                                    fontSize: 19.0,
+                                    fontSize: 17.0,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               const Spacer(),
