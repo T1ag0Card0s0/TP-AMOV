@@ -1,6 +1,4 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Categories {
   final String id;
   final String authorEmail;

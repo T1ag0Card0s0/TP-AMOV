@@ -174,6 +174,7 @@ class _ListScreenState extends State<ListScreen> {
                                         "To approve\nInformation may not be correct",
                                         style: TextStyle(
                                           color: Colors.red,
+                                            fontSize: 14,
                                           fontWeight: FontWeight.bold
                                         ),
                                       ),
@@ -213,7 +214,7 @@ class _ListScreenState extends State<ListScreen> {
                               Hero(
                                 tag: "btnIcon",
                                 child: IconButton(
-                                  icon: const Icon(Icons.more_vert), // Ícone de três pontos,
+                                  icon: const Icon(Icons.more_vert),
                                   onPressed: () async {
                                     await Navigator.pushNamed(
                                         context, DetailsScreen.routeName,

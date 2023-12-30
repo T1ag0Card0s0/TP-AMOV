@@ -67,7 +67,7 @@ class _RecentPlacesScreenState extends State<RecentPlacesScreen> {
                                 child: Text(
                                   location.name,
                                   style: const TextStyle(
-                                    fontSize: 19.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

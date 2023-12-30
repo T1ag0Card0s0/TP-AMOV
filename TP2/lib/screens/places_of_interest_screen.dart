@@ -119,7 +119,7 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                     }).toList(),
                   ),
                 ),
-                const SizedBox(width: 16.0), // Add spacing between dropdowns
+                const SizedBox(width: 16.0),
                 // Dropdown for Categories
                 Expanded(
                   child: FutureBuilder<List<Categories>>(
@@ -194,6 +194,7 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                                     Text("To approve\nInformation may not be correct",
                                       style: TextStyle(
                                         color: Colors.red,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -229,7 +230,7 @@ class _PlacesOfInterestScreenState extends State<PlacesOfInterestScreen> {
                                 child: Text(
                                   location.name,
                                   style: const TextStyle(
-                                    fontSize: 17.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   overflow: TextOverflow.ellipsis,
