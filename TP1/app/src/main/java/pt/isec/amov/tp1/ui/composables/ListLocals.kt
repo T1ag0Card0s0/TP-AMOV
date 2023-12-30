@@ -1,7 +1,5 @@
 package pt.isec.amov.tp1.ui.composables
 
-import android.widget.TextView
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card

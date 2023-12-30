@@ -9,7 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import pt.isec.amov.tp1.data.Location
 import pt.isec.amov.tp1.data.PlaceOfInterest
-import kotlin.math.*;
+import kotlin.math.*
 
 class FStorageOrder {
     companion object {
@@ -215,7 +215,7 @@ class FStorageOrder {
             lat2: Double,
             lon2: Double
         ): Double {
-            val R = 6371 // Radius of the earth in km
+            val r = 6371 // Radius of the earth in km
             val dLat = deg2rad(lat2 - lat1)
             val dLon = deg2rad(lon2 - lon1)
             val a =
@@ -223,7 +223,7 @@ class FStorageOrder {
                         cos(deg2rad(lat1)) * cos(deg2rad(lat2)) *
                         sin(dLon / 2) * sin(dLon / 2)
             val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-            return R * c // Distance in km
+            return r * c // Distance in km
         }
 
         private fun deg2rad(deg: Double): Double {

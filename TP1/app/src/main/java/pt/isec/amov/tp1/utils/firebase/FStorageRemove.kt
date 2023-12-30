@@ -53,7 +53,7 @@ class FStorageRemove {
                 }
         }
 
-        fun classifications(field: String, value: String, onResult: (Throwable?) -> Unit) {
+        private fun classifications(field: String, value: String, onResult: (Throwable?) -> Unit) {
             classificationsCollection.whereEqualTo(field, value)
                 .get()
                 .addOnSuccessListener { querySnapshot ->

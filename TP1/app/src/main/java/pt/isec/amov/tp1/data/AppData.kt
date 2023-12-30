@@ -1,7 +1,6 @@
 package pt.isec.amov.tp1.data
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import pt.isec.amov.tp1.ui.viewmodels.toUser
@@ -54,14 +53,7 @@ data class Location(
     override val longitude: Double,
     override var user1: String?,
     override var user2: String?
-):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude,false,user1,user2) {
-    fun getProgress(): Float {
-        var retValue = 0.0f
-        if(user1!=null) retValue+=0.5f
-        if(user2!=null) retValue+=0.5f
-        return retValue
-    }
-}
+):Local(authorEmail,id,name,description,imageName,imageUri,latitude,longitude,false,user1,user2)
 
 data class PlaceOfInterest(
     override val id: String,

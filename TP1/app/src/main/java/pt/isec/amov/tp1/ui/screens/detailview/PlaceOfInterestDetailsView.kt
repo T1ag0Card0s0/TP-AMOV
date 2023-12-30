@@ -24,7 +24,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -147,11 +147,11 @@ fun PlaceOfInterestDetailsView(
                             .padding(8.dp)
                     ) {
                         val progress = remember {
-                            mutableStateOf(placeOfInterest.numberOfValidations().toFloat() / 2)
+                            mutableFloatStateOf(placeOfInterest.numberOfValidations().toFloat() / 2)
                         }
 
                         LinearProgressIndicator(
-                            progress.value,
+                            progress.floatValue,
                             modifier = modifier
                                 .border(1.dp, Color.Gray)
                                 .height(10.dp)
@@ -161,7 +161,7 @@ fun PlaceOfInterestDetailsView(
                             IconButton(onClick = {
                                 placeOfInterest.assignValidation(viewModel.user.value!!.email)
                                 viewModel.updatePlaceOfInterest(placeOfInterest)
-                                progress.value = placeOfInterest.numberOfValidations().toFloat() / 2;
+                                progress.floatValue = placeOfInterest.numberOfValidations().toFloat() / 2
 
                             }) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null)
