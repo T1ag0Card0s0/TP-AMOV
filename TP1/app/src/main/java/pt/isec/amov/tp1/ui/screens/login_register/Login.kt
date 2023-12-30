@@ -108,7 +108,7 @@ fun LoginForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .align(Alignment.BottomEnd)
-                .fillMaxWidth(0.3f)
+                .fillMaxWidth(0.4f)
                 .fillMaxHeight(0.75f)
         ) {
             options.forEach { btnName ->
