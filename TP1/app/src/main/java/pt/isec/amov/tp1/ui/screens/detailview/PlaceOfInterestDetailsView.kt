@@ -235,14 +235,14 @@ fun PlaceOfInterestDetailsView(
                     }
                 }
                 Text(text = it.comment, modifier = modifier.padding(8.dp))
-                if (it.imageName != null)
+                if (!it.imageName.isNullOrEmpty())
                     Box(
                         modifier = modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
                         AsyncImage(
-                            model = it.imageUri!!,
+                            model = it.imageUri,
                             contentDescription = "Local image",
                             contentScale = ContentScale.FillWidth,
                             modifier = modifier.fillMaxSize()
