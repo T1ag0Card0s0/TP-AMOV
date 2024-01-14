@@ -135,13 +135,3 @@ nesses locais.
 - Manual do Utilizador
 
 ---
-
-## Entrega
-
-- Prazo: 08:00 do dia 2 de Janeiro de 2024
-- Formato do ficheiro zip: AMOV.2023.2024.<nr_aluno1>.<nr_aluno2>.<nr_aluno3>.zip
-- O ficheiro zip tem de incluir:
-  - todo o código (pastas com os projetos) com todos os recursos essenciais para a compilação e execução. Nos projetos do Android Studio deverão ser removidos previamente os diretórios: <proj>/.gradle e <proj>/app/build
-- Caso os ficheiros referidos não sejam removidos será aplicada uma penalização de 5% na nota final
-- Relatório técnico (PDF)
-- Manual do utilizador (PDF)
